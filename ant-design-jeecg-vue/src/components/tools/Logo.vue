@@ -1,8 +1,8 @@
 <template>
   <div class="logo">
     <router-link :to="{name:'dashboard'}">
-      <img src="~@/assets/logo2.png" alt="logo">
-      <h1 v-if="showTitle">{{ title }}</h1>
+      <img style="height: 59px;width: 200px;" src="~@/assets/logo2.jpg" alt="logo">
+      <!--<h1 v-if="showTitle">{{ title }}</h1>-->
     </router-link>
   </div>
 </template>
@@ -14,7 +14,7 @@
       title: {
         type: String,
         default: '发票服务',
-        required: false
+        required: false,
       },
       showTitle: {
         type: Boolean,
@@ -35,7 +35,7 @@
       line-height: $height !important;
       box-shadow: none !important;
       transition: background 300ms;
-      padding-left:1rem !important;
+      padding-left:0.1rem !important;
       a {
         color: white;
         &:hover {
