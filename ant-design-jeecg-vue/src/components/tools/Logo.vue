@@ -13,7 +13,7 @@
     props: {
       title: {
         type: String,
-        default: 'Jeecg-Boot Pro',
+        default: '发票平台',
         required: false
       },
       showTitle: {
@@ -35,7 +35,7 @@
       line-height: $height !important;
       box-shadow: none !important;
       transition: background 300ms;
-
+      padding-left:0px !important;
       a {
         color: white;
         &:hover {
