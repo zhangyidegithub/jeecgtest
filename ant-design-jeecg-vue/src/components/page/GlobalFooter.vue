@@ -1,18 +1,18 @@
 <template>
   <div class="footer">
-    <!--<div class="links">-->
-      <!--&lt;!&ndash;<a href="http://www.jeecg.org" target="_blank">JEECG 首页</a>&ndash;&gt;-->
-      <!--&lt;!&ndash;<a href="https://github.com/zhangdaiscott/jeecg-boot" target="_blank">&ndash;&gt;-->
-        <!--&lt;!&ndash;<a-icon type="github"/>&ndash;&gt;-->
-      <!--&lt;!&ndash;</a>&ndash;&gt;-->
-      <!--&lt;!&ndash;<a href="https://ant.design/">Ant Design</a>&ndash;&gt;-->
-      <!--&lt;!&ndash;<a href="https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/">Vue Antd</a>&ndash;&gt;-->
-    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-    <!--&lt;!&ndash;<div class="copyright">&ndash;&gt;-->
-      <!--&lt;!&ndash;Copyright&ndash;&gt;-->
-      <!--&lt;!&ndash;<a-icon type="copyright"/>&ndash;&gt;-->
-      <!--&lt;!&ndash;2019 <span>JEECG开源社区 出品</span>&ndash;&gt;-->
-    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <div class="links">
+      <!--<a href="#" target="_parent">陝西航天信息企业发票服务管理平台</a>-->
+      <!--<a href="https://github.com/zhangdaiscott/jeecg-boot" target="_blank">-->
+        <!--<a-icon type="github"/>-->
+      <!--</a>-->
+      <!--<a href="http://sn.aisino.com">访问官网</a>-->
+      <!--<a href="https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/">Vue Antd</a>-->
+    </div>
+    <div class="copyright">
+      Copyright
+      <a-icon type="copyright"/>
+      2019 <span><a href="http://sn.aisino.com" style="color: rgba(0, 0, 0, .45);">陕西航天信息有限公司</a> 出品</span>
+    </div>
   </div>
 </template>
 
@@ -31,6 +31,7 @@
     .links {
       margin-bottom: 8px;
 
+
       a {
         color: rgba(0, 0, 0, .45);
 
@@ -46,6 +47,7 @@
     .copyright {
       color: rgba(0, 0, 0, .45);
       font-size: 14px;
+      margin: 1rem;
     }
   }
 </style>

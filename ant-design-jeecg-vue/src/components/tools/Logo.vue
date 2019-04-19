@@ -1,7 +1,7 @@
 <template>
   <div class="logo">
     <router-link :to="{name:'dashboard'}">
-      <img src="~@/assets/logo.svg" alt="logo">
+      <img src="~@/assets/logo2.png" alt="logo">
       <h1 v-if="showTitle">{{ title }}</h1>
     </router-link>
   </div>
@@ -13,7 +13,7 @@
     props: {
       title: {
         type: String,
-        default: '发票平台',
+        default: '发票服务',
         required: false
       },
       showTitle: {
@@ -35,7 +35,7 @@
       line-height: $height !important;
       box-shadow: none !important;
       transition: background 300ms;
-      padding-left:0px !important;
+      padding-left:1rem !important;
       a {
         color: white;
         &:hover {

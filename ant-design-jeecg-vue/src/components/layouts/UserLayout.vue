@@ -4,8 +4,8 @@
       <div class="top">
         <div class="header">
           <a href="/">
-            <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">发票平台</span>
+            <img src="~@/assets/logo1.png" class="logo" alt="logo">
+            <span class="title">企业发票服务管理平台</span>
           </a>
         </div>
         <div class="desc"></div>
@@ -90,10 +90,11 @@
           }
 
           .logo {
-            height: 44px;
-            vertical-align: top;
+            height: 80px;
+            vertical-align: center;
             margin-right: 16px;
             border-style: none;
+            margin-bottom: 0.7rem;
           }
 
           .title {
