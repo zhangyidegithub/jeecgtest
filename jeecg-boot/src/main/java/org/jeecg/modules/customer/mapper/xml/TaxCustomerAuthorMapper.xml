@@ -15,4 +15,14 @@
 		WHERE
 			 CUSTOMER_ID = #{id} 		
 	</select>
+	<update id="updateAuthorStatus">
+		update TAX_CUSTOMER_AUTHOR
+		<set>
+			<if test="authorStatus != null">AUTHOR_STATUS=#{authorStatus},</if>
+			<if test="islockReached != null">ISLOCK_REACHED=#{islockReached}</if>
+		</set>
+		where check_code=#{checkCode} and customer_id=#{customerId}
+	</update>
+	
+	
 </mapper>

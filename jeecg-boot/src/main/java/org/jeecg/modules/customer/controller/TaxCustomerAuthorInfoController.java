@@ -1,5 +1,6 @@
 package org.jeecg.modules.customer.controller;
 
+import org.apache.shiro.SecurityUtils;
 import org.jeecg.modules.customer.entity.TaxCustomerAuthorInfo;
 import org.jeecg.modules.customer.service.ITaxCustomerAuthorInfoService;
 import com.alibaba.fastjson.JSON;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.system.entity.SysUser;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -26,7 +28,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +80,9 @@ public class TaxCustomerAuthorInfoController {
    public Result<TaxCustomerAuthorInfo> add(@RequestBody TaxCustomerAuthorInfo taxCustomerAuthorInfo) {
        Result<TaxCustomerAuthorInfo> result = new Result<TaxCustomerAuthorInfo>();
        try {
+           SysUser sysUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+           taxCustomerAuthorInfo.setCreatedDate(new Date());
+           taxCustomerAuthorInfo.setCreatedUserBy(sysUser.getUsername());
            taxCustomerAuthorInfoService.save(taxCustomerAuthorInfo);
            result.success("添加成功！");
        } catch (Exception e) {

@@ -6,13 +6,13 @@
       <a-form layout="inline">
         <a-row :gutter="24">
           <a-col :span="6">
-            <a-form-item label="联系人">
-              <a-input placeholder="请输入联系人" v-model="queryParam.linkMan"></a-input>
+            <a-form-item label="纳税人识别号">
+              <a-input placeholder="企业纳税人识别号" v-model="queryParam.custTaxCode"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="6">
-            <a-form-item label="联系人手机号">
-              <a-input placeholder="请输入联系人手机号" v-model="queryParam.linkPhone"></a-input>
+            <a-form-item label="纳税人名称">
+              <a-input placeholder="企业纳税人名称" v-model="queryParam.custTaxName"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="8" >
@@ -29,7 +29,9 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+<!--
       <a-button type="primary" icon="download" @click="handleExportXls">导出</a-button>
+-->
     </div>
 
     <!-- table区域-begin -->
@@ -140,12 +142,12 @@
           {
             title: '创建人',
             align:"center",
-            dataIndex: 'CreateBy'
+            dataIndex: 'createBy'
           },
           {
             title: '创建时间',
             align:"center",
-            dataIndex: 'CreateTime'
+            dataIndex: 'createTime'
           },
           {
             title: '联系人',
@@ -193,8 +195,8 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
-        this.$refs.taxCustomerAuthorList.getCustomerMain(this.selectedRowKeys[0]);
-        this.$refs.taxCustomerAuthorInfoList.getCustomerMain(this.selectedRowKeys[0]);
+        this.$refs.taxCustomerAuthorList.getCustomerMain(this.selectedRowKeys[0],this.selectionRows[0].custTaxCode);
+        this.$refs.taxCustomerAuthorInfoList.getCustomerMain(this.selectedRowKeys[0],this.selectionRows[0].custTaxCode);
 
       },
       onClearSelected() {

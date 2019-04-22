@@ -13,6 +13,6 @@
 		SELECT * 
 		FROM  TAX_CUSTOMER_AUTHOR_INFO
 		WHERE
-			 CUSTOMER_ID = #{id} 		
+			 CUSTOMER_ID = #{id} ORDER BY created_date desc
 	</select>
 </mapper>

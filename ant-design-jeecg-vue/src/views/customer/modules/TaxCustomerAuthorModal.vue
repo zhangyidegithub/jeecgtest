@@ -19,40 +19,47 @@
     <!-- 编辑 -->
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-
-
         <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="纳税人识别号"
+          v-model="this.custTaxCode"
+          :hidden="hiding"
+          hasFeedback>
+          <a-input v-decorator="[ 'custTaxCode', {}]" disabled="disabled"/>
+        </a-form-item>
+       <!-- <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="纳税人识别号">
-          <a-input placeholder="请输入企业纳税人识别号" v-decorator="['custTaxCode', {}]" />
-        </a-form-item>
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="联系人">
-          <a-input placeholder="请输入联系人" v-decorator="['linkMan', {}]" />
-        </a-form-item>
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="联系人手机号">
-          <a-input placeholder="请输入联系人手机号" v-decorator="['linkPhone', {}]" />
-        </a-form-item>
+          <a-input placeholder="请输入企业纳税人识别号" v-decorator="['custTaxCode',{rules: [{ required: custTaxCode, message: '请输入企业纳税人识别号!' }]}]" />
+        </a-form-item>-->
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="盘号">
-          <a-input placeholder="请输入盘号，用于客户端授权验证使用" v-decorator="['checkCode', {}]" />
+          <a-input placeholder="请输入盘号，用于客户端授权验证使用" v-decorator="['checkCode', validatorRules.checkCode]" />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="开票机号">
-          <a-input placeholder="请输入本开票机号码，主开票机为0" v-decorator="['machineNo', {}]" />
+          <a-input placeholder="请输入本开票机号码，主开票机为0" v-decorator="['machineNo', validatorRules.machineNo]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="联系人">
+          <a-input placeholder="请输入联系人" v-decorator="['linkMan', validatorRules.linkMan]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="联系人手机号">
+          <a-input placeholder="请输入联系人手机号" v-decorator="['linkPhone', validatorRules.linkPhone]" />
         </a-form-item>
         <a-form-item label="无票标志" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-select v-decorator="[ 'isinvEmpty', {}]" placeholder="请选择无票标志">
+          <a-select v-decorator="[ 'isinvEmpty', validatorRules.isinvEmpty]" placeholder="请选择无票标志">
             <a-select-option :value="1">有可用发票</a-select-option>
             <a-select-option :value="0">无可用发票</a-select-option>
           </a-select>
@@ -64,7 +71,7 @@
           </a-select>
         </a-form-item>
         <a-form-item label="锁死标志" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-select  v-decorator="[ 'islockReached', {}]" placeholder="请选择锁死标志">
+          <a-select  v-decorator="[ 'islockReached', {initialValue:0}]" placeholder="请选择锁死标志">
             <a-select-option :value="1">已到锁死期</a-select-option>
             <a-select-option :value="0">未到锁死期</a-select-option>
           </a-select>
@@ -80,7 +87,7 @@
           :wrapperCol="wrapperCol"
           label="企业信息Id"
           v-model="this.customerId"
-          :hidden="hiding"
+          :hidden="true"
           hasFeedback>
           <a-input v-decorator="[ 'customerId', {}]" disabled="disabled"/>
         </a-form-item>
@@ -192,6 +199,7 @@
         ],
         selectedRowKeys: [],
         customerId: "",
+        custTaxCode: "",
         hiding: false,
         headers: {},
         picUrl: "",
@@ -201,6 +209,11 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
+          checkCode:{rules: [{ required: true, message: '请输入盘号!' }]},
+          machineNo:{rules: [{ required: true, message: '请输入本开票机号码，主开票机为0' }]},
+          linkMan:{rules: [{ required: true, message: '请输入联系人!' }]},
+          linkPhone:{rules: [{required: true, message: '请输入联系人手机号码!' },{validator: this.validatePhone}]},
+          isinvEmpty:{rules: [{required: true, message: '请选择是否有票!' }]},
         },
         url: {
           add: "/customer/taxCustomerAuthor/add",
@@ -214,6 +227,13 @@
       this.headers = {"X-Access-Token": token}
     },
     methods: {
+      validatePhone(rule, value, callback){
+        if(!value || new RegExp(/^1[3|4|5|7|8][0-9]\d{8}$/).test(value)){
+          callback();
+        }else{
+          callback("请输入正确格式的手机号码!");
+        }
+      },
       toggleScreen(){
         if(this.modaltoggleFlag){
           this.modalWidth = window.innerWidth;
@@ -231,11 +251,12 @@
           this.drawerWidth = 700;
         }
       },
-      add (customerId) {
+      add (customerId,custTaxCode) {
         this.hiding = true;
         if (customerId) {
           this.customerId = customerId;
-          this.edit({customerId}, '');
+          this.custTaxCode = custTaxCode;
+          this.edit({customerId,custTaxCode}, '');
         } else {
           this.$message.warning("请选择一个企业信息");
         }
@@ -257,12 +278,17 @@
         }
         this.form.resetFields();
         this.customerId = record.customerId;
+        this.custTaxCode = record.custTaxCode;
         this.model = Object.assign({}, record);
         if (record.id) {
           this.hiding = false;
           this.addStatus = false;
           this.editStatus = true;
+
           this.$nextTick(() => {
+            this.model.islockReached = parseInt(this.model.islockReached);
+            this.model.isrepReached = parseInt(this.model.isrepReached);
+            this.model.isinvEmpty = parseInt(this.model.isinvEmpty);
             this.form.setFieldsValue(pick(this.model,'customerId','custTaxCode','authorStatus','linkMan','linkPhone','checkCode','machineNo','isinvEmpty','isrepReached','islockReached'))
           });
         } else {
@@ -293,6 +319,7 @@
             }
             let formData = Object.assign(this.model, values);
             formData.customerId = this.customerId;
+            formData.custTaxCode = this.custTaxCode;
 
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){

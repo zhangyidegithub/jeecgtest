@@ -30,7 +30,16 @@ public class TaxCustomerServiceImpl extends ServiceImpl<TaxCustomerMapper, TaxCu
 	private TaxCustomerAuthorMapper taxCustomerAuthorMapper;
 	@Autowired
 	private TaxCustomerAuthorInfoMapper taxCustomerAuthorInfoMapper;
-	
+
+	@Override
+	public boolean save(TaxCustomer entity) {
+		boolean flag =  super.save(entity);
+		if(flag){
+
+		}
+		return flag;
+	}
+
 	@Override
 	@Transactional
 	public void saveMain(TaxCustomer taxCustomer, List<TaxCustomerAuthor> taxCustomerAuthorList,List<TaxCustomerAuthorInfo> taxCustomerAuthorInfoList) {

@@ -109,7 +109,16 @@
           {
             title: '授权状态',
             align:"center",
-            dataIndex: 'authorStatus'
+            dataIndex: 'authorStatus',
+            customRender: function (text) {
+              if (text == 1) {
+                return "有效";
+              } else if (text == 0) {
+                return "无效";
+              } else {
+                return text;
+              }
+            }
           },
           {
             title: '操作',
@@ -118,6 +127,7 @@
             scopedSlots: { customRender: 'action' },
           }
         ],
+        custTaxCode: "",
         url: {
           list: "/customer/taxCustomer/queryTaxCustomerAuthorByMainId",
           delete: "/customer/taxCustomerAuthor/delete",
@@ -146,12 +156,13 @@
           }
         })
       },
-      getCustomerMain(customerId) {
+      getCustomerMain(customerId,custTaxCode) {
         this.queryParam.mainId = customerId;
+        this.custTaxCode = custTaxCode;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.mainId);
+        this.$refs.modalForm.add(this.queryParam.mainId,this.custTaxCode);
         this.$refs.modalForm.title = "添加盘号信息";
       }
     }

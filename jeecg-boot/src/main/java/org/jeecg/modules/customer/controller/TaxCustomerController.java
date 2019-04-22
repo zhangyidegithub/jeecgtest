@@ -3,16 +3,18 @@ package org.jeecg.modules.customer.controller;
 import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.apache.commons.lang.StringUtils;
+import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.modules.demo.test.entity.JeecgOrderMain;
 import org.jeecg.modules.demo.test.vo.JeecgOrderMainPage;
+import org.jeecg.modules.system.entity.SysUser;
+import org.jeecg.modules.system.service.ISysUserService;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -58,7 +60,8 @@ public class TaxCustomerController {
 	private ITaxCustomerAuthorService taxCustomerAuthorService;
 	@Autowired
 	private ITaxCustomerAuthorInfoService taxCustomerAuthorInfoService;
-	
+	 @Autowired
+	 private ISysUserService sysUserService;
 	/**
 	  * 分页列表查询
 	 * @param taxCustomer
@@ -110,6 +113,8 @@ public class TaxCustomerController {
 			 TaxCustomer taxcustomer = new TaxCustomer();
 			 BeanUtils.copyProperties(TaxCustomerPage, taxcustomer);
 			 taxCustomerService.save(taxcustomer);
+			 saveSysUser(taxcustomer);
+
 			 result.success("添加成功！");
 		 } catch (Exception e) {
 			 e.printStackTrace();
@@ -119,9 +124,28 @@ public class TaxCustomerController {
 		 return result;
 	 }
 
+	 /**
+	  * 保存信息到用户表
+	  * @param taxcustomer
+	  */
+	 private void saveSysUser(TaxCustomer taxcustomer) {
+		 SysUser user = new SysUser();
+		 user.setStatus(1);//1 正常 0 冻结
+		 user.setDelFlag("0");//是否删除
+		 user.setUsername(taxcustomer.getCustTaxCode());
+		 user.setRealname(taxcustomer.getCustTaxName());
+		 user.setCreateTime(new Date());//设置创建时间
+		 user.setPassword(taxcustomer.getPassword());
 
-	
-	/**
+		 String salt = oConvertUtils.randomGen(8);
+		 user.setSalt(salt);
+		 String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), salt);
+		 user.setPassword(passwordEncode);
+		 sysUserService.addUserWithRole(user, "f6817f48af4fb3af11b9e8bf182f618b");
+	 }
+
+
+	 /**
 	  *  编辑
 	 * @param taxCustomerPage
 	 * @return
@@ -139,11 +163,35 @@ public class TaxCustomerController {
 			//taxCustomerService.updateMain(taxCustomer, taxCustomerPage.getTaxCustomerAuthorList(),taxCustomerPage.getTaxCustomerAuthorInfoList());
 			result.success("修改成功!");
 		}
-		
+		changeSysUser(taxCustomer);
+
 		return result;
 	}
-	
-	/**
+
+	 /**
+	  * 修改用户
+	  * @param taxCustomer
+	  */
+	 private void changeSysUser(TaxCustomer taxCustomer) {
+		 String password = taxCustomer.getPassword();
+		 SysUser sysUser = this.sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, taxCustomer.getCustTaxCode()));
+		 if (sysUser == null) {
+			 log.error("未找到对应实体");
+			 saveSysUser(taxCustomer);
+		 } else {
+			 sysUser.setUsername(taxCustomer.getCustTaxCode());
+			 sysUser.setRealname(taxCustomer.getCustTaxName());
+			 sysUser.setPassword(taxCustomer.getPassword());
+			 String salt = oConvertUtils.randomGen(8);
+			 sysUser.setSalt(salt);
+			 String passwordEncode = PasswordUtil.encrypt(sysUser.getUsername(), password, salt);
+			 sysUser.setPassword(passwordEncode);
+			 this.sysUserService.updateById(sysUser);
+			 log.info("用户修改完成！");
+		 }
+	 }
+
+	 /**
 	  *   通过id删除
 	 * @param id
 	 * @return
@@ -205,7 +253,10 @@ public class TaxCustomerController {
 	@GetMapping(value = "/queryTaxCustomerAuthorByMainId")
 	public Result<List<TaxCustomerAuthor>> queryTaxCustomerAuthorListByMainId(@RequestParam(name = "mainId", required = false) String mainId) {
 		Result<List<TaxCustomerAuthor>> result = new Result<List<TaxCustomerAuthor>>();
-		List<TaxCustomerAuthor> taxCustomerAuthorList = taxCustomerAuthorService.selectByMainId(mainId);
+		List<TaxCustomerAuthor> taxCustomerAuthorList = new ArrayList<>();
+		if(StringUtils.isNotBlank(mainId)){
+			taxCustomerAuthorList = taxCustomerAuthorService.selectByMainId(mainId);
+		}
 		result.setResult(taxCustomerAuthorList);
 		result.setSuccess(true);
 		return result;
@@ -218,7 +269,10 @@ public class TaxCustomerController {
 	@GetMapping(value = "/queryTaxCustomerAuthorInfoByMainId")
 	public Result<List<TaxCustomerAuthorInfo>> queryTaxCustomerAuthorInfoListByMainId(@RequestParam(name = "mainId", required = false) String mainId) {
 		Result<List<TaxCustomerAuthorInfo>> result = new Result<List<TaxCustomerAuthorInfo>>();
-		List<TaxCustomerAuthorInfo> taxCustomerAuthorInfoList = taxCustomerAuthorInfoService.selectByMainId(mainId);
+		List<TaxCustomerAuthorInfo> taxCustomerAuthorInfoList = new ArrayList<>();
+		if(StringUtils.isNotBlank(mainId)){
+			taxCustomerAuthorInfoList =  taxCustomerAuthorInfoService.selectByMainId(mainId);
+		}
 		result.setResult(taxCustomerAuthorInfoList);
 		result.setSuccess(true);
 		return result;

@@ -72,7 +72,7 @@
   import TaxCustomerList from './TaxCustomerList'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import {getAction} from '@/api/manage'
-
+  import moment from "moment"
   export default {
     name: "TaxCustomerAuthorInfoList",
     mixins:[JeecgListMixin],
@@ -108,8 +108,9 @@
           {
             title: '开始时间',
             align:"center",
-            dataIndex: 'authorBeginDate'
-          },
+            dataIndex: 'authorBeginDate',
+
+           },
           {
             title: '失效时间',
             align:"center",
@@ -122,6 +123,7 @@
             scopedSlots: { customRender: 'action' },
           }
         ],
+        custTaxCode: "",
         url: {
           list: "/customer/taxCustomer/queryTaxCustomerAuthorInfoByMainId",
           delete: "/customer/taxCustomerAuthorInfo/delete",
@@ -150,12 +152,13 @@
           }
         })
       },
-      getCustomerMain(customerId) {
+      getCustomerMain(customerId,custTaxCode) {
         this.queryParam.mainId = customerId;
+        this.custTaxCode = custTaxCode;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.mainId);
+        this.$refs.modalForm.add(this.queryParam.mainId,this.custTaxCode);
         this.$refs.modalForm.title = "授权";
       }
     }

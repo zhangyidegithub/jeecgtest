@@ -15,36 +15,62 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="纳税人识别号">
-          <a-input placeholder="请输入企业纳税人识别号" v-decorator="['custTaxCode', {}]" />
+          label="纳税人识别号"
+          v-model="this.custTaxCode"
+          :hidden="hiding"
+          hasFeedback>
+          <a-input v-decorator="[ 'custTaxCode', {}]" disabled="disabled"/>
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="盘号">
 
-          <a-select  v-decorator="[ 'checkCode', {}]" placeholder="请选择锁盘号">
-            <a-select-option v-for="item in customerAuthors"  :value="item.checkCode">{{item.checkCode}}</a-select-option>
+          <a-select  v-decorator="[ 'checkCode', validatorRules.checkCode]"  :getPopupContainer="getPopupContainer" placeholder="请选择锁盘号">
+            <a-select-option v-for="item in customerAuthors"  :key="item.checkCode">{{item.checkCode}}</a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
+          :hidden="true"
           label="开始时间">
-          <a-date-picker format='YYYY-MM-DD' v-decorator="[ 'authorBeginDate', {}]" />
+          <a-input v-decorator="[ 'authorBeginDate', {}]" disabled="disabled"/>
+        </a-form-item>
+       <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          :hidden="true"
+          label="失效时间">
+         <a-input v-decorator="[ 'authorEndDate', {}]" disabled="disabled"/>
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="失效时间">
-          <a-date-picker format='YYYY-MM-DD' v-decorator="[ 'authorEndDate', {}]" />
+          label="授权起止日期">
+          <a-radio-group @change="authorDateTempChage">
+            <a-radio :value="1">半年</a-radio>
+            <a-radio :value="2">一年</a-radio>
+            <a-radio :value="3">三年</a-radio>
+            <a-radio :value="4">五年</a-radio>
+          </a-radio-group>
+          <a-range-picker
+            :disabledDate="disabledDate"
+            :disabledTime="disabledRangeTime"
+            :showTime="{
+              hideDisabledOptions: true,
+              defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')]
+            }"
+            format="YYYY-MM-DD HH:mm:ss"
+            v-decorator="[ 'authorDateRange',validatorRules.authorDateRange]"
+          />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="企业信息Id"
           v-model="this.customerId"
-          :hidden="hiding"
+          :hidden="true"
           hasFeedback>
           <a-input v-decorator="[ 'customerId', {}]" disabled="disabled"/>
         </a-form-item>
@@ -130,6 +156,7 @@
         ],
         selectedRowKeys: [],
         customerId: "",
+        custTaxCode: "",
         hiding: false,
         headers: {},
         picUrl: "",
@@ -139,6 +166,8 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
+          checkCode:{rules: [{ required: true, message: '请选择盘号!' }]},
+          authorDateRange:{rules: [{ required: true, message: '请选择授权日期!' }]},
         },
         url: {
           add: "/customer/taxCustomerAuthorInfo/add",
@@ -155,6 +184,71 @@
       this.headers = {"X-Access-Token": token}
     },
     methods: {
+      moment,
+      range(start, end) {
+        const result = [];
+        for (let i = start; i < end; i++) {
+          result.push(i);
+        }
+        return result;
+      },
+      disabledDate(current) {
+        // Can not select days before today and today
+        return current && current <= moment().startOf('day');
+      },
+
+      disabledDateTime() {
+        return {
+          disabledHours: () => this.range(0, 24).splice(4, 20),
+          disabledMinutes: () => this.range(30, 60),
+          disabledSeconds: () => [55, 56],
+        };
+      },
+
+      disabledRangeTime(_, type) {
+        if (type === 'start') {
+          return {
+            disabledHours: () => this.range(0, 60).splice(4, 20),
+            disabledMinutes: () => this.range(30, 60),
+            disabledSeconds: () => [55, 56],
+          };
+        }
+        return {
+          disabledHours: () => this.range(0, 60).splice(20, 4),
+          disabledMinutes: () => this.range(0, 31),
+          disabledSeconds: () => [55, 56],
+        };
+      },
+      authorDateTempChage(e){
+        var radioValue = e.target.value;
+        var startDate = moment().format('YYYY-MM-DD')+" 00:00:00";
+        var endDte = moment().format('YYYY-MM-DD')+" 23:59:59";
+        switch(radioValue){
+          case 1://半年
+            endDte  = moment().add(6,'months').format('YYYY-MM-DD 23:59:59');
+            break;
+          case 2://一年
+            endDte  = moment().add(1,"years").format('YYYY-MM-DD 23:59:59');
+            break;
+          case 3://三年
+            endDte  = moment().add(3,"years").format('YYYY-MM-DD 23:59:59');
+            break;
+          case 4://五年
+            endDte  = moment().add(5,"years").format('YYYY-MM-DD 23:59:59');
+            break;
+          default:
+            break;
+        }
+        var authorDateRangeVal=[
+          moment(startDate),
+          moment(endDte)
+        ]
+        console.log(authorDateRangeVal)
+       this.form.setFieldsValue({authorDateRange:authorDateRangeVal});
+      },
+      getPopupContainer(trigger){//解决下拉组件不更随滚动问题
+        return trigger.parentElement;
+      },
       toggleScreen(){
         if(this.modaltoggleFlag){
           this.modalWidth = window.innerWidth;
@@ -172,11 +266,12 @@
           this.drawerWidth = 700;
         }
       },
-      add (customerId) {
+      add (customerId,custTaxCode) {
         this.hiding = true;
         if (customerId) {
           this.customerId = customerId;
-          this.edit({customerId}, '');
+          this.custTaxCode = custTaxCode;
+          this.edit({customerId,custTaxCode}, '');
         } else {
           this.$message.warning("请选择一个企业信息");
         }
@@ -197,6 +292,7 @@
         }
         this.form.resetFields();
         this.customerId = record.customerId;
+        this.custTaxCode = record.custTaxCode;
         getAction(this.url.authorList, {mainId: this.customerId}).then((res) => {
           if (res.success) {
             console.info(res.result)
@@ -211,9 +307,16 @@
           this.addStatus = false;
           this.editStatus = true;
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'customerId','custTaxCode','checkCode'))
-            this.form.setFieldsValue({authorBeginDate: this.model.authorBeginDate ? moment(this.model.authorBeginDate) : null}) //时间格式化
-            this.form.setFieldsValue({authorEndDate: this.model.authorEndDate ? moment(this.model.authorEndDate) : null}) //时间格式化
+            if(!!this.model.authorBeginDate && !!this.model.authorEndDate){
+              this.model.authorDateRange=[
+                moment(this.model.authorBeginDate).format('YYYY-MM-DD HH:mm:ss'),
+                moment(this.model.authorEndDate).format('YYYY-MM-DD HH:mm:ss')
+              ]
+            }
+
+            this.form.setFieldsValue(pick(this.model,'customerId','custTaxCode','checkCode','authorBeginDate','authorEndDate','authorDateRange'))
+            //this.form.setFieldsValue({authorBeginDate: this.model.authorBeginDate ? moment(this.model.authorBeginDate) : null}) //时间格式化
+           //this.form.setFieldsValue({authorEndDate: this.model.authorEndDate ? moment(this.model.authorEndDate) : null}) //时间格式化
           });
         } else {
           this.addStatus = false;
@@ -242,9 +345,13 @@
               method = 'put';
             }
             let formData = Object.assign(this.model, values);
-            formData.authorBeginDate = formData.authorBeginDate ? formData.authorBeginDate.format('YYYY-MM-DD HH:mm:ss') : null;
-            formData.authorEndDate = formData.authorEndDate ? formData.authorEndDate.format('YYYY-MM-DD HH:mm:ss') : null;
+            console.info(formData.authorDateRange)
+            formData.authorBeginDate = formData.authorDateRange[0].format('YYYY-MM-DD HH:mm:ss');
+            formData.authorEndDate = formData.authorDateRange[1].format('YYYY-MM-DD HH:mm:ss');
+            console.info(formData.authorBeginDate)
+            console.info(httpurl+ "-----------------")
             formData.customerId = this.customerId;
+            formData.custTaxCode = this.custTaxCode;
 
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){

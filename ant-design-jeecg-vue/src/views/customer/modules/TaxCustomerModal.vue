@@ -62,7 +62,7 @@
         </a-form-item>
 
         <a-form-item label="确认密码" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <a-input type="password" @blur="handleConfirmBlur" placeholder="请重新输入登陆密码" v-decorator="[ 'password', validatorRules.confirmpassword]"/>
+          <a-input type="password" @blur="handleConfirmBlur" placeholder="请重新输入登陆密码" v-decorator="[ 'confirmpassword', validatorRules.confirmpassword]"/>
         </a-form-item>
       </a-form>
     </a-spin>
@@ -110,7 +110,7 @@
           custTaxCode:{rules: [{ required: true, message: '请输入企业纳税人识别号!' }]},
           custTaxName:{rules: [{ required: true, message: '请输入企业纳税人名称!' }]},
           linkMan:{rules: [{ required: true, message: '请输入联系人!' }]},
-          linkPhone:{rules: [{validator: this.validatePhone}]},
+          linkPhone:{rules: [{required: true, message: '请输入联系人手机号码!' },{validator: this.validatePhone}]},
           confirmpassword:{
             rules: [{
               required: true, message: '请重新输入登陆密码!',
@@ -164,7 +164,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'linkMan','linkPhone','password','customerId','version','custTaxCode','custTaxName','custAddressPhone','custBankAccount'))
+          this.form.setFieldsValue(pick(this.model,'linkMan','linkPhone','password','customerId','custTaxCode','custTaxName','custAddressPhone','custBankAccount'))
           //时间格式化
         });
 
@@ -234,6 +234,10 @@
           callback()
         }
       },
+      handleConfirmBlur  (e) {
+        const value = e.target.value
+        this.confirmDirty = this.confirmDirty || !!value
+      }
 
     }
   }
