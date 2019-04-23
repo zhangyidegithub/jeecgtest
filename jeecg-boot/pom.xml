@@ -40,6 +40,7 @@
         <druid.version>1.1.10</druid.version>
         <jwt.version>0.9.1</jwt.version>
         <commons.version>2.6</commons.version>
+		<ojdbc6.version>11.1.0.6.0</ojdbc6.version>
     </properties>
     
 	<dependencies>
@@ -129,7 +130,15 @@
 		   <artifactId>mysql-connector-java</artifactId>
 		   <scope>runtime</scope>
 		</dependency>
-		
+
+		<!--oracle-->
+		<dependency>
+			<groupId>com.oracle.jdbc</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>${ojdbc6.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		 <!-- Quartz定时任务 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

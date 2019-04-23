@@ -13,17 +13,17 @@ management:
     include: metrics,httptrace
     
 spring:
-  mail:
-    host: smtp.163.com
-    username: jeecgos@163.com
-    password: ??
-    properties:
-      mail: 
-        smtp: 
-          auth: true
-          starttls: 
-            enable: true
-            required: true
+#  mail:
+#    host: smtp.163.com
+#    username: jeecgos@163.com
+#    password: ??
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#            required: true
   ## quartz定时任务,采用数据库方式
   quartz:
     job-store-type: jdbc
@@ -84,10 +84,10 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false
-          username: root
-          password: root
-          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:oracle:thin:@192.168.3.200:1521/EDWDB
+          username: INVOICE_TAX
+          password: INVOICE_TAX
+          driver-class-name: oracle.jdbc.driver.OracleDriver
           # 多数据源配置
           #multi-datasource1:
           #url: jdbc:mysql://localhost:3306/jeecg-boot2?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true
@@ -97,7 +97,7 @@ spring:
   #redis 配置
   redis:
     database: 0
-    host: 127.0.0.1
+    host: 118.24.177.54
     lettuce:
       pool:
         max-active: 8   #最大连接数据库连接数,设 0 为没有限制
@@ -105,7 +105,7 @@ spring:
         max-wait: -1ms  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
         min-idle: 0     #最小等待连接中的数量,设 0 为没有限制
       shutdown-timeout: 100ms
-    password: ''
+    password: hh1125
     port: 6379
 #mybatis plus 设置
 mybatis-plus:
