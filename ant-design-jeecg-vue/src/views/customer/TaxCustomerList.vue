@@ -81,7 +81,7 @@
       </a-table>
     </div>
     <!-- table区域-end -->
-    <a-tabs defaultActiveKey="1">
+    <a-tabs defaultActiveKey="1" @change="tabsChange">
       <a-tab-pane tab="盘号信息" key="1">
         <Tax-Customer-Author-List ref="taxCustomerAuthorList"></Tax-Customer-Author-List>
       </a-tab-pane>
@@ -168,6 +168,9 @@
         ],
         // 请求参数
         type: "radio",
+        tabsActiveKey:"1",
+        selectedRowKeys:[],
+        selectionRows:[],
         url: {
           list: "/customer/taxCustomer/list",
           delete: "/customer/taxCustomer/delete",
@@ -183,6 +186,22 @@
       }
     },
     methods: {
+      tabsChange(activeKey){
+        var selectCustTaxCode = "";
+        var selectRowKey= "";
+        if(this.selectionRows.length>0){
+          selectCustTaxCode = this.selectionRows[0].custTaxCode;
+        }if(this.selectedRowKeys.length>0){
+          selectRowKey = this.selectedRowKeys[0];
+        }
+         if(activeKey == 2){
+           this.tabsActiveKey = "2";
+           this.$refs.taxCustomerAuthorInfoList.getCustomerMain(selectRowKey,selectCustTaxCode);
+         }else if(activeKey == "1"){
+           this.tabsActiveKey = "1";
+           this.$refs.taxCustomerAuthorList.getCustomerMain(selectRowKey,selectCustTaxCode);
+         }
+      },
       clickThenCheck(record) {
         return {
           on: {
@@ -195,22 +214,26 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
-        this.$refs.taxCustomerAuthorList.getCustomerMain(this.selectedRowKeys[0],this.selectionRows[0].custTaxCode);
-        this.$refs.taxCustomerAuthorInfoList.getCustomerMain(this.selectedRowKeys[0],this.selectionRows[0].custTaxCode);
-
+        if( this.tabsActiveKey == "1"){
+          this.$refs.taxCustomerAuthorList.getCustomerMain(this.selectedRowKeys[0],this.selectionRows[0].custTaxCode);
+        }else if(this.tabsActiveKey == "2"){
+          this.$refs.taxCustomerAuthorInfoList.getCustomerMain(this.selectedRowKeys[0],this.selectionRows[0].custTaxCode);
+        }
       },
       onClearSelected() {
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.taxCustomerAuthorList.queryParam.mainId = null;
-        this.$refs.taxCustomerAuthorList.loadData();
-        this.$refs.taxCustomerAuthorList.selectedRowKeys = [];
-        this.$refs.taxCustomerAuthorList.selectionRows = [];
-        this.$refs.taxCustomerAuthorInfoList.queryParam.mainId = null;
-        this.$refs.taxCustomerAuthorInfoList.loadData();
-        this.$refs.taxCustomerAuthorInfoList.selectedRowKeys = [];
-        this.$refs.taxCustomerAuthorInfoList.selectionRows = [];
-
+        if( this.tabsActiveKey == "1"){
+          this.$refs.taxCustomerAuthorList.queryParam.mainId = null;
+          this.$refs.taxCustomerAuthorList.loadData();
+          this.$refs.taxCustomerAuthorList.selectedRowKeys = [];
+          this.$refs.taxCustomerAuthorList.selectionRows = [];
+        }else if(this.tabsActiveKey == "2"){
+          this.$refs.taxCustomerAuthorInfoList.queryParam.mainId = null;
+          this.$refs.taxCustomerAuthorInfoList.loadData();
+          this.$refs.taxCustomerAuthorInfoList.selectedRowKeys = [];
+          this.$refs.taxCustomerAuthorInfoList.selectionRows = [];
+        }
       },
       handleDelete: function (id) {
         var that = this;
@@ -228,14 +251,17 @@
       searchQuery:function(){
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.taxCustomerAuthorList.queryParam.mainId = null;
-       // this.$refs.taxCustomerAuthorList.loadData();
-        this.$refs.taxCustomerAuthorList.selectedRowKeys = [];
-        this.$refs.taxCustomerAuthorList.selectionRows = [];
-        this.$refs.taxCustomerAuthorInfoList.queryParam.mainId = null;
-        // this.$refs.taxCustomerAuthorInfoList.loadData();
-        this.$refs.taxCustomerAuthorInfoList.selectedRowKeys = [];
-        this.$refs.taxCustomerAuthorInfoList.selectionRows = [];
+        if( this.tabsActiveKey == "1"){
+          this.$refs.taxCustomerAuthorList.queryParam.mainId = null;
+          // this.$refs.taxCustomerAuthorList.loadData();
+          this.$refs.taxCustomerAuthorList.selectedRowKeys = [];
+          this.$refs.taxCustomerAuthorList.selectionRows = [];
+        }else if(this.tabsActiveKey == "2"){
+          this.$refs.taxCustomerAuthorInfoList.queryParam.mainId = null;
+          // this.$refs.taxCustomerAuthorInfoList.loadData();
+          this.$refs.taxCustomerAuthorInfoList.selectedRowKeys = [];
+          this.$refs.taxCustomerAuthorInfoList.selectionRows = [];
+        }
         this.loadData();
       },
       initDictConfig() {

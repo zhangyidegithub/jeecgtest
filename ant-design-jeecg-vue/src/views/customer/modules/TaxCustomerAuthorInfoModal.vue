@@ -309,8 +309,8 @@
           this.$nextTick(() => {
             if(!!this.model.authorBeginDate && !!this.model.authorEndDate){
               this.model.authorDateRange=[
-                moment(this.model.authorBeginDate).format('YYYY-MM-DD HH:mm:ss'),
-                moment(this.model.authorEndDate).format('YYYY-MM-DD HH:mm:ss')
+                moment(this.model.authorBeginDate),
+                moment(this.model.authorEndDate)
               ]
             }
 

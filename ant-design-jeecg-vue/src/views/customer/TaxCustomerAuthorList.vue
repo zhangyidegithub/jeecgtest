@@ -34,10 +34,11 @@
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
-
+        <template slot="authorStatus"  slot-scope="textVal">
+          <span  :style="{color:(textVal=='1'?'limegreen':'red')}">{{textVal=='1'?'有效':'无效'}}</span>
+        </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
-
           <a-divider type="vertical" />
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
@@ -91,11 +92,11 @@
               return parseInt(index)+1;
             }
           },
-          {
+         /* {
             title: '企业纳税人识别号',
             align:"center",
             dataIndex: 'custTaxCode'
-          },
+          },*/
           {
             title: '盘号',
             align:"center",
@@ -110,15 +111,8 @@
             title: '授权状态',
             align:"center",
             dataIndex: 'authorStatus',
-            customRender: function (text) {
-              if (text == 1) {
-                return "有效";
-              } else if (text == 0) {
-                return "无效";
-              } else {
-                return text;
-              }
-            }
+            scopedSlots: { customRender: 'authorStatus' }
+
           },
           {
             title: '操作',

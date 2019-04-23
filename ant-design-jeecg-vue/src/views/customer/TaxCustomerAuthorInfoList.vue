@@ -37,13 +37,8 @@
 
         <span slot="action" slot-scope="text, record">
          <!-- <a @click="handleEdit(record)">编辑</a>-->
-          <a href="javascript:;" @click="handleDetail(record)">详情</a>
-          <a-divider type="vertical" />
-           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-                  <a>删除</a>
-                </a-popconfirm>
-
-          <!--<a-dropdown>
+<!--          <a-divider type="vertical" />-->
+          <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
               <a-menu-item>
@@ -55,7 +50,7 @@
                 </a-popconfirm>
               </a-menu-item>
             </a-menu>
-          </a-dropdown>-->
+          </a-dropdown>
         </span>
 
       </a-table>
@@ -95,11 +90,11 @@
               return parseInt(index)+1;
             }
           },
-          {
+          /*{
             title: '纳税人识别号',
             align:"center",
             dataIndex: 'custTaxCode'
-          },
+          },*/
           {
             title: '盘号',
             align:"center",
