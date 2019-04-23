@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
@@ -75,6 +77,7 @@ public class TaxCustomerAuthorController {
 	 * @return
 	 */
 	@PostMapping(value = "/add")
+	@RequiresPermissions(value={"customerAuthorInfo:add"})
 	public Result<TaxCustomerAuthor> add(@RequestBody TaxCustomerAuthor taxCustomerAuthor) {
 		Result<TaxCustomerAuthor> result = new Result<TaxCustomerAuthor>();
 		try {
@@ -94,6 +97,7 @@ public class TaxCustomerAuthorController {
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
+	@RequiresPermissions(value={"customerAuthorInfo:edit","customerAuthorInfo:detail"})
 	public Result<TaxCustomerAuthor> edit(@RequestBody TaxCustomerAuthor taxCustomerAuthor) {
 		Result<TaxCustomerAuthor> result = new Result<TaxCustomerAuthor>();
 		TaxCustomerAuthor taxCustomerAuthorEntity = taxCustomerAuthorService.getById(taxCustomerAuthor.getId());
@@ -116,6 +120,7 @@ public class TaxCustomerAuthorController {
 	 * @return
 	 */
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions(value={"customerAuthorInfo:delete"})
 	public Result<TaxCustomerAuthor> delete(@RequestParam(name="id",required=true) String id) {
 		Result<TaxCustomerAuthor> result = new Result<TaxCustomerAuthor>();
 		TaxCustomerAuthor taxCustomerAuthor = taxCustomerAuthorService.getById(id);
@@ -137,6 +142,7 @@ public class TaxCustomerAuthorController {
 	 * @return
 	 */
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions(value={"customerAuthorInfo:delete"})
 	public Result<TaxCustomerAuthor> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<TaxCustomerAuthor> result = new Result<TaxCustomerAuthor>();
 		if(ids==null || "".equals(ids.trim())) {

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.modules.demo.test.entity.JeecgOrderMain;
 import org.jeecg.modules.demo.test.vo.JeecgOrderMainPage;
@@ -108,6 +109,7 @@ public class TaxCustomerController {
 		return result;
 	}*/
 	 @PostMapping(value = "/add")
+	 @RequiresPermissions("customer:add")
 	 public Result<TaxCustomer> add(@RequestBody TaxCustomerPage TaxCustomerPage,@RequestParam(name="isSyncUser",required=false) String isSyncUser
 	 ,@RequestParam(name="selectedroles",required=false) String selectedroles) {
 		 Result<TaxCustomer> result = new Result<TaxCustomer>();
@@ -155,6 +157,7 @@ public class TaxCustomerController {
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
+	@RequiresPermissions(value={"customer:add","customer:detail"})
 	public Result<TaxCustomer> edit(@RequestBody JSONObject jsonObject) {
 		Result<TaxCustomer> result = new Result<TaxCustomer>();
 		TaxCustomerPage taxCustomerPage = jsonObject.toJavaObject(TaxCustomerPage.class);
@@ -204,6 +207,7 @@ public class TaxCustomerController {
 	 * @param id
 	 * @return
 	 */
+	 @RequiresPermissions(value={"customer:delete"})
 	@DeleteMapping(value = "/delete")
 	public Result<TaxCustomer> delete(@RequestParam(name="id",required=true) String id) {
 		Result<TaxCustomer> result = new Result<TaxCustomer>();
@@ -224,6 +228,7 @@ public class TaxCustomerController {
 	 * @return
 	 */
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions(value={"customer:delete"})
 	public Result<TaxCustomer> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<TaxCustomer> result = new Result<TaxCustomer>();
 		if(ids==null || "".equals(ids.trim())) {

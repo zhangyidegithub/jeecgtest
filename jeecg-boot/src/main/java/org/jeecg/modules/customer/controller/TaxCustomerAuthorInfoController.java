@@ -1,6 +1,7 @@
 package org.jeecg.modules.customer.controller;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.modules.customer.entity.TaxCustomerAuthorInfo;
 import org.jeecg.modules.customer.service.ITaxCustomerAuthorInfoService;
 import com.alibaba.fastjson.JSON;
@@ -77,6 +78,7 @@ public class TaxCustomerAuthorInfoController {
     * @return
     */
    @PostMapping(value = "/add")
+   @RequiresPermissions(value={"customerAuthor:add"})
    public Result<TaxCustomerAuthorInfo> add(@RequestBody TaxCustomerAuthorInfo taxCustomerAuthorInfo) {
        Result<TaxCustomerAuthorInfo> result = new Result<TaxCustomerAuthorInfo>();
        try {
@@ -99,6 +101,7 @@ public class TaxCustomerAuthorInfoController {
     * @return
     */
    @PutMapping(value = "/edit")
+   @RequiresPermissions(value={"customerAuthor:edit","customerAuthor:detail"})
    public Result<TaxCustomerAuthorInfo> edit(@RequestBody TaxCustomerAuthorInfo taxCustomerAuthorInfo) {
        Result<TaxCustomerAuthorInfo> result = new Result<TaxCustomerAuthorInfo>();
        TaxCustomerAuthorInfo taxCustomerAuthorInfoEntity = taxCustomerAuthorInfoService.getById(taxCustomerAuthorInfo.getId());
@@ -121,6 +124,7 @@ public class TaxCustomerAuthorInfoController {
     * @return
     */
    @DeleteMapping(value = "/delete")
+   @RequiresPermissions(value={"customerAuthor:delete"})
    public Result<TaxCustomerAuthorInfo> delete(@RequestParam(name="id",required=true) String id) {
        Result<TaxCustomerAuthorInfo> result = new Result<TaxCustomerAuthorInfo>();
        TaxCustomerAuthorInfo taxCustomerAuthorInfo = taxCustomerAuthorInfoService.getById(id);
@@ -142,6 +146,7 @@ public class TaxCustomerAuthorInfoController {
     * @return
     */
    @DeleteMapping(value = "/deleteBatch")
+   @RequiresPermissions(value={"customerAuthor:delete"})
    public Result<TaxCustomerAuthorInfo> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
        Result<TaxCustomerAuthorInfo> result = new Result<TaxCustomerAuthorInfo>();
        if(ids==null || "".equals(ids.trim())) {
