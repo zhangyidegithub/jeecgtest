@@ -3,14 +3,14 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAdd" type="primary" icon="plus" v-has="'customerAuthorInfo:add'" >新增</a-button>
       <!-- <a-button type="primary" icon="download" @click="handleExportXls">导出</a-button>
        <a-upload name="file" :showUploadList="false" :multiple="false" :action="importExcelUrl" @change="handleImportExcel">
          <a-button type="primary" icon="import">导入</a-button>
        </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+          <a-menu-item key="1" @click="batchDel"><a-icon type="delete" v-has="'customerAuthorInfo:delete'" />删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
       </a-dropdown>
@@ -42,10 +42,10 @@
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a href="javascript:;" @click="handleDetail(record)">详情</a>
+                <a href="javascript:;" @click="handleDetail(record)" v-has="'customerAuthorInfo:detail'" >详情</a>
               </a-menu-item>
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)" v-has="'customerAuthorInfo:delete'">
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
