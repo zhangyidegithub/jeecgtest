@@ -1,4 +1,4 @@
-package org.jeecg.modules.com.aisino.entity;
+package org.jeecg.modules.com.aisino.taxInvoice.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

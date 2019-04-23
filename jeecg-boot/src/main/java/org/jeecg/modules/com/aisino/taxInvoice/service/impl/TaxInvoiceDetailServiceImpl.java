@@ -1,9 +1,9 @@
-package org.jeecg.modules.com.aisino.service.impl;
+package org.jeecg.modules.com.aisino.taxInvoice.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.jeecg.modules.com.aisino.entity.TaxInvoiceDetail;
-import org.jeecg.modules.com.aisino.mapper.TaxInvoiceDetailMapper;
-import org.jeecg.modules.com.aisino.service.ITaxInvoiceDetailService;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceDetail;
+import org.jeecg.modules.com.aisino.taxInvoice.mapper.TaxInvoiceDetailMapper;
+import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

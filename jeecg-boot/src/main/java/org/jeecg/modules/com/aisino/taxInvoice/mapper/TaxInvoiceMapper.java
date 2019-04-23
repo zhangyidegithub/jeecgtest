@@ -1,7 +1,7 @@
-package org.jeecg.modules.com.aisino.mapper;
+package org.jeecg.modules.com.aisino.taxInvoice.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.jeecg.modules.com.aisino.entity.TaxInvoice;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
 
 /**
  * @Description: 客户税号

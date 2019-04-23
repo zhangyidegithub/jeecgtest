@@ -1,7 +1,7 @@
-package org.jeecg.modules.com.aisino.mapper;
+package org.jeecg.modules.com.aisino.taxInvoice.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.jeecg.modules.com.aisino.entity.TaxInvoiceDetail;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceDetail;
 
 import java.util.List;
 

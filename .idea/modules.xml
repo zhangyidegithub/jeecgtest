@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Aisino_invoice_platform.iml" filepath="$PROJECT_DIR$/.idea/Aisino_invoice_platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jeecg-boot/jeecg-boot.iml" filepath="$PROJECT_DIR$/jeecg-boot/jeecg-boot.iml" />
+    </modules>
+  </component>
+</project>

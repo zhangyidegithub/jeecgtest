@@ -1,8 +1,8 @@
-package org.jeecg.modules.com.aisino.service;
+package org.jeecg.modules.com.aisino.taxInvoice.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.jeecg.modules.com.aisino.entity.TaxInvoice;
-import org.jeecg.modules.com.aisino.entity.TaxInvoiceDetail;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceDetail;
 
 import java.io.Serializable;
 import java.util.Collection;
