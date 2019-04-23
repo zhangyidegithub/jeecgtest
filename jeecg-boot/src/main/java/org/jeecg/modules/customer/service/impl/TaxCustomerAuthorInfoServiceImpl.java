@@ -1,6 +1,5 @@
 package org.jeecg.modules.customer.service.impl;
 
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import org.jeecg.modules.customer.constant.Constant;
 import org.jeecg.modules.customer.entity.TaxCustomerAuthorInfo;
 import org.jeecg.modules.customer.mapper.TaxCustomerAuthorInfoMapper;
@@ -11,7 +10,6 @@ import java.util.List;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import sun.awt.image.IntegerComponentRaster;
 
 /**
  * @Description: 企业授权明细

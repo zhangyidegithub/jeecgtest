@@ -1,7 +1,7 @@
 package org.jeecg.modules.customer.vo;
 
 import java.util.List;
-import org.jeecg.modules.customer.entity.TaxCustomer;
+
 import org.jeecg.modules.customer.entity.TaxCustomerAuthor;
 import org.jeecg.modules.customer.entity.TaxCustomerAuthorInfo;
 import lombok.Data;

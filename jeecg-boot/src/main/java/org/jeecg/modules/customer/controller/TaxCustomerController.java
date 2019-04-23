@@ -13,8 +13,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.util.PasswordUtil;
-import org.jeecg.modules.demo.test.entity.JeecgOrderMain;
-import org.jeecg.modules.demo.test.vo.JeecgOrderMainPage;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
