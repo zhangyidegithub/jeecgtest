@@ -1,9 +1,9 @@
-package org.jeecg.modules.customer.controller;
+package org.jeecg.modules.com.aisino.customer.controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.jeecg.modules.customer.entity.TaxCustomerAuthorInfo;
-import org.jeecg.modules.customer.service.ITaxCustomerAuthorInfoService;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthorInfo;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorInfoService;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

@@ -1,8 +1,8 @@
-package org.jeecg.modules.customer.service;
+package org.jeecg.modules.com.aisino.customer.service;
 
-import org.jeecg.modules.customer.entity.TaxCustomerAuthor;
-import org.jeecg.modules.customer.entity.TaxCustomerAuthorInfo;
-import org.jeecg.modules.customer.entity.TaxCustomer;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthorInfo;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomer;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.io.Serializable;
 import java.util.Collection;

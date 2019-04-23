@@ -1,7 +1,7 @@
-package org.jeecg.modules.customer.mapper;
+package org.jeecg.modules.com.aisino.customer.mapper;
 
 
-import org.jeecg.modules.customer.entity.TaxCustomer;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomer;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

@@ -1,8 +1,8 @@
-package org.jeecg.modules.customer.service.impl;
+package org.jeecg.modules.com.aisino.customer.service.impl;
 
-import org.jeecg.modules.customer.entity.TaxCustomerAuthor;
-import org.jeecg.modules.customer.mapper.TaxCustomerAuthorMapper;
-import org.jeecg.modules.customer.service.ITaxCustomerAuthorService;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
+import org.jeecg.modules.com.aisino.customer.mapper.TaxCustomerAuthorMapper;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorService;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

@@ -1,4 +1,4 @@
-package org.jeecg.modules.customer.controller;
+package org.jeecg.modules.com.aisino.customer.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.io.IOException;
@@ -24,13 +24,13 @@ import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.customer.entity.TaxCustomerAuthor;
-import org.jeecg.modules.customer.entity.TaxCustomerAuthorInfo;
-import org.jeecg.modules.customer.entity.TaxCustomer;
-import org.jeecg.modules.customer.vo.TaxCustomerPage;
-import org.jeecg.modules.customer.service.ITaxCustomerService;
-import org.jeecg.modules.customer.service.ITaxCustomerAuthorService;
-import org.jeecg.modules.customer.service.ITaxCustomerAuthorInfoService;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthorInfo;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomer;
+import org.jeecg.modules.com.aisino.customer.vo.TaxCustomerPage;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerService;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorService;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package org.jeecg.modules.customer.constant;
+package org.jeecg.modules.com.aisino.customer.constant;
 
 import org.jeecg.common.constant.CommonConstant;
 

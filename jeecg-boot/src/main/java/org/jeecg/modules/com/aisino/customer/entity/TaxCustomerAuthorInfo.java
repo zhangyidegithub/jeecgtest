@@ -1,4 +1,4 @@
-package org.jeecg.modules.customer.entity;
+package org.jeecg.modules.com.aisino.customer.entity;
 
 import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.IdType;

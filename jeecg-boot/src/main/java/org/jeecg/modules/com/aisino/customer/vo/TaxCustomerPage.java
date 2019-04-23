@@ -1,9 +1,9 @@
-package org.jeecg.modules.customer.vo;
+package org.jeecg.modules.com.aisino.customer.vo;
 
 import java.util.List;
 
-import org.jeecg.modules.customer.entity.TaxCustomerAuthor;
-import org.jeecg.modules.customer.entity.TaxCustomerAuthorInfo;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthorInfo;
 import lombok.Data;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;

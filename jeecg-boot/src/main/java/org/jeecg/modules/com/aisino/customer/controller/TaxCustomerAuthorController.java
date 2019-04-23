@@ -1,4 +1,4 @@
-package org.jeecg.modules.customer.controller;
+package org.jeecg.modules.com.aisino.customer.controller;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,14 +13,14 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.customer.entity.TaxCustomerAuthor;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
-import org.jeecg.modules.customer.service.ITaxCustomerAuthorService;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorService;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
