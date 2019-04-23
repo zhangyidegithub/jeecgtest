@@ -8,6 +8,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.commons.lang.StringUtils;
 import org.jeecg.common.util.PasswordUtil;
@@ -86,7 +87,7 @@ public class TaxCustomerController {
 	
 	/**
 	  *   添加
-	 * @param taxCustomerPage
+	 *  taxCustomerPage
 	 * @return
 	 */
 	/*
@@ -107,13 +108,16 @@ public class TaxCustomerController {
 		return result;
 	}*/
 	 @PostMapping(value = "/add")
-	 public Result<TaxCustomer> add(@RequestBody TaxCustomerPage TaxCustomerPage) {
+	 public Result<TaxCustomer> add(@RequestBody TaxCustomerPage TaxCustomerPage,@RequestParam(name="isSyncUser",required=false) String isSyncUser
+	 ,@RequestParam(name="selectedroles",required=false) String selectedroles) {
 		 Result<TaxCustomer> result = new Result<TaxCustomer>();
 		 try {
 			 TaxCustomer taxcustomer = new TaxCustomer();
 			 BeanUtils.copyProperties(TaxCustomerPage, taxcustomer);
 			 taxCustomerService.save(taxcustomer);
-			 saveSysUser(taxcustomer);
+			 if("1".equals(isSyncUser)){
+				 saveSysUser(taxcustomer,selectedroles);
+			 }
 
 			 result.success("添加成功！");
 		 } catch (Exception e) {
@@ -128,7 +132,7 @@ public class TaxCustomerController {
 	  * 保存信息到用户表
 	  * @param taxcustomer
 	  */
-	 private void saveSysUser(TaxCustomer taxcustomer) {
+	 private void saveSysUser(TaxCustomer taxcustomer,String selectedroles) {
 		 SysUser user = new SysUser();
 		 user.setStatus(1);//1 正常 0 冻结
 		 user.setDelFlag("0");//是否删除
@@ -141,7 +145,7 @@ public class TaxCustomerController {
 		 user.setSalt(salt);
 		 String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), salt);
 		 user.setPassword(passwordEncode);
-		 sysUserService.addUserWithRole(user, "f6817f48af4fb3af11b9e8bf182f618b");
+		 sysUserService.addUserWithRole(user, selectedroles);
 	 }
 
 
@@ -151,8 +155,11 @@ public class TaxCustomerController {
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
-	public Result<TaxCustomer> edit(@RequestBody TaxCustomerPage taxCustomerPage) {
+	public Result<TaxCustomer> edit(@RequestBody JSONObject jsonObject) {
 		Result<TaxCustomer> result = new Result<TaxCustomer>();
+		TaxCustomerPage taxCustomerPage = jsonObject.toJavaObject(TaxCustomerPage.class);
+		String isSyncUser = jsonObject.getString("isSyncUser");
+		String selectedroles = jsonObject.getString("selectedroles");
 		TaxCustomer taxCustomer = new TaxCustomer();
 		BeanUtils.copyProperties(taxCustomerPage, taxCustomer);
 		TaxCustomer taxCustomerEntity = taxCustomerService.getById(taxCustomer.getCustomerId());
@@ -163,8 +170,9 @@ public class TaxCustomerController {
 			//taxCustomerService.updateMain(taxCustomer, taxCustomerPage.getTaxCustomerAuthorList(),taxCustomerPage.getTaxCustomerAuthorInfoList());
 			result.success("修改成功!");
 		}
-		changeSysUser(taxCustomer);
-
+		if("1".equals(isSyncUser)) {
+			changeSysUser(taxCustomer,selectedroles);
+		}
 		return result;
 	}
 
@@ -172,12 +180,12 @@ public class TaxCustomerController {
 	  * 修改用户
 	  * @param taxCustomer
 	  */
-	 private void changeSysUser(TaxCustomer taxCustomer) {
+	 private void changeSysUser(TaxCustomer taxCustomer,String selectedroles) {
 		 String password = taxCustomer.getPassword();
 		 SysUser sysUser = this.sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, taxCustomer.getCustTaxCode()));
 		 if (sysUser == null) {
 			 log.error("未找到对应实体");
-			 saveSysUser(taxCustomer);
+			 saveSysUser(taxCustomer,selectedroles);
 		 } else {
 			 sysUser.setUsername(taxCustomer.getCustTaxCode());
 			 sysUser.setRealname(taxCustomer.getCustTaxName());
@@ -186,7 +194,7 @@ public class TaxCustomerController {
 			 sysUser.setSalt(salt);
 			 String passwordEncode = PasswordUtil.encrypt(sysUser.getUsername(), password, salt);
 			 sysUser.setPassword(passwordEncode);
-			 this.sysUserService.updateById(sysUser);
+			 sysUserService.editUserWithRole(sysUser,selectedroles);
 			 log.info("用户修改完成！");
 		 }
 	 }
@@ -247,7 +255,7 @@ public class TaxCustomerController {
 	
 	/**
 	  * 通过id查询
-	 * @param id
+	 * @param mainId
 	 * @return
 	 */
 	@GetMapping(value = "/queryTaxCustomerAuthorByMainId")
@@ -263,7 +271,7 @@ public class TaxCustomerController {
 	}
 	/**
 	  * 通过id查询
-	 * @param id
+	 * @param mainId
 	 * @return
 	 */
 	@GetMapping(value = "/queryTaxCustomerAuthorInfoByMainId")

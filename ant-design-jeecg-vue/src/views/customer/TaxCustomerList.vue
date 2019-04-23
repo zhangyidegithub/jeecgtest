@@ -28,7 +28,7 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAdd" type="primary" icon="plus" v-has="'customer:add'">新增</a-button>
 <!--
       <a-button type="primary" icon="download" @click="handleExportXls">导出</a-button>
 -->
@@ -61,17 +61,17 @@
       >
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
+          <a @click="handleEdit(record)" v-has="'customer:edit'">编辑</a>
            <a-divider type="vertical" />
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
                <a-menu-item>
-                <a href="javascript:;" @click="handleDetail(record)">详情</a>
+                <a href="javascript:;" @click="handleDetail(record)" v-has="'customer:detail'">详情</a>
               </a-menu-item>
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.customerId)">
-                  <a>删除</a>
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.customerId)" >
+                  <a v-has="'customer:delete'">删除</a>
                 </a-popconfirm>
               </a-menu-item>
             </a-menu>

@@ -64,6 +64,34 @@
         <a-form-item label="确认密码" :labelCol="labelCol" :wrapperCol="wrapperCol" >
           <a-input type="password" @blur="handleConfirmBlur" placeholder="请重新输入登陆密码" v-decorator="[ 'confirmpassword', validatorRules.confirmpassword]"/>
         </a-form-item>
+        <template>
+          <a-form-item
+            label="是否同步至用户"
+            :labelCol="labelCol"
+            :wrapperCol="wrapperCol" >
+            <a-radio-group @change="onChangeRadio"   v-decorator="[ 'isSyncUser', {initialValue:0}]">
+              <a-radio :value="1">是</a-radio>
+              <a-radio :value="0">否</a-radio>
+            </a-radio-group>
+          </a-form-item>
+          <a-form-item
+            label="选取角色"
+            :labelCol="labelCol"
+            :wrapperCol="wrapperCol"
+            :hidden="roleHidding">
+            <a-select
+              mode="multiple"
+              style="width: 100%"
+              placeholder="选取角色"
+              @change="handleChange"
+              :getPopupContainer="getPopupContainer"
+              v-decorator="[ 'selectedroles',validatorRules.selectedRole]">
+              <a-select-option v-for="(role) in roleList" :key="role.id" :value="role.roleName" >
+                {{ role.roleName }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </template>
       </a-form>
     </a-spin>
       <div class="drawer-bootom-button" v-show="!disableSubmit">
@@ -81,6 +109,7 @@
   import pick from 'lodash.pick'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
   import Vue from 'vue'
+  import {queryall } from '@/api/api'
   //import moment from "moment"
 
   export default {
@@ -105,12 +134,23 @@
         },
         confirmLoading: false,
         headers:{},
+        roleList:[],
+        selectedRoleIds:[],
+        selectedroles:[],
+        roleHidding:true,
+        selectedRole:[],
+        roleRadio:"",
         form: this.$form.createForm(this),
         validatorRules:{
           custTaxCode:{rules: [{ required: true, message: '请输入企业纳税人识别号!' }]},
           custTaxName:{rules: [{ required: true, message: '请输入企业纳税人名称!' }]},
           linkMan:{rules: [{ required: true, message: '请输入联系人!' }]},
           linkPhone:{rules: [{required: true, message: '请输入联系人手机号码!' },{validator: this.validatePhone}]},
+          selectedRole:{
+            rules: [{
+              validator:this.checkSelectRole,
+            }]
+          },
           confirmpassword:{
             rules: [{
               required: true, message: '请重新输入登陆密码!',
@@ -124,7 +164,7 @@
             }, {
               validator: this.validateToNextPassword,
             }],
-          }
+          },
         },
         url: {
           add: "/customer/taxCustomer/add",
@@ -138,6 +178,41 @@
       this.headers = {"X-Access-Token":token}
     },
     methods: {
+      getPopupContainer(trigger){//解决下拉组件不更随滚动问题
+        return trigger.parentElement;
+      },
+      onChangeRadio(e){
+        var radioValue = e.target.value;
+        switch(radioValue){
+          case 1://是
+            this.roleHidding = false;
+            this.roleRadio='1';
+            this.initialRoleList();
+            break;
+          case 0://否
+            this.roleRadio = "0";
+            this.roleHidding = true;
+            break;
+          default:
+            break;
+        }
+      },
+      handleChange(value,optionArray) {
+        var selectedRoleId = [];
+       optionArray.forEach(function(v,i){
+          selectedRoleId.push(v.key);
+        })
+        this.selectedRoleIds = selectedRoleId;
+      },
+      initialRoleList(){
+        queryall().then((res)=>{
+          if(res.success){
+            this.roleList = res.result;
+          }else{
+            console.log(res.message);
+          }
+        });
+      },
       toggleScreen(){
         if(this.modaltoggleFlag){
           this.modalWidth = window.innerWidth;
@@ -156,10 +231,24 @@
         }
       },
       add () {
+        this.selectedRoleIds=[];
+        this.selectedroles=[];
+        this.roleHidding=true;
+        this.selectedRole=[];
+        this.roleRadio="";
         this.edit({});
       },
       edit (record) {
+        this.selectedRoleIds=[];
+        this.selectedroles=[];
+        this.roleHidding=true;
+        this.selectedRole=[];
+        this.roleRadio="";
         this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
+        if(this.roleRadio=='1'){
+          this.roleHidding = false;
+          this.initialRoleList();
+        }
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
@@ -190,8 +279,9 @@
               method = 'put';
             }
             let formData = Object.assign(this.model, values);
-            //时间格式化
-            console.log(formData)
+            formData.isSyncUser = this.roleRadio;
+            formData.selectedroles = this.selectedRoleIds.length>0?this.selectedRoleIds.join(","):'';
+            //时间格式化 formData.isSyncUser
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){
                 that.$message.success(res.message);
@@ -232,6 +322,13 @@
           callback('两次输入的密码不一样！');
         } else {
           callback()
+        }
+      },
+      checkSelectRole  (rule, value, callback) {
+        if (this.roleRadio=='1' && this.selectedRoleIds.length<=0) {
+          callback('请选择角色！');
+        } else {
+          callback();
         }
       },
       handleConfirmBlur  (e) {

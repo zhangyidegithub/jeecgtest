@@ -26,7 +26,13 @@
           :wrapperCol="wrapperCol"
           label="盘号">
 
-          <a-select  v-decorator="[ 'checkCode', validatorRules.checkCode]"  :getPopupContainer="getPopupContainer" placeholder="请选择锁盘号">
+          <a-select
+            showSearch
+            v-decorator="[ 'checkCode', validatorRules.checkCode]"
+            :getPopupContainer="getPopupContainer"
+            :filterOption="filterOption"
+            optionFilterProp="children"
+            placeholder="请选择锁盘号">
             <a-select-option v-for="item in customerAuthors"  :key="item.checkCode">{{item.checkCode}}</a-select-option>
           </a-select>
         </a-form-item>
@@ -48,7 +54,7 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="授权起止日期">
-          <a-radio-group @change="authorDateTempChage">
+          <a-radio-group @change="authorDateTempChage" style="width: 100%;text-align:center;">
             <a-radio :value="1">半年</a-radio>
             <a-radio :value="2">一年</a-radio>
             <a-radio :value="3">三年</a-radio>
@@ -57,6 +63,7 @@
           <a-range-picker
             :disabledDate="disabledDate"
             :disabledTime="disabledRangeTime"
+            style="width: 100%;"
             :showTime="{
               hideDisabledOptions: true,
               defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')]
@@ -243,11 +250,13 @@
           moment(startDate),
           moment(endDte)
         ]
-        console.log(authorDateRangeVal)
        this.form.setFieldsValue({authorDateRange:authorDateRangeVal});
       },
       getPopupContainer(trigger){//解决下拉组件不更随滚动问题
         return trigger.parentElement;
+      },
+      filterOption(input, option) {
+        return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
       },
       toggleScreen(){
         if(this.modaltoggleFlag){
@@ -295,7 +304,6 @@
         this.custTaxCode = record.custTaxCode;
         getAction(this.url.authorList, {mainId: this.customerId}).then((res) => {
           if (res.success) {
-            console.info(res.result)
             this.customerAuthors = res.result;
           } else {
             this.customerAuthors = [];
