@@ -66,7 +66,7 @@
         @change="handleTableChange">
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">查看</a>
+          <a @click="handleDetail(record)">查看</a>
 
 
 <!--          <a-divider type="vertical" />-->

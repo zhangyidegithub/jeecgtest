@@ -171,10 +171,6 @@ export const JeecgListMixin = {
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title = "编辑";
     },
-    handleView: function (record) {
-      this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title = "查看";
-    },
     handleAdd: function () {
       this.$refs.modalForm.add();
       this.$refs.modalForm.title = "新增";

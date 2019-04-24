@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.aspect.annotation.PermissionData;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
@@ -13,6 +15,7 @@ import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceDetail;
 import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceDetailService;
 import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceService;
 import org.jeecg.modules.com.aisino.taxInvoice.vo.TaxInvoicePage;
+import org.jeecg.modules.system.entity.SysUser;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -66,6 +69,10 @@ public class TaxInvoiceController {
 												   HttpServletRequest req) {
 		Result<IPage<TaxInvoice>> result = new Result<IPage<TaxInvoice>>();
 		QueryWrapper<TaxInvoice> queryWrapper = QueryGenerator.initQueryWrapper(taxInvoice, req.getParameterMap());
+		String userName = ((SysUser) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		if(!"admin".equals(userName)){
+			queryWrapper.eq("seller_tax_code",userName);
+		}
 		Page<TaxInvoice> page = new Page<TaxInvoice>(pageNo, pageSize);
 		IPage<TaxInvoice> pageList = taxInvoiceService.page(page, queryWrapper);
 		result.setSuccess(true);
