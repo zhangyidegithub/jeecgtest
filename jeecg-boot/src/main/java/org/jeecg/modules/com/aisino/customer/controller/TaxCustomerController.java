@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.jeecg.common.aspect.annotation.PermissionData;
 import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
@@ -71,12 +73,15 @@ public class TaxCustomerController {
 	 * @return
 	 */
 	@GetMapping(value = "/list")
+	@PermissionData(pageComponent="customer/TaxCustomerList")
 	public Result<IPage<TaxCustomer>> queryPageList(TaxCustomer taxCustomer,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 									  HttpServletRequest req) {
 		Result<IPage<TaxCustomer>> result = new Result<IPage<TaxCustomer>>();
 		QueryWrapper<TaxCustomer> queryWrapper = QueryGenerator.initQueryWrapper(taxCustomer, req.getParameterMap());
+		//SysUser sysUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+		//queryWrapper.eq("cust_tax_code",sysUser.getUsername());
 		Page<TaxCustomer> page = new Page<TaxCustomer>(pageNo, pageSize);
 		IPage<TaxCustomer> pageList = taxCustomerService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -108,12 +113,14 @@ public class TaxCustomerController {
 	}*/
 	 @PostMapping(value = "/add")
 	 @RequiresPermissions("customer:add")
-	 public Result<TaxCustomer> add(@RequestBody TaxCustomerPage TaxCustomerPage,@RequestParam(name="isSyncUser",required=false) String isSyncUser
-	 ,@RequestParam(name="selectedroles",required=false) String selectedroles) {
+	 public Result<TaxCustomer> add(@RequestBody JSONObject jsonObject) {
 		 Result<TaxCustomer> result = new Result<TaxCustomer>();
+		 TaxCustomerPage taxCustomerPage = jsonObject.toJavaObject(TaxCustomerPage.class);
+		 String isSyncUser = jsonObject.getString("isSyncUser");
+		 String selectedroles = jsonObject.getString("selectedroles");
 		 try {
 			 TaxCustomer taxcustomer = new TaxCustomer();
-			 BeanUtils.copyProperties(TaxCustomerPage, taxcustomer);
+			 BeanUtils.copyProperties(taxCustomerPage, taxcustomer);
 			 taxCustomerService.save(taxcustomer);
 			 if("1".equals(isSyncUser)){
 				 saveSysUser(taxcustomer,selectedroles);
@@ -369,5 +376,44 @@ public class TaxCustomerController {
       }
       return Result.ok("文件导入失败！");
   }
+ @RequestMapping(value = "/checkCustTaxCode", method = RequestMethod.GET)
+ public Result<Boolean> checkUsername(TaxCustomer taxCustomer) {
+	 Result<Boolean> result = new Result<>();
+	 result.setResult(true);//如果此参数为false则程序发生异常
+	 String customerId = taxCustomer.getCustomerId();
+	 log.info("--验证企业纳税人识别号是否一致一---customerId:" + customerId);
+	 try {
+		 TaxCustomer oldTaxCustomerEntity = null;
+		 if (oConvertUtils.isNotEmpty(customerId)) {
+		 	oldTaxCustomerEntity = taxCustomerService.getById(customerId);
+		 } else {
+			 taxCustomer.setCustomerId(null);
+		 }
+		 //通过传入信息查询新的企业
+		 TaxCustomer newTaxCustomerEntity = taxCustomerService.getOne(new QueryWrapper<TaxCustomer>(taxCustomer));
+		 if (newTaxCustomerEntity != null) {
+			 //如果根据传入信息查询到用户了，那么就需要做校验了。
+			 if (oldTaxCustomerEntity == null) {
+				 //oldUser为空=>新增模式=>只要信息存在则返回false
+				 result.setSuccess(false);
+				 result.setMessage("纳税人识别号已存在");
+				 return result;
+			 } else if (!customerId.equals(newTaxCustomerEntity.getCustomerId())) {
+				 //否则=>编辑模式=>判断两者ID是否一致-
+				 result.setSuccess(false);
+				 result.setMessage("纳税人识别号已存在");
+				 return result;
+			 }
+		 }
+
+	 } catch (Exception e) {
+		 result.setSuccess(false);
+		 result.setResult(false);
+		 result.setMessage(e.getMessage());
+		 return result;
+	 }
+	 result.setSuccess(true);
+	 return result;
+ }
 
 }

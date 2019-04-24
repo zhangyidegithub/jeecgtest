@@ -24,13 +24,15 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="纳税人识别号">
+          label="纳税人识别号"
+          hasFeedback>
           <a-input placeholder="请输入企业纳税人识别号" v-decorator="['custTaxCode', validatorRules.custTaxCode ]" />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="纳税人名称">
+          label="纳税人名称"
+          hasFeedback>
           <a-input placeholder="请输入企业纳税人名称" v-decorator="['custTaxName',  validatorRules.custTaxName]" />
         </a-form-item>
         <a-form-item
@@ -48,20 +50,22 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="联系人">
+          label="联系人"
+          hasFeedback>
           <a-input placeholder="请输入联系人" v-decorator="['linkMan',validatorRules.linkMan]" />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="联系人手机号">
+          label="联系人手机号"
+          hasFeedback>
           <a-input placeholder="请输入联系人手机号" v-decorator="['linkPhone',validatorRules.linkPhone]" />
         </a-form-item>
-        <a-form-item label="登陆密码" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+        <a-form-item label="登陆密码" :labelCol="labelCol" :wrapperCol="wrapperCol" hasFeedback>
           <a-input type="password" placeholder="请输入登陆密码" v-decorator="[ 'password', validatorRules.password]" />
         </a-form-item>
 
-        <a-form-item label="确认密码" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+        <a-form-item label="确认密码" :labelCol="labelCol" :wrapperCol="wrapperCol" hasFeedback>
           <a-input type="password" @blur="handleConfirmBlur" placeholder="请重新输入登陆密码" v-decorator="[ 'confirmpassword', validatorRules.confirmpassword]"/>
         </a-form-item>
         <template>
@@ -78,7 +82,8 @@
             label="选取角色"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
-            :hidden="roleHidding">
+            :hidden="roleHidding"
+            hasFeedback>
             <a-select
               mode="multiple"
               style="width: 100%"
@@ -105,7 +110,7 @@
 </template>
 
 <script>
-  import { httpAction } from '@/api/manage'
+  import { httpAction ,getAction} from '@/api/manage'
   import pick from 'lodash.pick'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
   import Vue from 'vue'
@@ -142,7 +147,12 @@
         roleRadio:"",
         form: this.$form.createForm(this),
         validatorRules:{
-          custTaxCode:{rules: [{ required: true, message: '请输入企业纳税人识别号!' }]},
+          custTaxCode:{rules: [
+            { required: true, message: '请输入企业纳税人识别号!' },
+              {
+                validator: this.validateCustTaxCode,
+              }
+          ]},
           custTaxName:{rules: [{ required: true, message: '请输入企业纳税人名称!' }]},
           linkMan:{rules: [{ required: true, message: '请输入联系人!' }]},
           linkPhone:{rules: [{required: true, message: '请输入联系人手机号码!' },{validator: this.validatePhone}]},
@@ -331,6 +341,19 @@
           callback();
         }
       },
+      validateCustTaxCode(rule, value, callback){
+          var params = {
+            customerId:this.model.customerId,
+            custTaxCode:value
+          };
+          getAction("/customer/taxCustomer/checkCustTaxCode",params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback("纳税人识别号已存在！");
+            }
+          });
+        },
       handleConfirmBlur  (e) {
         const value = e.target.value
         this.confirmDirty = this.confirmDirty || !!value

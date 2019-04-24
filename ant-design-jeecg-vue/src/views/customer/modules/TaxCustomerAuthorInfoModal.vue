@@ -24,7 +24,8 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="盘号">
+          label="盘号"
+          hasFeedback>
 
           <a-select
             showSearch
@@ -53,7 +54,8 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="授权起止日期">
+          label="授权起止日期"
+          hasFeedback>
           <a-radio-group @change="authorDateTempChage" style="width: 100%;text-align:center;">
             <a-radio :value="1">半年</a-radio>
             <a-radio :value="2">一年</a-radio>

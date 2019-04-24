@@ -1,7 +1,7 @@
 <template>
   <a-select :placeholder="placeholder" :value="value" @change="handleInput">
     <a-select-option value="">请选择</a-select-option>
-    <a-select-option v-for="(item, key) in dictOptions" :key="key" :value="item.value">{{ item.text }}</a-select-option>
+    <a-select-option v-for="(item, key) in dictOptions" :key="key" :value="item.VALUE">{{ item.TEXT }}</a-select-option>
   </a-select>
 </template>
 
