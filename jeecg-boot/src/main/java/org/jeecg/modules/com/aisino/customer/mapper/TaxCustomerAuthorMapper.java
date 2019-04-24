@@ -1,11 +1,11 @@
 package org.jeecg.modules.com.aisino.customer.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
+
+import java.util.List;
 
 /**
  * @Description: 企业授权
@@ -27,4 +27,9 @@ public interface TaxCustomerAuthorMapper extends BaseMapper<TaxCustomerAuthor> {
 	 * @param authorStatus
 	 */
 	public Integer updateAuthorStatus(@Param("checkCode") String checkCode, @Param("customerId")String customerId, @Param("authorStatus")Integer authorStatus,@Param("islockReached")Integer islockReached);
+	/**
+	 * 检查授权还在有效期内的数据
+	 * @return
+	 */
+	public List<TaxCustomerAuthor> selectAuthorExpire();
 }

@@ -1,15 +1,16 @@
 package org.jeecg.modules.com.aisino.customer.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.jeecg.modules.com.aisino.customer.constant.Constant;
 import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthorInfo;
 import org.jeecg.modules.com.aisino.customer.mapper.TaxCustomerAuthorInfoMapper;
 import org.jeecg.modules.com.aisino.customer.mapper.TaxCustomerAuthorMapper;
 import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorInfoService;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @Description: 企业授权明细
@@ -35,7 +36,7 @@ public class TaxCustomerAuthorInfoServiceImpl extends ServiceImpl<TaxCustomerAut
 	public boolean save(TaxCustomerAuthorInfo entity) {
 		boolean flag = super.save(entity);
 		if(flag){
-			Integer result =  taxCustomerAuthorMapper.updateAuthorStatus(entity.getCheckCode(),entity.getCustomerId(), Constant.STATUS_AUTHOR_EFFECTIVITY,Constant.STATUS_LOCK_EFFECTIVITY);
+			Integer result =  taxCustomerAuthorMapper.updateAuthorStatus(entity.getCheckCode(),entity.getCustomerId(), Constant.STATUS_AUTHOR_EFFECTIVITY,Constant.STATUS_LOCK_DISABLED);
 		}
 		return flag;
 	}

@@ -23,6 +23,19 @@
 		</set>
 		where check_code=#{checkCode} and customer_id=#{customerId}
 	</update>
+	<select id="selectAuthorExpire"  resultType="org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor">
+		select * from tax_customer_author a where not exists(
+  			select * from tax_customer_author c where c.id=a.id and c.author_status=0 and c.islock_reached=1
+		) and not exists(
+			select * from tax_customer_author_info b where a.customer_id=b.customer_id and a.cust_tax_code=b.cust_tax_code
+			and
+			to_date(to_char(sysdate,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+			between
+			to_date(to_char(author_begin_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+			and
+			to_date(to_char(author_end_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+		)
+	</select>
 	
 	
 </mapper>

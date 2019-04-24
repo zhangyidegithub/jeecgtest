@@ -76,7 +76,7 @@ public class TaxCustomerAuthorInfoController {
     * @return
     */
    @PostMapping(value = "/add")
-   @RequiresPermissions(value={"customerAuthor:add"})
+   @RequiresPermissions(value={"customerAuthorInfo:add"})
    public Result<TaxCustomerAuthorInfo> add(@RequestBody TaxCustomerAuthorInfo taxCustomerAuthorInfo) {
        Result<TaxCustomerAuthorInfo> result = new Result<TaxCustomerAuthorInfo>();
        try {
@@ -99,7 +99,7 @@ public class TaxCustomerAuthorInfoController {
     * @return
     */
    @PutMapping(value = "/edit")
-   @RequiresPermissions(value={"customerAuthor:edit","customerAuthor:detail"})
+   @RequiresPermissions(value={"customerAuthorInfo:edit","customerAuthorInfo:detail"})
    public Result<TaxCustomerAuthorInfo> edit(@RequestBody TaxCustomerAuthorInfo taxCustomerAuthorInfo) {
        Result<TaxCustomerAuthorInfo> result = new Result<TaxCustomerAuthorInfo>();
        TaxCustomerAuthorInfo taxCustomerAuthorInfoEntity = taxCustomerAuthorInfoService.getById(taxCustomerAuthorInfo.getId());

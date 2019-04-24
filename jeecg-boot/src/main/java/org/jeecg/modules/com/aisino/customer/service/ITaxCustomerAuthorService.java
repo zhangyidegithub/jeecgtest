@@ -1,7 +1,8 @@
 package org.jeecg.modules.com.aisino.customer.service;
 
-import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
+
 import java.util.List;
 
 /**
@@ -13,4 +14,9 @@ import java.util.List;
 public interface ITaxCustomerAuthorService extends IService<TaxCustomerAuthor> {
 
 	public List<TaxCustomerAuthor> selectByMainId(String mainId);
+	/**
+	 * 检查授权还在有效期内的数据
+	 * @return
+	 */
+	public List<TaxCustomerAuthor> selectAuthorExpire();
 }
