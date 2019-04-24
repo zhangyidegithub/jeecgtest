@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.system.entity.SysPermissionDataRule;
@@ -37,9 +38,12 @@ public class SysPermissionDataRuleImpl extends ServiceImpl<SysPermissionDataRule
 	@Override
 	public List<SysPermissionDataRule> getPermRuleListByPermId(String permissionId) {
 		LambdaQueryWrapper<SysPermissionDataRule> query = new LambdaQueryWrapper<SysPermissionDataRule>();
-		query.eq(SysPermissionDataRule::getPermissionId, permissionId);
-		query.orderByDesc(SysPermissionDataRule::getCreateTime);
-		List<SysPermissionDataRule> permRuleList = permRuleService.list(query);
+		List<SysPermissionDataRule> permRuleList = null;
+		if(StringUtils.isNotBlank(permissionId)){
+			query.eq(SysPermissionDataRule::getPermissionId, permissionId);
+			query.orderByDesc(SysPermissionDataRule::getCreateTime);
+			permRuleList = permRuleService.list(query);
+		}
 		return permRuleList;
 	}
 
@@ -70,7 +74,10 @@ public class SysPermissionDataRuleImpl extends ServiceImpl<SysPermissionDataRule
 				}
 			}
 		}
-		return this.baseMapper.selectList(new QueryWrapper<SysPermissionDataRule>().in("id", set));
+		if(set.size()!=0){
+			return this.baseMapper.selectList(new QueryWrapper<SysPermissionDataRule>().in("id", set));
+		}
+		return null;
 	}
 
 }

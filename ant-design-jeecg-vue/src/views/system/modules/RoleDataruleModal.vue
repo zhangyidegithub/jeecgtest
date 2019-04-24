@@ -74,10 +74,10 @@
         })
       },
       saveDataruleForRole(){
-        if(!this.dataruleChecked || this.dataruleChecked.length==0){
+        /*if(!this.dataruleChecked || this.dataruleChecked.length==0){
           this.$message.warning("请现勾选数据权限然后保存!")
           return false;
-        }
+        }*/
         let params = {
           permissionId:this.functionId,
           roleId:this.roleId,
