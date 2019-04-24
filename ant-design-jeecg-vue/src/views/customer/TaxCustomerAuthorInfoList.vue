@@ -25,7 +25,7 @@
 
       <a-table
         ref="table"
-        size="middle"
+        size="small"
         bordered
         rowKey="id"
         :columns="columns"

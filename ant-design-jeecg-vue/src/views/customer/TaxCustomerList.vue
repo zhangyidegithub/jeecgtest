@@ -48,7 +48,7 @@
 
       <a-table
         ref="table"
-        size="middle"
+        size="small"
         bordered
         rowKey="customerId"
         :columns="columns"
