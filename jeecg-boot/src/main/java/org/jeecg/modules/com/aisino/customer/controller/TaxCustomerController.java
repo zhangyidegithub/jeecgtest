@@ -1,20 +1,28 @@
 package org.jeecg.modules.com.aisino.customer.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.PermissionData;
+import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.util.MD5Util;
 import org.jeecg.common.util.PasswordUtil;
+import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomer;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthorInfo;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorInfoService;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorService;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerService;
+import org.jeecg.modules.com.aisino.customer.vo.TaxCustomerPage;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -22,28 +30,19 @@ import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-
-import org.jeecg.common.api.vo.Result;
-import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthor;
-import org.jeecg.modules.com.aisino.customer.entity.TaxCustomerAuthorInfo;
-import org.jeecg.modules.com.aisino.customer.entity.TaxCustomer;
-import org.jeecg.modules.com.aisino.customer.vo.TaxCustomerPage;
-import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerService;
-import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorService;
-import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerAuthorInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.extern.slf4j.Slf4j;
-import com.alibaba.fastjson.JSON;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.*;
 
  /**
  * @Title: Controller
@@ -141,6 +140,7 @@ public class TaxCustomerController {
 	  */
 	 private void saveSysUser(TaxCustomer taxcustomer,String selectedroles) {
 		 SysUser user = new SysUser();
+		 String password = taxcustomer.getPassword();
 		 user.setStatus(1);//1 正常 0 冻结
 		 user.setDelFlag("0");//是否删除
 		 user.setUsername(taxcustomer.getCustTaxCode());
@@ -151,6 +151,9 @@ public class TaxCustomerController {
 		 String salt = oConvertUtils.randomGen(8);
 		 user.setSalt(salt);
 		 String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), salt);
+		 if(StringUtils.isNotBlank(password)){
+			 user.setClientPassword(MD5Util.MD5Encode(password,"utf-8"));
+		 }
 		 user.setPassword(passwordEncode);
 		 sysUserService.addUserWithRole(user, selectedroles);
 	 }
@@ -158,11 +161,11 @@ public class TaxCustomerController {
 
 	 /**
 	  *  编辑
-	 * @param taxCustomerPage
+	 * @param jsonObject
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
-	@RequiresPermissions(value={"customer:add","customer:detail"})
+	@RequiresPermissions(value={"customer:add","customer:detail"},logical= Logical.OR)
 	public Result<TaxCustomer> edit(@RequestBody JSONObject jsonObject) {
 		Result<TaxCustomer> result = new Result<TaxCustomer>();
 		TaxCustomerPage taxCustomerPage = jsonObject.toJavaObject(TaxCustomerPage.class);
@@ -202,6 +205,9 @@ public class TaxCustomerController {
 			 sysUser.setSalt(salt);
 			 String passwordEncode = PasswordUtil.encrypt(sysUser.getUsername(), password, salt);
 			 sysUser.setPassword(passwordEncode);
+			 if(StringUtils.isNotBlank(password)){
+				 sysUser.setClientPassword(MD5Util.MD5Encode(password,"utf-8"));
+			 }
 			 sysUserService.editUserWithRole(sysUser,selectedroles);
 			 log.info("用户修改完成！");
 		 }

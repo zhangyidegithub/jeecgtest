@@ -75,14 +75,14 @@
           </a-select>
         </a-form-item>
         <!--{initialValue:0}-->
-        <a-form-item label="锁死标志" :labelCol="labelCol" :wrapperCol="wrapperCol" hasFeedback>
-          <a-select  v-decorator="[ 'islockReached', {rules: [{ required: true, message: '请选择是否到锁死期!' }]}]" placeholder="请选择锁死标志">
+        <a-form-item label="锁死标志" :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="authorhiding" hasFeedback>
+          <a-select  v-decorator="[ 'islockReached', {rules: [{ required: true, message: '请选择是否到锁死期!' }],initialValue:0}]" placeholder="请选择锁死标志">
             <a-select-option :value="1">已到锁死期</a-select-option>
             <a-select-option :value="0">未到锁死期</a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="授权状态" :labelCol="labelCol" :wrapperCol="wrapperCol" hasFeedback>
-          <a-select v-decorator="[ 'authorStatus', {rules: [{ required: true, message: '请选择授权状态!' }]}]" placeholder="请选择授权状态">
+        <a-form-item label="授权状态" :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="authorhiding" hasFeedback>
+          <a-select v-decorator="[ 'authorStatus', {rules: [{ required: true, message: '请选择授权状态!' }],initialValue:1}]" placeholder="请选择授权状态">
             <a-select-option :value="1">有效</a-select-option>
             <a-select-option :value="0">无效</a-select-option>
           </a-select>
@@ -206,6 +206,7 @@
         customerId: "",
         custTaxCode: "",
         hiding: false,
+        authorhiding:true,
         headers: {},
         picUrl: "",
         previewVisible: false,
@@ -270,12 +271,14 @@
         this.edit(record, 'd');
       },
       edit(record, v) {
+        this.authorhiding = true;
         this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         if (v == 'e') {
           this.hiding = false;
           this.disableSubmit = false;
         } else if (v == 'd') {
           this.hiding = false;
+          this.authorhiding = false;
           this.disableSubmit = true;
         } else {
           this.hiding = true;

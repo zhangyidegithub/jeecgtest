@@ -1,25 +1,24 @@
 package org.jeecg.modules.system.controller;
 
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.shiro.authz.annotation.RequiresRoles;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.util.MD5Util;
 import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.system.entity.SysRole;
+import org.jeecg.modules.com.aisino.customer.entity.TaxCustomer;
+import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerService;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.entity.SysUserDepart;
 import org.jeecg.modules.system.entity.SysUserRole;
@@ -34,24 +33,17 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.*;
 
 /**
  * <p>
@@ -77,6 +69,8 @@ public class SysUserController {
 
 	@Autowired
 	private ISysUserRoleService userRoleService;
+    @Autowired
+    private ITaxCustomerService taxCustomerService;
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<IPage<SysUser>> queryPageList(SysUser user,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -91,12 +85,14 @@ public class SysUserController {
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	
+    @RequiresPermissions("user:add")
 	public Result<SysUser> add(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
 		String selectedRoles = jsonObject.getString("selectedroles");
-		try {
-			SysUser user = JSON.parseObject(jsonObject.toJSONString(), SysUser.class);
+        try {
+
+            SysUser user = JSON.parseObject(jsonObject.toJSONString(), SysUser.class);
+            String password = user.getPassword();
 			user.setCreateTime(new Date());//设置创建时间
 			String salt = oConvertUtils.randomGen(8);
 			user.setSalt(salt);
@@ -104,6 +100,9 @@ public class SysUserController {
 			user.setPassword(passwordEncode);
 			user.setStatus(1);
 			user.setDelFlag("0");
+			if(StringUtils.isNotBlank(password)){
+                user.setClientPassword(MD5Util.MD5Encode(password,"utf-8"));
+            }
 			sysUserService.addUserWithRole(user, selectedRoles);
 			result.success("添加成功！");
 		} catch (Exception e) {
@@ -115,7 +114,7 @@ public class SysUserController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
-	
+    @RequiresPermissions(value={"user:edit","user:detail"},logical= Logical.OR)
 	public Result<SysUser> edit(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
 		try {
@@ -125,9 +124,13 @@ public class SysUserController {
 			}else {
 				SysUser user = JSON.parseObject(jsonObject.toJSONString(), SysUser.class);
 				user.setUpdateTime(new Date());
+                String password = user.getPassword();
 				//String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), sysUser.getSalt());
 				user.setPassword(sysUser.getPassword());
 				String roles = jsonObject.getString("selectedroles");
+                if(StringUtils.isNotBlank(password)){
+                    user.setClientPassword(password);
+                }
 				sysUserService.editUserWithRole(user, roles);
 				result.success("修改成功!");
 			}
@@ -140,7 +143,7 @@ public class SysUserController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	
+    @RequiresPermissions("user:delete")
 	public Result<SysUser> delete(@RequestParam(name="id",required=true) String id) {
 		Result<SysUser> result = new Result<SysUser>();
 		// 定义SysUserDepart实体类的数据库查询LambdaQueryWrapper
@@ -162,7 +165,7 @@ public class SysUserController {
 	}
 
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
-	
+    @RequiresPermissions("user:delete")
 	public Result<SysUser> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		// 定义SysUserDepart实体类的数据库查询对象LambdaQueryWrapper
 		LambdaQueryWrapper<SysUserDepart> query = new LambdaQueryWrapper<SysUserDepart>();
@@ -189,6 +192,7 @@ public class SysUserController {
 	 */
 	
 	@RequestMapping(value = "/frozenBatch", method = RequestMethod.PUT)
+    @RequiresPermissions(value={"user:frozen","user:unfrozen"},logical= Logical.OR)
 	public Result<SysUser> frozenBatch(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
 		try {
@@ -292,7 +296,6 @@ public class SysUserController {
      * 修改密码
      */
     @RequestMapping(value = "/changPassword", method = RequestMethod.PUT)
-    
     public Result<SysUser> changPassword(@RequestBody SysUser sysUser) {
         Result<SysUser> result = new Result<SysUser>();
         String password = sysUser.getPassword();
@@ -304,11 +307,28 @@ public class SysUserController {
             sysUser.setSalt(salt);
             String passwordEncode = PasswordUtil.encrypt(sysUser.getUsername(), password, salt);
             sysUser.setPassword(passwordEncode);
+            if(StringUtils.isNotBlank(password)){
+                sysUser.setClientPassword(MD5Util.MD5Encode(password,"utf-8"));
+            }
             this.sysUserService.updateById(sysUser);
             result.setResult(sysUser);
             result.success("密码修改完成！");
+            updateCusTaxPassword(sysUser, password);
         }
         return result;
+    }
+
+    /**
+     * 修改企业信息密码
+     * @param sysUser
+     * @param password
+     */
+    private void updateCusTaxPassword(@RequestBody SysUser sysUser, String password) {
+        TaxCustomer taxcustomer = taxCustomerService.getOne(new LambdaQueryWrapper<TaxCustomer>().eq(TaxCustomer::getCustTaxCode, sysUser.getUsername()));
+        if(null != taxcustomer){
+            taxcustomer.setPassword(password);
+            taxCustomerService.updateById(taxcustomer);
+        }
     }
 
     /**

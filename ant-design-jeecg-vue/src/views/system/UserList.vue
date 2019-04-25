@@ -65,22 +65,22 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator" style="border-top: 5px">
       <a-button @click="handleAdd" v-has="'user:add'" type="primary" icon="plus">添加用户</a-button>
-      <a-button @click="handleSyncUser" type="primary" icon="plus">重新同步流程用户</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :action="importExcelUrl" @change="handleImportExcel">
+      <a-button @click="handleSyncUser" type="primary" v-has="'user:syncprocess'" icon="plus">重新同步流程用户</a-button>
+      <a-button type="primary" icon="download" v-has="'user:export'" @click="handleExportXls">导出</a-button>
+      <a-upload name="file" :showUploadList="false" v-has="'user:import'"  :multiple="false" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay" @click="handleMenuClick">
-          <a-menu-item key="1">
+          <a-menu-item key="1" v-has="'user:delete'">
             <a-icon type="delete" @click="batchDel"/>
             删除
           </a-menu-item>
-          <a-menu-item key="2">
+          <a-menu-item key="2" v-has="'user:frozen'">
             <a-icon type="lock" @click="batchFrozen('2')"/>
             冻结
           </a-menu-item>
-          <a-menu-item key="3">
+          <a-menu-item key="3" v-has="'user:unfrozen'">
             <a-icon type="unlock" @click="batchFrozen('1')"/>
             解冻
           </a-menu-item>
@@ -118,7 +118,7 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
+          <a @click="handleEdit(record)"  v-has="'user:edit'">编辑</a>
 
           <a-divider type="vertical"/>
 
@@ -131,23 +131,23 @@
                 <a href="javascript:;" @click="handleDetail(record)">详情</a>
               </a-menu-item>
 
-              <a-menu-item>
-                <a href="javascript:;" @click="handleChangePassword(record.username)">密码</a>
+              <a-menu-item v-has="'user:password'">
+                <a href="javascript:;" @click="handleChangePassword(record.username)" >密码</a>
               </a-menu-item>
 
-              <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+              <a-menu-item v-has="'user:delete'">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)" >
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
 
-              <a-menu-item v-if="record.status==1">
+              <a-menu-item v-if="record.status==1" v-has="'user:frozen'">
                 <a-popconfirm title="确定冻结吗?" @confirm="() => handleFrozen(record.id,2)">
                   <a>冻结</a>
                 </a-popconfirm>
               </a-menu-item>
 
-              <a-menu-item v-if="record.status==2">
+              <a-menu-item v-if="record.status==2" v-has="'user:unfrozen'">
                 <a-popconfirm title="确定解冻吗?" @confirm="() => handleFrozen(record.id,1)">
                   <a>解冻</a>
                 </a-popconfirm>

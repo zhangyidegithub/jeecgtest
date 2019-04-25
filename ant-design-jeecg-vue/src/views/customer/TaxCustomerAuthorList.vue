@@ -158,7 +158,12 @@
       handleAdd: function () {
         this.$refs.modalForm.add(this.queryParam.mainId,this.custTaxCode);
         this.$refs.modalForm.title = "添加盘号信息";
-      }
+      },
+      handleDetail:function(record){
+        this.$refs.modalForm.detail(record);
+        this.$refs.modalForm.title="详情";
+        this.$refs.modalForm.disableSubmit = true;
+      },
     }
   }
 </script>

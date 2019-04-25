@@ -25,8 +25,9 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="纳税人识别号"
+
           hasFeedback>
-          <a-input placeholder="请输入企业纳税人识别号" v-decorator="['custTaxCode', validatorRules.custTaxCode ]" />
+          <a-input placeholder="请输入企业纳税人识别号" v-decorator="['custTaxCode', validatorRules.custTaxCode ]" :disabled="disabled"/>
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
@@ -61,19 +62,20 @@
           hasFeedback>
           <a-input placeholder="请输入联系人手机号" v-decorator="['linkPhone',validatorRules.linkPhone]" />
         </a-form-item>
-        <a-form-item label="登陆密码" :labelCol="labelCol" :wrapperCol="wrapperCol" hasFeedback>
+        <a-form-item label="登陆密码" :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="hidding" hasFeedback>
           <a-input type="password" placeholder="请输入登陆密码" v-decorator="[ 'password', validatorRules.password]" />
         </a-form-item>
 
-        <a-form-item label="确认密码" :labelCol="labelCol" :wrapperCol="wrapperCol" hasFeedback>
+        <a-form-item label="确认密码" :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="hidding"  hasFeedback>
           <a-input type="password" @blur="handleConfirmBlur" placeholder="请重新输入登陆密码" v-decorator="[ 'confirmpassword', validatorRules.confirmpassword]"/>
         </a-form-item>
         <template>
           <a-form-item
             label="是否同步至用户"
             :labelCol="labelCol"
-            :wrapperCol="wrapperCol" >
-            <a-radio-group @change="onChangeRadio"   v-decorator="[ 'isSyncUser', {initialValue:0}]">
+            :wrapperCol="wrapperCol"
+            :hidden="hidding" >
+            <a-radio-group @change="onChangeRadio"   v-decorator="[ 'isSyncUser', {initialValue:1}]">
               <a-radio :value="1">是</a-radio>
               <a-radio :value="0">否</a-radio>
             </a-radio-group>
@@ -88,10 +90,9 @@
               mode="multiple"
               style="width: 100%"
               placeholder="选取角色"
-              @change="handleChange"
               :getPopupContainer="getPopupContainer"
-              v-decorator="[ 'selectedroles',validatorRules.selectedRole]">
-              <a-select-option v-for="(role) in roleList" :key="role.id" :value="role.roleName" >
+              v-decorator="[ 'selectedRole',validatorRules.selectedRole]">
+              <a-select-option v-for="(role) in roleList" :key="role.id" :value="role.id" >
                 {{ role.roleName }}
               </a-select-option>
             </a-select>
@@ -140,11 +141,12 @@
         confirmLoading: false,
         headers:{},
         roleList:[],
-        selectedRoleIds:[],
         selectedroles:[],
-        roleHidding:true,
+        roleHidding:false,
+        hidding:false,
+        disabled:false,
         selectedRole:[],
-        roleRadio:"",
+        roleRadio:"1",
         form: this.$form.createForm(this),
         validatorRules:{
           custTaxCode:{rules: [
@@ -159,7 +161,8 @@
           selectedRole:{
             rules: [{
               validator:this.checkSelectRole,
-            }]
+            }],
+          initialValue:["8845ccc45c95dd5ad7919eba58daab56"],
           },
           confirmpassword:{
             rules: [{
@@ -207,17 +210,24 @@
             break;
         }
       },
-      handleChange(value,optionArray) {
+      /*handleChange(value,optionArray) {
         var selectedRoleId = [];
        optionArray.forEach(function(v,i){
           selectedRoleId.push(v.key);
         })
         this.selectedRoleIds = selectedRoleId;
-      },
+      },*/
       initialRoleList(){
         queryall().then((res)=>{
           if(res.success){
-            this.roleList = res.result;
+            var roleArray = res.result;
+            var roles = [];
+            roleArray.forEach(function(v,i) {
+              if(v.roleCode!="admin" && v.roleCode!="ywgly"){
+                roles.push(v);
+              }
+            });
+            this.roleList = roles;
           }else{
             console.log(res.message);
           }
@@ -241,27 +251,54 @@
         }
       },
       add () {
-        this.selectedRoleIds=[];
-        this.selectedroles=[];
-        this.roleHidding=true;
-        this.selectedRole=[];
-        this.roleRadio="";
+        this.validatorRules.selectedRole={
+          rules: [{
+            validator:this.checkSelectRole,
+          }],
+            initialValue:["8845ccc45c95dd5ad7919eba58daab56"],
+        };
+        this.validatorRules.confirmpassword = {
+          rules: [{
+            required: true, message: '请重新输入登陆密码!',
+          }, {
+            validator: this.compareToFirstPassword,
+          }],
+        };
+        this.validatorRules.password ={
+          rules: [{
+            required: true, message: '请输入密码!',
+          }, {
+            validator: this.validateToNextPassword,
+          }],
+        };
         this.edit({});
       },
       edit (record) {
         this.selectedRoleIds=[];
         this.selectedroles=[];
-        this.roleHidding=true;
+        this.roleHidding=false;
         this.selectedRole=[];
-        this.roleRadio="";
+        this.roleRadio="1";
+        this.hidding = false;
+        this.roleRadio="1";
+        this.disabled = false;
         this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
+        this.form.resetFields();
+        this.model = Object.assign({}, record);
+        this.visible = true;
+        if(this.model.customerId){
+          this.hidding = true;
+          this.roleHidding = true;
+          this.roleRadio="0";
+          this.disabled = "disabled";
+          this.validatorRules.password={};
+          this.validatorRules.confirmpassword={};
+          this.validatorRules.selectedRole={};
+        }
         if(this.roleRadio=='1'){
           this.roleHidding = false;
           this.initialRoleList();
         }
-        this.form.resetFields();
-        this.model = Object.assign({}, record);
-        this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'linkMan','linkPhone','password','customerId','custTaxCode','custTaxName','custAddressPhone','custBankAccount'))
           //时间格式化
@@ -290,7 +327,8 @@
             }
             let formData = Object.assign(this.model, values);
             formData.isSyncUser = this.roleRadio;
-            formData.selectedroles = this.selectedRoleIds.length>0?this.selectedRoleIds.join(","):'';
+            formData.selectedroles = formData.selectedRole.length>0?formData.selectedRole.join(","):'';
+            console.info(formData.selectedroles)
             //时间格式化 formData.isSyncUser
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){
@@ -321,21 +359,21 @@
       },
       validateToNextPassword  (rule, value, callback) {
         const form = this.form;
-        if (value && this.confirmDirty) {
+        if (value && this.confirmDirty && !this.hidding) {
           form.validateFields(['confirm'], { force: true })
         }
         callback();
       },
       compareToFirstPassword  (rule, value, callback) {
         const form = this.form;
-        if (value && value !== form.getFieldValue('password')) {
+        if (value && value !== form.getFieldValue('password') && !this.hidding) {
           callback('两次输入的密码不一样！');
         } else {
           callback()
         }
       },
       checkSelectRole  (rule, value, callback) {
-        if (this.roleRadio=='1' && this.selectedRoleIds.length<=0) {
+        if (this.roleRadio=='1' && value.length<=0 && !this.roleHidding) {
           callback('请选择角色！');
         } else {
           callback();
