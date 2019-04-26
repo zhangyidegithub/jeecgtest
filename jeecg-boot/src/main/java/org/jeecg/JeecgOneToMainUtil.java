@@ -25,23 +25,23 @@ public class JeecgOneToMainUtil {
 		mainTable.setTableName("TAX_INVOICE");//表名
 		mainTable.setEntityName("TaxInvoice");	 //实体名
 		mainTable.setEntityPackage("com.aisino");	 //包名
-		mainTable.setFtlDescription("客户税号");	 //描述
+		mainTable.setFtlDescription("红字发票申请单");	 //描述
 		
 		//第二步：设置子表集合配置
 		List<SubTableVo> subTables = new ArrayList<SubTableVo>();
 		//[1].子表一
 		SubTableVo po = new SubTableVo();
-		po.setTableName("TAX_INVOICE_DETAIL");//表名
-		po.setEntityName("TaxInvoiceDetail");	    //实体名
+		po.setTableName("TAX_INVOICE_GOODS");//表名
+		po.setEntityName("TaxInvoiceGoods");	    //实体名
 		po.setEntityPackage("com.aisino");	        //包名
-		po.setFtlDescription("客户明细");       //描述
+		po.setFtlDescription("商品明细");       //描述
 		//子表外键参数配置
 		/*说明: 
 		 * a) 子表引用主表主键ID作为外键，外键字段必须以_ID结尾;
 		 * b) 主表和子表的外键字段名字，必须相同（除主键ID外）;
 		 * c) 多个外键字段，采用逗号分隔;
 		*/
-		po.setForeignKeys(new String[]{"dataid"});
+		po.setForeignKeys(new String[]{"inv_id"});
 		subTables.add(po);
 		//[2].子表二
 //		SubTableVo po2 = new SubTableVo();

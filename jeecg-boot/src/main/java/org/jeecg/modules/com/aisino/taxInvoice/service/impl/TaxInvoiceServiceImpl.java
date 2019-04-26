@@ -1,11 +1,13 @@
 package org.jeecg.modules.com.aisino.taxInvoice.service.impl;
 
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
-import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceDetail;
-import org.jeecg.modules.com.aisino.taxInvoice.mapper.TaxInvoiceDetailMapper;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceGoods;
+import org.jeecg.modules.com.aisino.taxInvoice.mapper.TaxInvoiceGoodsMapper;
 import org.jeecg.modules.com.aisino.taxInvoice.mapper.TaxInvoiceMapper;
-import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceService;
+import org.jeecg.modules.com.aisino.taxInvoice.service.*;
+import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +17,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @Description: 客户税号
+ * @Description: 红字发票申请单
  * @author： jeecg-boot
- * @date：   2019-04-18
+ * @date：   2019-04-25
  * @version： V1.0
  */
 @Service
@@ -26,32 +28,32 @@ public class TaxInvoiceServiceImpl extends ServiceImpl<TaxInvoiceMapper, TaxInvo
 	@Autowired
 	private TaxInvoiceMapper taxInvoiceMapper;
 	@Autowired
-	private TaxInvoiceDetailMapper taxInvoiceDetailMapper;
+	private TaxInvoiceGoodsMapper taxInvoiceGoodsMapper;
 	
 	@Override
 	@Transactional
-	public void saveMain(TaxInvoice taxInvoice, List<TaxInvoiceDetail> taxInvoiceDetailList) {
+	public void saveMain(TaxInvoice taxInvoice, List<TaxInvoiceGoods> taxInvoiceGoodsList) {
 		taxInvoiceMapper.insert(taxInvoice);
-		for(TaxInvoiceDetail entity:taxInvoiceDetailList) {
+		for(TaxInvoiceGoods entity:taxInvoiceGoodsList) {
 			//外键设置
-			entity.setDataid(taxInvoice.getId());
-			taxInvoiceDetailMapper.insert(entity);
+			entity.setInvId(taxInvoice.getId());
+			taxInvoiceGoodsMapper.insert(entity);
 		}
 	}
 
 	@Override
 	@Transactional
-	public void updateMain(TaxInvoice taxInvoice,List<TaxInvoiceDetail> taxInvoiceDetailList) {
+	public void updateMain(TaxInvoice taxInvoice,List<TaxInvoiceGoods> taxInvoiceGoodsList) {
 		taxInvoiceMapper.updateById(taxInvoice);
 		
 		//1.先删除子表数据
-		taxInvoiceDetailMapper.deleteByMainId(taxInvoice.getId());
+		taxInvoiceGoodsMapper.deleteByMainId(taxInvoice.getId());
 		
 		//2.子表数据重新插入
-		for(TaxInvoiceDetail entity:taxInvoiceDetailList) {
+		for(TaxInvoiceGoods entity:taxInvoiceGoodsList) {
 			//外键设置
-			entity.setDataid(taxInvoice.getId());
-			taxInvoiceDetailMapper.insert(entity);
+			entity.setInvId(taxInvoice.getId());
+			taxInvoiceGoodsMapper.insert(entity);
 		}
 	}
 
@@ -59,7 +61,7 @@ public class TaxInvoiceServiceImpl extends ServiceImpl<TaxInvoiceMapper, TaxInvo
 	@Transactional
 	public void delMain(String id) {
 		taxInvoiceMapper.deleteById(id);
-		taxInvoiceDetailMapper.deleteByMainId(id);
+		taxInvoiceGoodsMapper.deleteByMainId(id);
 	}
 
 	@Override
@@ -67,7 +69,7 @@ public class TaxInvoiceServiceImpl extends ServiceImpl<TaxInvoiceMapper, TaxInvo
 	public void delBatchMain(Collection<? extends Serializable> idList) {
 		for(Serializable id:idList) {
 			taxInvoiceMapper.deleteById(id);
-			taxInvoiceDetailMapper.deleteByMainId(id.toString());
+			taxInvoiceGoodsMapper.deleteByMainId(id.toString());
 		}
 	}
 	

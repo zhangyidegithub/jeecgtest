@@ -1,48 +1,47 @@
 package org.jeecg.modules.com.aisino.taxInvoice.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.jeecg.common.api.vo.Result;
-import org.jeecg.common.aspect.annotation.PermissionData;
-import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
-import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceDetail;
-import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceDetailService;
-import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceService;
-import org.jeecg.modules.com.aisino.taxInvoice.vo.TaxInvoicePage;
-import org.jeecg.modules.system.entity.SysUser;
-import org.jeecgframework.poi.excel.ExcelImportUtil;
-import org.jeecgframework.poi.excel.def.NormalExcelConstants;
-import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.ImportParams;
-import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceGoods;
+import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceGoodsService;
+import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceService;
+import org.jeecg.modules.com.aisino.taxInvoice.vo.TaxInvoicePage;
+import org.jeecgframework.poi.excel.ExcelImportUtil;
+import org.jeecgframework.poi.excel.def.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.ImportParams;
+import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
+
+import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.util.oConvertUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import com.alibaba.fastjson.JSON;
+
  /**
  * @Title: Controller
- * @Description: 客户税号
+ * @Description: 红字发票申请单
  * @author： jeecg-boot
- * @date：   2019-04-18
+ * @date：   2019-04-25
  * @version： V1.0
  */
 @RestController
@@ -52,7 +51,7 @@ public class TaxInvoiceController {
 	@Autowired
 	private ITaxInvoiceService taxInvoiceService;
 	@Autowired
-	private ITaxInvoiceDetailService taxInvoiceDetailService;
+	private ITaxInvoiceGoodsService taxInvoiceGoodsService;
 	
 	/**
 	  * 分页列表查询
@@ -69,10 +68,6 @@ public class TaxInvoiceController {
 												   HttpServletRequest req) {
 		Result<IPage<TaxInvoice>> result = new Result<IPage<TaxInvoice>>();
 		QueryWrapper<TaxInvoice> queryWrapper = QueryGenerator.initQueryWrapper(taxInvoice, req.getParameterMap());
-		String userName = ((SysUser) SecurityUtils.getSubject().getPrincipal()).getUsername();
-		if(!"admin".equals(userName)){
-			queryWrapper.eq("seller_tax_code",userName);
-		}
 		Page<TaxInvoice> page = new Page<TaxInvoice>(pageNo, pageSize);
 		IPage<TaxInvoice> pageList = taxInvoiceService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -92,7 +87,7 @@ public class TaxInvoiceController {
 			TaxInvoice taxInvoice = new TaxInvoice();
 			BeanUtils.copyProperties(taxInvoicePage, taxInvoice);
 			
-			taxInvoiceService.saveMain(taxInvoice, taxInvoicePage.getTaxInvoiceDetailList());
+			taxInvoiceService.saveMain(taxInvoice, taxInvoicePage.getTaxInvoiceGoodsList());
 			result.success("添加成功！");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,7 +112,7 @@ public class TaxInvoiceController {
 			result.error500("未找到对应实体");
 		}else {
 			boolean ok = taxInvoiceService.updateById(taxInvoice);
-			taxInvoiceService.updateMain(taxInvoice, taxInvoicePage.getTaxInvoiceDetailList());
+			taxInvoiceService.updateMain(taxInvoice, taxInvoicePage.getTaxInvoiceGoodsList());
 			result.success("修改成功!");
 		}
 		
@@ -183,11 +178,11 @@ public class TaxInvoiceController {
 	 * @param id
 	 * @return
 	 */
-	@GetMapping(value = "/queryTaxInvoiceDetailByMainId")
-	public Result<List<TaxInvoiceDetail>> queryTaxInvoiceDetailListByMainId(@RequestParam(name="id",required=true) String id) {
-		Result<List<TaxInvoiceDetail>> result = new Result<List<TaxInvoiceDetail>>();
-		List<TaxInvoiceDetail> taxInvoiceDetailList = taxInvoiceDetailService.selectByMainId(id);
-		result.setResult(taxInvoiceDetailList);
+	@GetMapping(value = "/queryTaxInvoiceGoodsByMainId")
+	public Result<List<TaxInvoiceGoods>> queryTaxInvoiceGoodsListByMainId(@RequestParam(name="id",required=true) String id) {
+		Result<List<TaxInvoiceGoods>> result = new Result<List<TaxInvoiceGoods>>();
+		List<TaxInvoiceGoods> taxInvoiceGoodsList = taxInvoiceGoodsService.selectByMainId(id);
+		result.setResult(taxInvoiceGoodsList);
 		result.setSuccess(true);
 		return result;
 	}
@@ -220,14 +215,14 @@ public class TaxInvoiceController {
       for (TaxInvoice taxInvoice : taxInvoiceList) {
           TaxInvoicePage vo = new TaxInvoicePage();
           BeanUtils.copyProperties(taxInvoice, vo);
-          List<TaxInvoiceDetail> taxInvoiceDetailList = taxInvoiceDetailService.selectByMainId(taxInvoice.getId());
-          vo.setTaxInvoiceDetailList(taxInvoiceDetailList);
+          List<TaxInvoiceGoods> taxInvoiceGoodsList = taxInvoiceGoodsService.selectByMainId(taxInvoice.getId());
+          vo.setTaxInvoiceGoodsList(taxInvoiceGoodsList);
           pageList.add(vo);
       }
       //导出文件名称
-      mv.addObject(NormalExcelConstants.FILE_NAME, "客户税号列表");
+      mv.addObject(NormalExcelConstants.FILE_NAME, "红字发票申请单列表");
       mv.addObject(NormalExcelConstants.CLASS, TaxInvoicePage.class);
-      mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("客户税号列表数据", "导出人:Jeecg", "导出信息"));
+      mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("红字发票申请单列表数据", "导出人:Jeecg", "导出信息"));
       mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
       return mv;
   }
@@ -254,7 +249,7 @@ public class TaxInvoiceController {
               for (TaxInvoicePage page : list) {
                   TaxInvoice po = new TaxInvoice();
                   BeanUtils.copyProperties(page, po);
-                  taxInvoiceService.saveMain(po, page.getTaxInvoiceDetailList());
+                  taxInvoiceService.saveMain(po, page.getTaxInvoiceGoodsList());
               }
               return Result.ok("文件导入成功！数据行数：" + list.size());
           } catch (Exception e) {

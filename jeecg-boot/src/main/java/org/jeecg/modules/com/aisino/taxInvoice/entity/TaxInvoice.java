@@ -1,18 +1,19 @@
 package org.jeecg.modules.com.aisino.taxInvoice.entity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
-
 /**
- * @Description: 客户税号
+ * @Description: 红字发票申请单
  * @author： jeecg-boot
- * @date：   2019-04-18
+ * @date：   2019-04-25
  * @version： V1.0
  */
 @Data
@@ -148,6 +149,4 @@ public class TaxInvoice implements Serializable {
 	private java.lang.String p4;
 	/**备用字段5*/
 	private java.lang.String p5;
-	/**原始XML文件*/
-	private java.lang.String xml;
 }

@@ -1,13 +1,13 @@
 package org.jeecg.modules.com.aisino.taxInvoice.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.List;
 import lombok.Data;
-import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceDetail;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceGoods;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.List;
+import java.util.Date;
 
 @Data
 public class TaxInvoicePage {
@@ -179,21 +179,25 @@ public class TaxInvoicePage {
   	@Excel(name = "销货清单标志：0打印发票，1打印清单", width = 15)
 	private java.lang.String goodsListFlag;
 	/**是否显示边距确认对话框：0否，1是*/
+  	@Excel(name = "是否显示边距确认对话框：0否，1是", width = 15)
 	private java.lang.String infoShowPrtdlg;
 	/**备用字段1*/
+  	@Excel(name = "备用字段1", width = 15)
 	private java.lang.String p1;
 	/**备用字段2*/
+  	@Excel(name = "备用字段2", width = 15)
 	private java.lang.String p2;
 	/**备用字段3*/
+  	@Excel(name = "备用字段3", width = 15)
 	private java.lang.String p3;
 	/**备用字段4*/
+  	@Excel(name = "备用字段4", width = 15)
 	private java.lang.String p4;
 	/**备用字段5*/
+  	@Excel(name = "备用字段5", width = 15)
 	private java.lang.String p5;
-	/**原始XML文件*/
-	private java.lang.String xml;
 	
-	@ExcelCollection(name="客户明细")
-	private List<TaxInvoiceDetail> taxInvoiceDetailList;
+	@ExcelCollection(name="商品明细")
+	private List<TaxInvoiceGoods> taxInvoiceGoodsList;
 	
 }
