@@ -281,6 +281,9 @@
     },
     methods: {
       getAvatarView: function (avatar) {
+        if(!avatar){
+          return process.env.BASE_URL+"image/defaultUserAvatar.png";
+        }
         return this.url.imgerver + "/" + avatar;
       },
 
