@@ -80,12 +80,12 @@ export const JEditableTableOneToManyMixin = {
 
     /** 查询某个tab的数据 */
     requestSubTableData(url, params, tab) {
-      tab.loading = true
-      getAction(url, params).then(res => {
-        tab.dataSource = res.result || []
-      }).finally(() => {
-        tab.loading = false
-      })
+        tab.loading = true
+        getAction(url, params).then(res => {
+          tab.dataSource = res.result || []
+        }).finally(() => {
+          tab.loading = false
+        })
     },
     /** 发起请求，自动判断是执行新增还是修改操作 */
     request(formData) {

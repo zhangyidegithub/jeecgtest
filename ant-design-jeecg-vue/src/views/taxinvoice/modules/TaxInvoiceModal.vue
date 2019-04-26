@@ -43,7 +43,7 @@
               <table height="42" border="0" cellpadding="0" cellspacing="0">
                 <tbody>
                   <tr>
-                    <td style="font-size:28px; border-bottom:3px double #505050 ;">陕西省增值税电子普通发票</td>
+                    <td style="font-size:28px; border-bottom:3px double #A52A2A; color: #A52A2A;">陕西省增值税电子普通发票</td>
                   </tr>
                 </tbody>
               </table>
@@ -57,13 +57,13 @@
           </tr>
         </tbody>
       </table>
-      <table width="860" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#505050">
+      <table width="860" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#A52A2A">
         <tbody>
           <tr>
             <td align="center" valign="middle"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
               <tbody>
               <tr>
-                <td width="40" align="center" valign="middle" style="border-right:2px #505050 solid;">购<br>
+                <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">购<br>
                   买<br>
                   方</td>
                 <td width="600">
@@ -75,8 +75,8 @@
                   <br>
                   <label class="Validform_label">开户行及账号:{{this.model.clientBankAccount}}</label>
                 </td>
-                <td width="40" align="center" valign="middle" style="border-right:2px #505050 solid;">&nbsp;</td>
-                <td width="40" align="center" valign="middle" style="border-right:2px #505050 solid;">
+                <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">
                   密<br>
                   码<br>
                   区
@@ -91,69 +91,69 @@
           </tr>
         <tr>
           <td valign="top"><!--{{this.taxInvoiceGoodsTable.dataSource}}-->
-            <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" id="web_order_details_table">
+            <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
-                  <td align="center" style="border-right:2px #505050 solid; width: 220px" bgcolor="#EEEEEE">货物或应税劳务、服务名称</td>
-                  <td align="center" style="border-right:2px #505050 solid; width: 70px" bgcolor="#EEEEEE">规格型号</td>
-                  <td align="center" style="border-right:2px #505050 solid;width: 30px" bgcolor="#EEEEEE">单位</td>
-                  <td align="center" style="border-right:2px #505050 solid;width: 30px" bgcolor="#EEEEEE">数量</td>
-                  <td align="center" style="border-right:2px #505050 solid;width: 70px" bgcolor="#EEEEEE">单价</td>
-                  <td align="center" style="border-right:2px #505050 solid;width: 68px" bgcolor="#EEEEEE">金额</td>
-                  <td align="center" style="border-right:2px #505050 solid;width: 20px" bgcolor="#EEEEEE">税率</td>
+                  <td align="center" style="border-right:2px #A52A2A solid; width: 220px" bgcolor="#EEEEEE">货物或应税劳务、服务名称</td>
+                  <td align="center" style="border-right:2px #A52A2A solid; width: 70px" bgcolor="#EEEEEE">规格型号</td>
+                  <td align="center" style="border-right:2px #A52A2A solid;width: 30px" bgcolor="#EEEEEE">单位</td>
+                  <td align="center" style="border-right:2px #A52A2A solid;width: 30px" bgcolor="#EEEEEE">数量</td>
+                  <td align="center" style="border-right:2px #A52A2A solid;width: 70px" bgcolor="#EEEEEE">单价</td>
+                  <td align="center" style="border-right:2px #A52A2A solid;width: 68px" bgcolor="#EEEEEE">金额</td>
+                  <td align="center" style="border-right:2px #A52A2A solid;width: 20px" bgcolor="#EEEEEE">税率</td>
                   <td align="center" bgcolor="#EEEEEE" style="width: 70px">税额</td>
                 </tr>
               </tbody>
             <tbody>
 
             <tr v-for="taxInvoiceGoods in this.taxInvoiceGoodsTable.dataSource">
-              <td align="center" style="border-right:2px #505050 solid;">
+              <td align="center" style="border-right:2px #A52A2A solid;">
                 <label class="Validform_label">{{taxInvoiceGoods.goodsName}}</label>
               </td>
-              <td align="center" style="border-right:2px #505050 solid;">
+              <td align="center" style="border-right:2px #A52A2A solid;">
                 <label class="Validform_label">{{taxInvoiceGoods.goodsXh}}</label>
               </td>
-              <td align="center" style="border-right:2px #505050 solid;">
+              <td align="center" style="border-right:2px #A52A2A solid;">
                 <label class="Validform_label">{{taxInvoiceGoods.goodsUnit}}</label>
               </td>
-              <td align="center" style="border-right:2px #505050 solid;">
+              <td align="center" style="border-right:2px #A52A2A solid;">
                 <label class="Validform_label">{{taxInvoiceGoods.goodsNumber}}</label>
               </td>
-              <td align="center" style="border-right:2px #505050 solid;">
+              <td align="center" style="border-right:2px #A52A2A solid;">
                 <label class="Validform_label">{{taxInvoiceGoods.goodsPrice}}</label>
               </td>
-              <td align="center" style="border-right:2px #505050 solid;">
+              <td align="center" style="border-right:2px #A52A2A solid;">
                 <label class="Validform_label">{{taxInvoiceGoods.goodsJe}}</label>
               </td>
-              <td align="center" style="border-right:2px #505050 solid;">
+              <td align="center" style="border-right:2px #A52A2A solid;">
                 <label class="Validform_label">{{taxInvoiceGoods.goodsTaxRate}}</label>
               </td>
-              <td align="center" style="border-right:2px #505050 solid;">
+              <td align="center" style="border-right:2px #A52A2A solid;">
                 <label class="Validform_label">{{taxInvoiceGoods.goodsSe}}</label>
               </td>
             </tr>
             </tbody>
               <tbody>
                 <tr v-for="blandk in this.taxInvoiceGoodsTable.fillBlank">
-                  <td align="center" style="border-right:2px #505050 solid;"></td>
-                  <td align="center" style="border-right:2px #505050 solid;"><span v-html="blandk.fill"></span></td>
-                  <td align="center" style="border-right:2px #505050 solid;"><span v-html="blandk.fill"></span></td>
-                  <td align="center" style="border-right:2px #505050 solid;"><span v-html="blandk.fill"></span></td>
-                  <td align="center" style="border-right:2px #505050 solid;"><span v-html="blandk.fill"></span></td>
-                  <td align="center" style="border-right:2px #505050 solid;"><span v-html="blandk.fill"></span></td>
-                  <td align="center" style="border-right:2px #505050 solid;"><span v-html="blandk.fill"></span></td>
-                  <td align="center" style="border-right:2px #505050 solid;"><span v-html="blandk.fill"></span></td>
+                  <td align="center" style="border-right:2px #A52A2A solid;"></td>
+                  <td align="center" style="border-right:2px #A52A2A solid;"><span v-html="blandk.fill"></span></td>
+                  <td align="center" style="border-right:2px #A52A2A solid;"><span v-html="blandk.fill"></span></td>
+                  <td align="center" style="border-right:2px #A52A2A solid;"><span v-html="blandk.fill"></span></td>
+                  <td align="center" style="border-right:2px #A52A2A solid;"><span v-html="blandk.fill"></span></td>
+                  <td align="center" style="border-right:2px #A52A2A solid;"><span v-html="blandk.fill"></span></td>
+                  <td align="center" style="border-right:2px #A52A2A solid;"><span v-html="blandk.fill"></span></td>
+                  <td align="center" style="border-right:2px #A52A2A solid;"><span v-html="blandk.fill"></span></td>
                 </tr>
               </tbody>
               <tbody>
-                <td align="center" style="border-right:2px #505050 solid;">合计:</td>
-                <td align="center" style="border-right:2px #505050 solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #505050 solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #505050 solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #505050 solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #505050 solid;">{{this.model.infoAmount}}</td>
-                <td align="center" style="border-right:2px #505050 solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #505050 solid;">{{this.model.tax}}</td>
+                <td align="center" style="border-right:2px #A52A2A solid;">合计:</td>
+                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                <td align="center" style="border-right:2px #A52A2A solid;">{{this.model.infoAmount}}</td>
+                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                <td align="center" style="border-right:2px #A52A2A solid;">{{this.model.tax}}</td>
               </tbody>
             </table>
           </td>
@@ -168,9 +168,9 @@
             <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
-                  <td width="40" align="center" valign="middle" style="border-right:2px #505050 solid;">
+                  <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">
                     销<br>
-                    货<br>
+                    售<br>
                     方
                   </td>
                   <td width="600">
@@ -182,8 +182,8 @@
                     <br>
                     <label class="Validform_label">开户行及账号:{{this.model.clientBankAccount}}</label>
                   </td>
-                  <td width="40" align="center" valign="middle" style="border-right:2px #505050 solid;">&nbsp;</td>
-                  <td width="40" align="center" style="border-right:2px #505050 solid;">
+                  <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                  <td width="40" align="center" style="border-right:2px #A52A2A solid;">
                     备<br>
                     注
                   </td>
@@ -200,7 +200,7 @@
       <table width="860" height="42" border="0" align="center" cellpadding="0" cellspacing="0">
         <tbody>
         <tr>
-          <td width="253"><label class="Validform_label">收款人:{{this.model.cashier}}</label></td>
+          <td width="253"><label class="Validform_label">&nbsp;&nbsp;收款人:{{this.model.cashier}}</label></td>
           <td width="246"><label class="Validform_label">复核人:{{this.model.checker}}</label></td>
           <td width="182"><label class="Validform_label">开票人:{{this.model.invoicer}}</label></td>
           <td width="179">销售方：（章）</td>
