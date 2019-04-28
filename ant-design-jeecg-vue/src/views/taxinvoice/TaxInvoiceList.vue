@@ -5,18 +5,13 @@
       <a-form layout="inline">
         <a-row :gutter="24">
           <a-col :span="6">
-            <a-form-item label="订单编号">
-              <a-input placeholder="请输入订单编号" v-model="queryParam.ddbh"></a-input>
+            <a-form-item label="信息表编号">
+              <a-input placeholder="请输入信息表编号" v-model="queryParam.ddbh"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="6">
             <a-form-item label="购方名称">
               <a-input placeholder="请输入购方名称" v-model="queryParam.clientTaxName"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-item label="购方识别号">
-              <a-input placeholder="请输入购方识别号" v-model="queryParam.clientTaxCode"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="6" >
@@ -75,35 +70,25 @@
         description: '红字发票申请单管理页面',
         // 表头
         columns: [
+          // {
+          //   title: '序号',
+          //   dataIndex: '',
+          //   key: 'rowIndex',
+          //   width: 60,
+          //   align: "center",
+          //   customRender:function (t, r, index) {
+          //     return parseInt(index)+1;
+          //   }
+          // },
           {
-            title: '序号',
-            dataIndex: '',
-            key: 'rowIndex',
-            width: 60,
-            align: "center",
-            customRender:function (t, r, index) {
-              return parseInt(index)+1;
-            }
-          },
-          {
-            title: '订单编号',
+            title: '信息表编号',
             align:"center",
             dataIndex: 'ddbh'
           },
           {
-            title: '购方名称',
+            title: '开票日期',
             align:"center",
-            dataIndex: 'clientTaxName'
-          },
-          {
-            title: '购方识别号',
-            align:"center",
-            dataIndex: 'clientTaxCode'
-          },
-          {
-            title: '开票员',
-            align:"center",
-            dataIndex: 'invoicer'
+            dataIndex: 'invDate'
           },
           {
             title: '发票代码',
@@ -116,29 +101,24 @@
             dataIndex: 'infoNumber'
           },
           {
-            title: '冲红原因',
+            title: '购方名称',
             align:"center",
-            dataIndex: 'chyy'
+            dataIndex: 'clientTaxName'
+          },
+          {
+            title: '销货名称',
+            align:"center",
+            dataIndex: 'clientTaxName'
+          },
+          {
+            title: '经办人',
+            align:"center",
+            dataIndex: 'invoicer'
           },
           {
             title: '价税合计金额',
             align:"center",
             dataIndex: 'amount'
-          },
-          {
-            title: '备注',
-            align:"center",
-            dataIndex: 'bz'
-          },
-          {
-            title: '开票日期',
-            align:"center",
-            dataIndex: 'invDate'
-          },
-          {
-            title: '描述信息',
-            align:"center",
-            dataIndex: 'retMsg'
           },
           {
             title: '操作',

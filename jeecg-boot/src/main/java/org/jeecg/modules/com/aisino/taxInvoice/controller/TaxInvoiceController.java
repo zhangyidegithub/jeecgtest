@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.ApiOperation;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.Report;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceGoods;
 import org.jeecg.modules.com.aisino.taxInvoice.service.ITaxInvoiceGoodsService;
@@ -173,6 +175,20 @@ public class TaxInvoiceController {
 		return result;
 	}
 	
+	/**
+	  * 通过用户名和年份查询统计报表
+	 * @param Report 请求参数
+	 * @return
+	 */
+	@ApiOperation(value = "获取report数据列表", notes = "获取所有report数据列表", produces = "application/json")
+	@PostMapping(value = "/report")
+	public Result<List<Report>> queryTaxInvoicereport(@RequestBody Report report) {
+		Result<List<Report>> result = new Result<List<Report>>();
+		List<Report> reportList = taxInvoiceService.findReport(report);
+		result.setResult(reportList);
+		result.setSuccess(true);
+		return result;
+	}
 	/**
 	  * 通过id查询
 	 * @param id

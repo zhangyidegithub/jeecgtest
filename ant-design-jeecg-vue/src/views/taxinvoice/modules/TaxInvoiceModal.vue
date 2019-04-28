@@ -14,28 +14,6 @@
           <tr>
             <td width="682">&nbsp;</td>
             <td width="178" rowspan="4">
-              <table>
-                <tr>
-                  <td>
-                    <label class="Validform_label">发票代码:{{this.model.infoTypeCode}}</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="Validform_label">发票号码:{{this.model.infoNumber}}</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="Validform_label">开票日期:{{this.model.invDate}}</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="Validform_label">&nbsp;&nbsp;校验码:</label>
-                  </td>
-                </tr>
-              </table>
             </td>
           </tr>
           <tr>
@@ -43,7 +21,7 @@
               <table height="42" border="0" cellpadding="0" cellspacing="0">
                 <tbody>
                   <tr>
-                    <td style="font-size:28px; border-bottom:3px double #A52A2A; color: #A52A2A;">陕西省增值税电子普通发票</td>
+                    <td style="font-size:28px; border-bottom:3px double #A52A2A; color: #A52A2A;">开具红字增值税专用发票信息表</td>
                   </tr>
                 </tbody>
               </table>
@@ -52,8 +30,14 @@
           <tr>
             <td>&nbsp;</td>
           </tr>
+        </tbody>
+      </table>
+      <table width="860" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tbody>
           <tr>
-            <td> 机器编号:</td>
+            <td width="286" >填开日期:&nbsp;{{this.model.invDate}}</td>
+            <td width="286" >申请方经办人:&nbsp;{{this.model.invoicer}}</td>
+            <td width="288" >No:&nbsp;{{this.model.fpqqlsh}}</td>
           </tr>
         </tbody>
       </table>
@@ -63,26 +47,30 @@
             <td align="center" valign="middle"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
               <tbody>
               <tr>
-                <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">购<br>
-                  买<br>
-                  方</td>
-                <td width="600">
-                  <label class="Validform_label">&nbsp;&nbsp;购货方名称:{{this.model.clientTaxName}}</label>
+                <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">
+                  销<br>
+                  售<br>
+                  方
+                </td>
+                <td width="350">
+                  <label class="Validform_label">&nbsp;&nbsp;名&nbsp;&nbsp;&nbsp;&nbsp;称&nbsp;&nbsp;:{{this.model.clientTaxName}}</label>
+                  <br>&nbsp;&nbsp;
                   <br>
                   <label class="Validform_label">纳税人识别号:{{this.model.clientTaxCode}}</label>
-                  <br>
-                  <label class="Validform_label">&nbsp;地址&nbsp;、电话:{{this.model.clientAddressPhone}}</label>
-                  <br>
-                  <label class="Validform_label">开户行及账号:{{this.model.clientBankAccount}}</label>
+                  <br>&nbsp;&nbsp;
                 </td>
-                <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                <td width="1" align="center" valign="middle" style="border-right:2px #A52A2A solid;">&nbsp;</td>
                 <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">
-                  密<br>
-                  码<br>
-                  区
+                  购<br>
+                  买<br>
+                  方
                 </td>
-                <td width="200">
-
+                <td width="350">
+                  <label class="Validform_label">&nbsp;&nbsp;名&nbsp;&nbsp;&nbsp;&nbsp;称&nbsp;&nbsp;:{{this.model.clientTaxName}}</label>
+                  <br>&nbsp;&nbsp;
+                  <br>
+                  <label class="Validform_label">纳税人识别号:{{this.model.clientTaxCode}}</label>
+                  <br>&nbsp;&nbsp;
                 </td>
               </tr>
               </tbody>
@@ -94,12 +82,12 @@
             <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
               <tbody>
                 <tr>
-                  <td align="center" style="border-right:2px #A52A2A solid; width: 220px" bgcolor="#EEEEEE">货物或应税劳务、服务名称</td>
-                  <td align="center" style="border-right:2px #A52A2A solid; width: 70px" bgcolor="#EEEEEE">规格型号</td>
+                  <td align="center" style="border-right:2px #A52A2A solid; width: 200px" bgcolor="#EEEEEE">货物(劳务、服务)名称</td>
+                  <td align="center" style="border-right:2px #A52A2A solid; width: 50px" bgcolor="#EEEEEE">规格型号</td>
                   <td align="center" style="border-right:2px #A52A2A solid;width: 30px" bgcolor="#EEEEEE">单位</td>
                   <td align="center" style="border-right:2px #A52A2A solid;width: 30px" bgcolor="#EEEEEE">数量</td>
-                  <td align="center" style="border-right:2px #A52A2A solid;width: 70px" bgcolor="#EEEEEE">单价</td>
-                  <td align="center" style="border-right:2px #A52A2A solid;width: 68px" bgcolor="#EEEEEE">金额</td>
+                  <td align="center" style="border-right:2px #A52A2A solid;width: 100px" bgcolor="#EEEEEE">单价(不含税)</td>
+                  <td align="center" style="border-right:2px #A52A2A solid;width: 100px" bgcolor="#EEEEEE">金额(不含税)</td>
                   <td align="center" style="border-right:2px #A52A2A solid;width: 20px" bgcolor="#EEEEEE">税率</td>
                   <td align="center" bgcolor="#EEEEEE" style="width: 70px">税额</td>
                 </tr>
@@ -145,22 +133,28 @@
                   <td align="center" style="border-right:2px #A52A2A solid;"><span v-html="blandk.fill"></span></td>
                 </tr>
               </tbody>
-              <tbody>
-                <td align="center" style="border-right:2px #A52A2A solid;">合计:</td>
-                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #A52A2A solid;">{{this.model.infoAmount}}</td>
-                <td align="center" style="border-right:2px #A52A2A solid;">&nbsp;</td>
-                <td align="center" style="border-right:2px #A52A2A solid;">{{this.model.tax}}</td>
-              </tbody>
             </table>
           </td>
         </tr>
         <tr>
           <td>
-            &nbsp;&nbsp;<label class="Validform_label" style="align:right">价税合计(小写):￥{{this.model.amount}}</label>
+            <table>
+              <tbody>
+                <tr>
+                  <td width="33%" align="center">
+                    <label class="Validform_label" style="align:right">合计</label>
+                  </td>
+                  <td width="1" align="center" valign="middle" style="border-right:0px #A52A2A solid;">&nbsp;</td>
+                  <td width="33%" align="center">
+                    <label class="Validform_label" style="align:right">金额:{{this.model.amount}}</label>
+                  </td>
+                  <td width="1" align="center" valign="middle" style="border-right:0px #A52A2A solid;">&nbsp;</td>
+                  <td width="33%" align="center">
+                    <label class="Validform_label" style="align:right">税额:{{this.model.tax}}</label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </td>
         </tr>
         <tr>
@@ -169,26 +163,25 @@
               <tbody>
                 <tr>
                   <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">
-                    销<br>
-                    售<br>
-                    方
+                    说<br><br>
+                    明
                   </td>
-                  <td width="600">
-                    <label class="Validform_label">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:{{this.model.clientTaxName}}</label>
-                    <br>
-                    <label class="Validform_label">纳税人识别号:{{this.model.clientTaxCode}}</label>
-                    <br>
-                    <label class="Validform_label">地址&nbsp;、&nbsp;电话:{{this.model.clientAddressPhone}}</label>
-                    <br>
-                    <label class="Validform_label">开户行及账号:{{this.model.clientBankAccount}}</label>
-                  </td>
-                  <td width="40" align="center" valign="middle" style="border-right:2px #A52A2A solid;">&nbsp;</td>
-                  <td width="40" align="center" style="border-right:2px #A52A2A solid;">
-                    备<br>
-                    注
-                  </td>
-                  <td width="200" align="center">
+                  <td width="350">
                     <label class="Validform_label">{{this.model.bz}}</label>
+                  </td>
+                  <td width="1" align="center" valign="middle" style="border-right:2px #A52A2A solid;">&nbsp;</td>
+                  <td width="40" align="center" style="border-right:2px #A52A2A solid;">
+                    发<br>
+                    票<br>
+                    信<br>
+                    息
+                  </td>
+                  <td width="350" align="left">
+                    <label class="Validform_label">&nbsp;&nbsp;发票代码:{{this.model.infoTypeCode}}</label>
+                    <br>
+                    <label class="Validform_label">&nbsp;&nbsp;发票号码:{{this.model.infoNumber}}</label>
+                    <br>
+                    <label class="Validform_label">&nbsp;&nbsp;发票种类:增值税专用发票</label>
                   </td>
               </tr>
             </tbody>
@@ -197,15 +190,14 @@
         </tr>
         </tbody>
       </table>
-      <table width="860" height="42" border="0" align="center" cellpadding="0" cellspacing="0">
+      <!--<table width="860" height="42" border="0" align="center" cellpadding="0" cellspacing="0">
         <tbody>
         <tr>
           <td width="253"><label class="Validform_label">&nbsp;&nbsp;收款人:{{this.model.cashier}}</label></td>
           <td width="246"><label class="Validform_label">复核人:{{this.model.checker}}</label></td>
           <td width="182"><label class="Validform_label">开票人:{{this.model.invoicer}}</label></td>
-          <td width="179">销售方：（章）</td>
         </tr>
-        </tbody></table>
+        </tbody></table>-->
     </a-spin>
   </a-drawer>
 </template>

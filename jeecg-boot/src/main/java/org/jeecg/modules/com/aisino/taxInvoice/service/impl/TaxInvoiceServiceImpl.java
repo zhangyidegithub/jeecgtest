@@ -2,6 +2,7 @@ package org.jeecg.modules.com.aisino.taxInvoice.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.Report;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceGoods;
 import org.jeecg.modules.com.aisino.taxInvoice.mapper.TaxInvoiceGoodsMapper;
@@ -72,5 +73,17 @@ public class TaxInvoiceServiceImpl extends ServiceImpl<TaxInvoiceMapper, TaxInvo
 			taxInvoiceGoodsMapper.deleteByMainId(id.toString());
 		}
 	}
-	
+
+	@Override
+	public List<Report> findReport(Report report){
+		try{
+			return this.taxInvoiceMapper.findByReport(report);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+
 }

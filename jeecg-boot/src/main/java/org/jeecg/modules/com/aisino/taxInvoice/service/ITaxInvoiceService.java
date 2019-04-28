@@ -1,6 +1,7 @@
 package org.jeecg.modules.com.aisino.taxInvoice.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.com.aisino.taxInvoice.entity.Report;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceGoods;
 
@@ -37,5 +38,11 @@ public interface ITaxInvoiceService extends IService<TaxInvoice> {
 	 * 批量删除一对多
 	 */
 	public void delBatchMain (Collection<? extends Serializable> idList);
-	
+
+	/**
+	 * 统计报表查询
+	 * @param report 转换类
+	 * @return	List<Report>
+	 */
+	public List<Report> findReport(Report report);
 }
