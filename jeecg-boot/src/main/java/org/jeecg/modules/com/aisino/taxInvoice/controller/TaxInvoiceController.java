@@ -67,6 +67,7 @@ public class TaxInvoiceController {
 	 * @return
 	 */
 	@GetMapping(value = "/list")
+	@PermissionData(pageComponent="taxinvoice/TaxInvoiceList")
 	public Result<IPage<TaxInvoice>> queryPageList(TaxInvoice taxInvoice,
 												   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 												   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -74,9 +75,9 @@ public class TaxInvoiceController {
 		Result<IPage<TaxInvoice>> result = new Result<IPage<TaxInvoice>>();
 		QueryWrapper<TaxInvoice> queryWrapper = QueryGenerator.initQueryWrapper(taxInvoice, req.getParameterMap());
 		String userName = ((SysUser) SecurityUtils.getSubject().getPrincipal()).getUsername();
-		if(!"admin".equals(userName)){
-			queryWrapper.eq("seller_tax_code",userName);
-		}
+//		if(!"admin".equals(userName)){
+//			queryWrapper.eq("seller_tax_code",userName);
+//		}
 		Page<TaxInvoice> page = new Page<TaxInvoice>(pageNo, pageSize);
 		IPage<TaxInvoice> pageList = taxInvoiceService.page(page, queryWrapper);
 		result.setSuccess(true);
