@@ -84,6 +84,25 @@ public class TaxInvoiceServiceImpl extends ServiceImpl<TaxInvoiceMapper, TaxInvo
 		return null;
 	}
 
+	@Override
+	public Report findNumber(Report report) {
+		try {
+			return this.taxInvoiceMapper.findByNumber(report);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Report findAount(Report report) {
+		try {
+			return this.taxInvoiceMapper.findByAmount(report);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 
 }

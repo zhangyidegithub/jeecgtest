@@ -21,4 +21,21 @@ public interface TaxInvoiceMapper extends BaseMapper<TaxInvoice> {
      * @return  Report
      */
     public List<Report> findByReport(Report report);
+
+    /**
+     * 报表开票量查询
+     * @param report    请求参数
+     * @return  Report
+     */
+    public Report findByNumber(Report report);
+
+    /**
+     * 报表金额查询
+     * @param report    请求参数
+     * @return  Report
+     */
+    public Report findByAmount(Report report);
+
+
+
 }

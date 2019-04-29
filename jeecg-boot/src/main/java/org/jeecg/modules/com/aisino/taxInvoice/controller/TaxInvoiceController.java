@@ -183,20 +183,6 @@ public class TaxInvoiceController {
 	}
 	
 	/**
-	  * 通过用户名和年份查询统计报表
-	 * @param Report 请求参数
-	 * @return
-	 */
-	@ApiOperation(value = "获取report数据列表", notes = "获取所有report数据列表", produces = "application/json")
-	@PostMapping(value = "/report")
-	public Result<List<Report>> queryTaxInvoicereport(@RequestBody Report report) {
-		Result<List<Report>> result = new Result<List<Report>>();
-		List<Report> reportList = taxInvoiceService.findReport(report);
-		result.setResult(reportList);
-		result.setSuccess(true);
-		return result;
-	}
-	/**
 	  * 通过id查询
 	 * @param id
 	 * @return
@@ -288,5 +274,49 @@ public class TaxInvoiceController {
       }
       return Result.ok("文件导入失败！");
   }
-
+  /*===================================================================*/
+  /*报表数据统计*/
+  /*===================================================================*/
+	 /**
+	  * 通过用户名和年份查询统计报表
+	  * @param Report 请求参数
+	  * @return
+	  */
+	 @ApiOperation(value = "获取report数据列表", notes = "获取所有report数据列表", produces = "application/json")
+	 @PostMapping(value = "/report")
+	 public Result<List<Report>> queryTaxInvoicereport(@RequestBody Report report) {
+		 Result<List<Report>> result = new Result<List<Report>>();
+		 List<Report> reportList = taxInvoiceService.findReport(report);
+		 result.setResult(reportList);
+		 result.setSuccess(true);
+		 return result;
+	 }
+	 /**
+	  * 通过用户名查询开票量统计报表
+	  * @param Report 请求参数
+	  * @return
+	  */
+	 @ApiOperation(value = "获取开票量报表数据", notes = "获取开票量报表数据", produces = "application/json")
+	 @PostMapping(value = "/number")
+	 public Result<Report> queryTaxInvoiceNumber(@RequestBody Report report) {
+		 Result<Report> result = new  Result<Report>();
+		 Report reportVo = taxInvoiceService.findNumber(report);
+		 result.setResult(reportVo);
+		 result.setSuccess(true);
+		 return result;
+	 }
+	 /**
+	  * 通过用户名查询开票金额统计报表
+	  * @param Report 请求参数
+	  * @return
+	  */
+	 @ApiOperation(value = "获取开票金额报表数据", notes = "获取开票金额报表数据", produces = "application/json")
+	 @PostMapping(value = "/amount")
+	 public Result<Report> queryTaxInvoiceAmount(@RequestBody Report report) {
+		 Result<Report> result = new Result<Report>();
+		 Report reportVo = taxInvoiceService.findAount(report);
+		 result.setResult(reportVo);
+		 result.setSuccess(true);
+		 return result;
+	 }
 }

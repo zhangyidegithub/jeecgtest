@@ -45,4 +45,18 @@ public interface ITaxInvoiceService extends IService<TaxInvoice> {
 	 * @return	List<Report>
 	 */
 	public List<Report> findReport(Report report);
+
+	/**
+	 * 报表开票量统计
+	 * @param report	转换类
+	 * @return	Report
+	 */
+	public Report findNumber(Report report);
+
+	/**
+	 *	报表金额统计
+	 * @param report	转换类
+	 * @return	Report
+	 */
+	public Report findAount(Report report);
 }
