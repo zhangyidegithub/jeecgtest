@@ -71,6 +71,7 @@ const editDictItem = (params)=>putAction("/sys/dictItem/edit",params);
 //字典标签专用（通过code获取字典数组）
 export const ajaxGetDictItems = (code, params)=>getAction(`/sys/dict/getDictItems/${code}`,params);
 
+
 //系统通告
 const doReleaseData = (params)=>getAction("/sys/annountCement/doReleaseData",params);
 const doReovkeData = (params)=>getAction("/sys/annountCement/doReovkeData",params);
@@ -115,6 +116,7 @@ export {
   queryDepartTreeList,
   queryIdTree,
   queryParentName,
+  redFpCylindrical,
   searchByKeywords,
   deleteByDepartId,
   deleteLog,

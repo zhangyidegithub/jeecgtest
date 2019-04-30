@@ -52,10 +52,10 @@ module.exports = {
   },
 
   devServer: {
-    port: 3000,
+    port: 3002,
     proxy: {
-     /* '/api': {
-        target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro', //mock API接口系统
+      /*'/api': {
+        target: 'http://192.168.4.25:8080', //mock API接口系统
         ws: false,
         changeOrigin: true,
         pathRewrite: {

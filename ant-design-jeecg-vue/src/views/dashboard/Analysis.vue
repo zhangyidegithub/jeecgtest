@@ -1,164 +1,85 @@
 <template>
   <div class="page-header-index-wide">
     <a-row :gutter="24">
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="总销售额" total="￥126,560">
-          <a-tooltip title="指标说明" slot="action">
+      <a-col :sm="24" :md="12" :xl="6" >
+        <chart-card :loading="loading" title="今日冲红金额" :total="this.redMoneyDay">
+          <a-tooltip title="今日冲红金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
-          <div>
-            <trend flag="up" style="margin-right: 16px;">
-              <span slot="term">周同比</span>
-              12%
-            </trend>
-            <trend flag="down">
-              <span slot="term">日同比</span>
-              11%
-            </trend>
-          </div>
-          <template slot="footer">日均销售额<span>￥ 234.56</span></template>
+          <template slot="footer">累计冲红金额<span>￥ {{ this.sumRedMoney }}</span></template>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="访问量" :total="8846 | NumberFormat">
-          <a-tooltip title="指标说明" slot="action">
+        <chart-card :loading="loading" title="今日红票量" :total="this.countRedDay" >
+          <a-tooltip title="今日红票量" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
-            <mini-area />
+            <!--<mini-area x="月份" y="票量"/>-->
           </div>
-          <template slot="footer">日访问量<span> {{ '1234' | NumberFormat }}</span></template>
+          <template slot="footer">累计红票量<span> {{ this.sumCountRed }}</span></template>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="支付笔数" :total="6560 | NumberFormat">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-bar :height="40" />
-          </div>
-          <template slot="footer">转化率 <span>60%</span></template>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="运营活动效果" total="78%">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-progress color="rgb(19, 194, 194)" :target="80" :percentage="78" :height="8" />
-          </div>
-          <template slot="footer">
-            <trend flag="down" style="margin-right: 16px;">
-              <span slot="term">同周比</span>
-              12%
-            </trend>
-            <trend flag="up">
-              <span slot="term">日环比</span>
-              80%
-            </trend>
-          </template>
-        </chart-card>
+
+        <!--<chart-card :loading="loading" title="日红票量" :total="8846 | NumberFormat">-->
+          <chart-card :loading="loading" :bordered="false" title="实时访问统计">
+            <div style="height: 105px">
+              <a-row>
+                <a-col :span="8">
+                  <div class="head-info" :class="center && 'center'">
+                    <span>今日IP</span>
+                    <p><a>{{ loginfo.todayIp }}</a></p>
+                  </div>
+                </a-col>
+                <a-col :span="8">
+                  <div class="head-info" :class="center && 'center'">
+                    <span>今日访问</span>
+                    <p><a>{{ loginfo.todayVisitCount }}</a></p>
+                  </div>
+                </a-col>
+                <a-col :span="8">
+                  <div class="head-info" :class="center && 'center'">
+                    <span>访问总览</span>
+                    <p><a>{{ loginfo.totalVisitCount }}</a></p>
+                  </div>
+                </a-col>
+              </a-row>
+            </div>
+            <template slot="footer">今日访问量<span> {{ loginfo.todayVisitCount }}</span></template>
+          </chart-card>
       </a-col>
     </a-row>
 
     <a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">
       <div class="salesCard">
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">
+
           <div class="extra-wrapper" slot="tabBarExtraContent">
-            <div class="extra-item">
-              <a>今日</a>
-              <a>本周</a>
-              <a>本月</a>
-              <a>本年</a>
-            </div>
-            <a-range-picker :style="{width: '256px'}" />
+            <!--<a-range-picker :style="{width: '256px'}" />-->
+            <a-dropdown>
+              <a class="ant-dropdown-link" href="#">{{ Year }}
+                <a-icon type="down" />
+              </a>
+              <a-menu slot="overlay" @click="onClick">
+                <a-menu-item key="1">{{ lastYear }}</a-menu-item>
+                <a-menu-item key="2">{{ thisYear }}</a-menu-item>
+              </a-menu>
+            </a-dropdown>
           </div>
-          <a-tab-pane loading="true" tab="销售额" key="1">
+          <a-tab-pane loading="true" tab="红字发票统计" key="1">
             <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar title="销售额排行" :dataSource="barData"/>
+              <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
+                <bar title="红字发票统计" :dataSource="barData"/>
               </a-col>
-              <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                <rank-list title="门店销售排行榜" :list="rankList"/>
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-          <a-tab-pane tab="访问量" key="2">
-            <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar title="销售额趋势" :dataSource="barData"/>
-              </a-col>
-              <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                <rank-list title="门店销售排行榜" :list="rankList"/>
-              </a-col>
+              <!--<a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">-->
+                <!--<rank-list title="门店销售排行榜" :list="rankList"/>-->
+              <!--</a-col>-->
             </a-row>
           </a-tab-pane>
         </a-tabs>
       </div>
     </a-card>
-
-    <a-row :gutter="12">
-      <a-col :xl="12" :lg="24" :md="24" :sm="24" :xs="24">
-        <a-card :loading="loading" :bordered="false" title="实时访问统计" :style="{ marginTop: '24px' }">
-          <a-dropdown :trigger="['click']" placement="bottomLeft" slot="extra">
-            <a class="ant-dropdown-link" href="#">
-              <a-icon type="ellipsis" />
-            </a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a href="javascript:;">操作一</a>
-              </a-menu-item>
-              <a-menu-item>
-                <a href="javascript:;">操作二</a>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
-          <div style="height: 105px">
-            <a-row>
-              <a-col :span="8">
-                <div class="head-info" :class="center && 'center'">
-                  <span>今日IP</span>
-                  <p><a>{{ loginfo.todayIp }}</a></p>
-                </div>
-              </a-col>
-              <a-col :span="8">
-                <div class="head-info" :class="center && 'center'">
-                  <span>今日访问</span>
-                  <p><a>{{ loginfo.todayVisitCount }}</a></p>
-                </div>
-              </a-col>
-              <a-col :span="8">
-                <div class="head-info" :class="center && 'center'">
-                  <span>访问总览</span>
-                  <p><a>{{ loginfo.totalVisitCount }}</a></p>
-                </div>
-              </a-col>
-            </a-row>
-          </div>
-        </a-card>
-      </a-col>
-      <a-col :xl="12" :lg="24" :md="24" :sm="24" :xs="24">
-        <a-card :loading="loading" :bordered="false" title="销售额类别占比" :style="{ marginTop: '24px' }">
-          <a-dropdown :trigger="['click']" placement="bottomLeft" slot="extra">
-            <a class="ant-dropdown-link" href="#">
-              <a-icon type="ellipsis" />
-            </a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a href="javascript:;">操作一</a>
-              </a-menu-item>
-              <a-menu-item>
-                <a href="javascript:;">操作二</a>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
-          <p>card content</p>
-          <p>card content</p>
-          <p>card content</p>
-        </a-card>
-      </a-col>
     </a-row>
   </div>
 </template>
@@ -174,21 +95,31 @@
   import Bar from '@/components/chart/Bar'
   import Trend from '@/components/Trend'
   import {getLoginfo} from '@/api/api'
+  import Vue from 'vue';
+  import store from '@/store'
+  import { redFpCylindrical, redFpStatisticsCount, redFpStatisticsMoney } from '../../api/login'
+  import { ACCESS_TOKEN, USER_NAME } from '../../store/mutation-types'
+  import { formatDate, formatDate2 } from '../../utils/util'
 
   const rankList = []
-  for (let i = 0; i < 7; i++) {
-    rankList.push({
-      name: '白鹭岛 ' + (i+1) + ' 号店',
-      total: 1234.56 - i * 100
-    })
-  }
+  // for (let i = 0; i < 7; i++) {
+  //   rankList.push({
+  //     name: '白鹭岛 ' + (i+1) + ' 号店',
+  //     total: 1234.56 - i * 100
+  //   })
+  // }
   const barData = []
-  for (let i = 0; i < 12; i += 1) {
-    barData.push({
-      x: `${i + 1}月`,
-      y: Math.floor(Math.random() * 1000) + 200
-    })
-  }
+  let datee=new Date();
+  // let date=datee.getDate();
+  // let month=datee.getMonth()+1
+   // let today=""+datee.getFullYear()+"-"+month+"-"+date;
+  const token=Vue.ls.get(ACCESS_TOKEN);
+  // for (let i = 0; i < 12; i += 1) {
+  //   barData.push({
+  //     x: `${i + 1}月`,
+  //     y: Math.floor(Math.random() * 1000) + 200
+  //   })
+  // }
   export default {
     name: "Analysis",
     components: {
@@ -207,17 +138,203 @@
         loading: true,
         center: null,
         rankList,
-        barData,
+        barData:[],
         loginfo:{},
+        lastYear:'',
+        thisYear:'',
+        Year:'',
+        NSRSBH:'',
+        redMoneyDay:'',
+        sumRedMoney:'',
+        countRedDay:'',
+        sumCountRed:'',
+        today:''
       }
     },
     created() {
       setTimeout(() => {
+        // const date=new Date;
+        this.today=formatDate2(datee,'yyyy-MM-dd');
         this.loading = !this.loading
+        this.thisYear=datee.getFullYear();
+        this.lastYear=datee.getFullYear()-1;
+        this.Year=this.thisYear;
+        // console.log(today);
+        this.NSRSBH=Vue.ls.get(USER_NAME);
+        this.redFpmonthly(),
+        this.redMoneyday(),
+          this.sumRedmoney(),
+          this.countRedday(),
+          this.sumCountred()
       }, 1000)
       this.initLogInfo();
     },
     methods: {
+
+      //年份切换
+      onClick({ key }){
+        if(key==='1'){
+          this.Year=this.lastYear;
+          this.redFpmonthly()
+          }else if (key==='2'){
+          this.Year=this.thisYear;
+          this.redFpmonthly()
+        }
+      },
+      //红字发票柱状体请求
+      redFpmonthly() {
+        const that = this;
+        let NSRSBH = this.userNameAchane(that.NSRSBH);
+        let params;
+        if (NSRSBH === '') {
+           params = {
+            year: that.Year
+          }
+        } else {
+           params = {
+            count: 0,
+            month: "",
+            userName: NSRSBH,
+            year: that.Year
+          }
+      }
+        that.loading = true;
+        redFpCylindrical(token,params).then((res)=>{
+          if(res.success){
+            that.$message.success(res.message);
+            that.loading = false;
+            const totalList = []
+            let x,y
+            for (let i = 0; i < res.result.length; i++) {
+               x=res.result[i].month
+               y=res.result[i].count
+              totalList.push({
+                x: x+"月",
+                y: y
+              })
+            }
+            this.barData=totalList;
+          }else {
+            that.$message.error(res.message);
+            that.loading = false;
+          }
+        })
+      },
+      //今日冲红金额
+      redMoneyday(){
+        const that=this;
+        let NSRSBH=this.userNameAchane(that.NSRSBH);
+        let params
+          if(NSRSBH===''){
+            params= {
+              date:that.today
+            }
+          }else {
+            params= {
+              date:that.today,
+              userName: NSRSBH
+            }
+          }
+        redFpStatisticsMoney(token,params).then((res)=>{
+          if (res.success){
+            // that.$message.success(res.message);
+            that.loading=false;
+            if (res.result === null) {
+              that.redMoneyDay="0";
+            }else {
+              that.redMoneyDay = res.result.amount +"";
+            }          }else {
+            that.$message.error(res.message);
+            that.loading = false;
+          }
+        })
+      },
+      //本月冲红金额
+      sumRedmoney(){
+        const that=this;
+        let NSRSBH=this.userNameAchane(that.NSRSBH);
+        let params
+        if(NSRSBH===''){
+          params= {
+          }
+        }else {
+          params= {
+            userName: NSRSBH
+          }
+        }
+        redFpStatisticsMoney(token,params).then((res)=>{
+          if (res.success){
+            // that.$message.success(res.message);
+            that.loading=false;
+            if (res.result === null) {
+              that.sumRedMoney="0";
+            }else {
+              that.sumRedMoney = res.result.amount + "";
+            }          }else {
+            that.$message.error(res.message);
+            that.loading = false;
+          }
+        })
+
+      },
+      // //今日红票量
+      countRedday(){
+        const that=this;
+        let NSRSBH=this.userNameAchane(that.NSRSBH);
+        let params
+        if(NSRSBH===''){
+          params= {
+            date:that.today,
+          }
+        }else {
+          params= {
+            date:that.today,
+            userName: NSRSBH
+          }
+        }
+        redFpStatisticsCount(token,params).then((res)=>{
+          if (res.success){
+            // that.$message.success(res.message);
+            that.loading=false;
+            that.countRedDay=res.result.count+"";
+          }else {
+            that.$message.error(res.message);
+            that.loading = false;
+          }
+        })
+
+      },
+      // //本月红票量
+      sumCountred(){
+        const that=this;
+        let NSRSBH=this.userNameAchane(that.NSRSBH)+'';
+        let params
+        if(NSRSBH===''){
+          params= {
+          }
+        }else {
+          params= {
+            userName: NSRSBH
+          }
+        }
+        redFpStatisticsCount(token,params).then((res)=>{
+          if (res.success){
+            // that.$message.success(res.message);
+            that.loading=false;
+            that.sumCountRed=res.result.count+"";
+          }else {
+            that.$message.error(res.message);
+            that.loading = false;
+          }
+        })
+      },
+      userNameAchane(a){
+        if (a==='admin' || a==='ywadmin'){
+          return a='';
+        } else {
+          return a;
+        }
+      },
       initLogInfo () {
         getLoginfo(null).then((res)=>{
           if(res.success){

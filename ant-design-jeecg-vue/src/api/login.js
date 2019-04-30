@@ -45,6 +45,46 @@ export function logout(logoutToken) {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       'X-Access-Token':  logoutToken
-    }
+    },
+  })
+}
+
+
+export function redFpCylindrical(logoutToken,parameter) {
+  console.log(parameter)
+  return axios({
+    url: '/com/aisino/taxInvoice/report',
+    method: 'post',
+    headers: {
+      'Content-Type':'application/json;charset=UTF-8',
+      'X-Access-Token':  logoutToken
+    },
+    data: parameter
+  })
+}
+
+export function redFpStatisticsMoney(logoutToken,parameter) {
+  console.log(parameter)
+  return axios({
+    url: '/com/aisino/taxInvoice/amount',
+    method: 'post',
+    headers: {
+      'Content-Type':'application/json;charset=UTF-8',
+      'X-Access-Token':  logoutToken
+    },
+    data: parameter
+  })
+}
+
+export function redFpStatisticsCount(logoutToken,parameter) {
+  console.log(logoutToken);
+  return axios({
+    url: '/com/aisino/taxInvoice/number',
+    method: 'post',
+    headers: {
+      'Content-Type':'application/json;charset=UTF-8',
+      'X-Access-Token':  logoutToken
+    },
+    data: parameter
   })
 }
