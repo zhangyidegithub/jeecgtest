@@ -1,19 +1,16 @@
 package org.jeecg.modules.com.aisino.taxInvoice.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.PermissionData;
+import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.Report;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoice;
 import org.jeecg.modules.com.aisino.taxInvoice.entity.TaxInvoiceGoods;
@@ -26,21 +23,22 @@ import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-
-import org.jeecg.common.api.vo.Result;
-import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.common.util.oConvertUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.extern.slf4j.Slf4j;
-import com.alibaba.fastjson.JSON;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
  /**
  * @Title: Controller
@@ -57,7 +55,32 @@ public class TaxInvoiceController {
 	private ITaxInvoiceService taxInvoiceService;
 	@Autowired
 	private ITaxInvoiceGoodsService taxInvoiceGoodsService;
-	
+	 /**
+	  * 分页列表查询
+	  * @param taxInvoice
+	  * @param pageNo
+	  * @param pageSize
+	  * @param req
+	  * @return
+	  */
+	 @GetMapping(value = "/listBlue")
+	 @PermissionData(pageComponent="taxinvoice/TaxInvoiceBlueList")
+	 public Result<IPage<TaxInvoice>> queryPageList4Blue(TaxInvoice taxInvoice,
+													@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+													@RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+													HttpServletRequest req) {
+		 Result<IPage<TaxInvoice>> result = new Result<IPage<TaxInvoice>>();
+		 QueryWrapper<TaxInvoice> queryWrapper = QueryGenerator.initQueryWrapper(taxInvoice, req.getParameterMap());
+		 String userName = ((SysUser) SecurityUtils.getSubject().getPrincipal()).getUsername();
+//		if(!"admin".equals(userName)){
+//			queryWrapper.eq("seller_tax_code",userName);
+//		}
+		 Page<TaxInvoice> page = new Page<TaxInvoice>(pageNo, pageSize);
+		 IPage<TaxInvoice> pageList = taxInvoiceService.page(page, queryWrapper);
+		 result.setSuccess(true);
+		 result.setResult(pageList);
+		 return result;
+	 }
 	/**
 	  * 分页列表查询
 	 * @param taxInvoice

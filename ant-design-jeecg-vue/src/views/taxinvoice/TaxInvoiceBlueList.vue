@@ -49,7 +49,7 @@
     <!-- table区域-end -->
 
     <!-- 表单区域 -->
-    <taxInvoice-modal ref="modalForm" @ok="modalFormOk"/>
+    <tax-invoice-blue-modal ref="modalForm" @ok="modalFormOk"/>
 
   </a-card>
 </template>
@@ -57,29 +57,19 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import TaxInvoiceModal from './modules/TaxInvoiceModal'
+  import TaxInvoiceBlueModal from './modules/TaxInvoiceBlueModal'
 
   export default {
-    name: "TaxInvoiceList",
+    name: "TaxInvoiceBlueList",
     mixins: [JeecgListMixin],
     components: {
-      TaxInvoiceModal
+      TaxInvoiceBlueModal
     },
     data () {
       return {
-        description: '红字发票申请单管理页面',
+        description: '蓝票信息页面',
         // 表头
         columns: [
-          // {
-          //   title: '序号',
-          //   dataIndex: '',
-          //   key: 'rowIndex',
-          //   width: 60,
-          //   align: "center",
-          //   customRender:function (t, r, index) {
-          //     return parseInt(index)+1;
-          //   }
-          // },
           {
             title: '信息表编号',
             align:"center",
@@ -129,7 +119,7 @@
         ],
         // 请求参数
         url: {
-          list: "/com/aisino/taxInvoice/list",
+          list: "/com/aisino/taxInvoice/listBlue",
           delete: "/com/aisino/taxInvoice/delete",
           deleteBatch: "/com/aisino/taxInvoice/deleteBatch",
           exportXlsUrl: "com/aisino/taxInvoice/exportXls",
