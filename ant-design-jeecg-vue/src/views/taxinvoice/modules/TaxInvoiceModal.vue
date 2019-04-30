@@ -53,10 +53,10 @@
                   方
                 </td>
                 <td width="350">
-                  <label class="Validform_label">&nbsp;&nbsp;名&nbsp;&nbsp;&nbsp;&nbsp;称&nbsp;&nbsp;:{{this.model.clientTaxName}}</label>
+                  <label class="Validform_label">&nbsp;&nbsp;名&nbsp;&nbsp;&nbsp;&nbsp;称&nbsp;&nbsp;:{{this.model.sellerTaxName}}</label>
                   <br>&nbsp;&nbsp;
                   <br>
-                  <label class="Validform_label">纳税人识别号:{{this.model.clientTaxCode}}</label>
+                  <label class="Validform_label">纳税人识别号:{{this.model.sellerTaxCode}}</label>
                   <br>&nbsp;&nbsp;
                 </td>
                 <td width="1" align="center" valign="middle" style="border-right:2px #A52A2A solid;">&nbsp;</td>
