@@ -19,7 +19,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @author cheng
+ * @author zhangchengping
  * @PackageName:org.jeecg.modules.com.aisino.customer.job
  * @ClassName:AuthorCheckJob
  * @Description: 检验企业盘是否授权过期

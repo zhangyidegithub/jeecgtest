@@ -17,7 +17,7 @@ import java.util.Collection;
 
 /**
  * @Description: 企业信息
- * @author： jeecg-boot
+ * @author： zhangchengping
  * @date：   2019-04-18
  * @version： V1.0
  */

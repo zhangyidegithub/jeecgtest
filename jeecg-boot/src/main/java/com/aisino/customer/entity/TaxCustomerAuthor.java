@@ -1,15 +1,16 @@
 package com.aisino.customer.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
+import java.io.Serializable;
+
 /**
  * @Description: 企业授权
- * @author： jeecg-boot
+ * @author： zhangchengping
  * @date：   2019-04-18
  * @version： V1.0
  */
