@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aisino.taxInvoice.mapper.TaxInvoiceGoodsMapper">
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  TAX_INVOICE_GOODS 
+		WHERE
+			 inv_id = #{id}
+	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultType="com.aisino.taxInvoice.entity.TaxInvoiceGoods">
+		SELECT * 
+		FROM  TAX_INVOICE_GOODS
+		WHERE
+			 inv_id = #{id}
+	</select>
+</mapper>

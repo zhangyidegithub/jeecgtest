@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aisino.customer.mapper.TaxCustomerAuthorMapper">
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  TAX_CUSTOMER_AUTHOR 
+		WHERE
+			 CUSTOMER_ID = #{id} 		
+	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultType="com.aisino.customer.entity.TaxCustomerAuthor">
+		SELECT * 
+		FROM  TAX_CUSTOMER_AUTHOR
+		WHERE
+			 CUSTOMER_ID = #{id} 		
+	</select>
+	<update id="updateAuthorStatus">
+		update TAX_CUSTOMER_AUTHOR
+		<set>
+			<if test="authorStatus != null">AUTHOR_STATUS=#{authorStatus},</if>
+			<if test="islockReached != null">ISLOCK_REACHED=#{islockReached}</if>
+		</set>
+		where check_code=#{checkCode} and customer_id=#{customerId}
+	</update>
+	<select id="selectAuthorExpire"  resultType="com.aisino.customer.entity.TaxCustomerAuthor">
+		select * from tax_customer_author a where not exists(
+  			select * from tax_customer_author c where c.id=a.id and c.author_status=0 and c.islock_reached=1
+		) and not exists(
+			select * from tax_customer_author_info b where a.customer_id=b.customer_id and a.cust_tax_code=b.cust_tax_code
+			and
+			to_date(to_char(sysdate,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+			between
+			to_date(to_char(author_begin_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+			and
+			to_date(to_char(author_end_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+		)
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,32 @@
+package com.aisino.customer.service.impl;
+
+import com.aisino.customer.entity.TaxCustomerAuthor;
+import com.aisino.customer.mapper.TaxCustomerAuthorMapper;
+import com.aisino.customer.service.ITaxCustomerAuthorService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @Description: 企业授权
+ * @author： jeecg-boot
+ * @date：   2019-04-18
+ * @version： V1.0
+ */
+@Service
+public class TaxCustomerAuthorServiceImpl extends ServiceImpl<TaxCustomerAuthorMapper, TaxCustomerAuthor> implements ITaxCustomerAuthorService {
+	@Autowired
+	private TaxCustomerAuthorMapper taxCustomerAuthorMapper;
+	
+	@Override
+	public List<TaxCustomerAuthor> selectByMainId(String mainId) {
+		return taxCustomerAuthorMapper.selectByMainId(mainId);
+	}
+
+	@Override
+	public List<TaxCustomerAuthor> selectAuthorExpire() {
+		return taxCustomerAuthorMapper.selectAuthorExpire();
+	}
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aisino.taxInvoice.mapper.TaxInvoiceMapper">
+
+    <select id="findByReport" parameterType="com.aisino.taxInvoice.entity.Report" resultType="com.aisino.taxInvoice.entity.Report">
+		SELECT TO_CHAR(ds.CREATED_DATE,'MM') month,count(*) count
+        FROM (
+            SELECT *
+            FROM TAX_INVOICE
+            WHERE 1 = 1
+            <if test="Report.userName != null and Report.userName != ''">
+                CLIENT_TAX_CODE = #{userName}
+            </if>
+            <if test="year != null">
+                AND TO_CHAR(created_date,'yyyy') = #{year}
+            </if>
+         ) ds
+        GROUP BY TO_CHAR(ds.CREATED_DATE,'MM')
+        ORDER BY TO_CHAR(ds.CREATED_DATE,'MM') ASC NULLS  LAST
+	</select>
+
+    <select id="findByNumber" parameterType="com.aisino.taxInvoice.entity.Report" resultType="com.aisino.taxInvoice.entity.Report">
+        SELECT COUNT(1) count
+        FROM TAX_INVOICE
+        WHERE 1 = 1
+        <if test="date != null">
+            AND  TO_CHAR(CREATED_DATE,'YYYY-MM-DD')=#{date}
+        </if>
+        <if test="userName!= null">
+            AND CLIENT_TAX_CODE = #{userName}
+        </if>
+	</select>
+    <select id="findByAmount" parameterType="com.aisino.taxInvoice.entity.Report" resultType="com.aisino.taxInvoice.entity.Report">
+        SELECT SUM(amount) AS amount FROM TAX_INVOICE
+        WHERE 1 = 1
+        <if test="userName != null">
+            AND CLIENT_TAX_CODE = #{userName}
+        </if>
+        <if test="date != null">
+            AND TO_CHAR(CREATED_DATE,'YYYY-MM-DD') = #{date}
+        </if>
+	</select>
+</mapper>
