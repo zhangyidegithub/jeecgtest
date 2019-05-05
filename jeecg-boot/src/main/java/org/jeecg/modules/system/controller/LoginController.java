@@ -68,6 +68,7 @@ public class LoginController {
 			}
 			//生成token
 			String token = JwtUtil.sign(username, syspassword);
+			System.out.println(token);
 			redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
 			 //设置超时时间
 			redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME/1000);
@@ -84,7 +85,6 @@ public class LoginController {
 	
 	/**
 	 * 退出登录
-	 * @param username
 	 * @return
 	 */
 	@RequestMapping(value = "/logout")

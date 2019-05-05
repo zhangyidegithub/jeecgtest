@@ -1,6 +1,8 @@
 package org.jeecg.modules.system.controller;
 
 
+import com.aisino.customer.entity.TaxCustomer;
+import com.aisino.customer.service.ITaxCustomerService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -13,12 +15,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.aspect.annotation.PermissionData;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.MD5Util;
 import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.com.aisino.customer.entity.TaxCustomer;
-import org.jeecg.modules.com.aisino.customer.service.ITaxCustomerService;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.entity.SysUserDepart;
 import org.jeecg.modules.system.entity.SysUserRole;
@@ -322,7 +323,7 @@ public class SysUserController {
      * 修改企业信息密码
      * @param sysUser
      * @param password
-     */
+password     */
     private void updateCusTaxPassword(@RequestBody SysUser sysUser, String password) {
         TaxCustomer taxcustomer = taxCustomerService.getOne(new LambdaQueryWrapper<TaxCustomer>().eq(TaxCustomer::getCustTaxCode, sysUser.getUsername()));
         if(null != taxcustomer){
