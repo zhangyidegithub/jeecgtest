@@ -67,7 +67,7 @@
               <!--</a-menu>-->
             <!--</a-dropdown>-->
           </div>
-          <a-tab-pane loading="true" tab="红字发票申请单量统比" key="1">
+          <a-tab-pane loading="true" tab="红字发票申请单量同比" key="1">
             <a-row>
               <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
                 <!--<bar title="申请红字发票统计" :dataSource="barData"/> 柱状体-->
