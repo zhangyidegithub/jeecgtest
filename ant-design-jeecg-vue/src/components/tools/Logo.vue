@@ -33,8 +33,8 @@
     },
     methods: {
       whatfuckdat: function(){
-        alert("a");
-        console.log("aaa")
+        // alert("a");
+        // console.log("aaa")
       }
     }
 
