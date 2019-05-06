@@ -82,7 +82,7 @@
     </div>
     <!-- table区域-end -->
     <a-tabs defaultActiveKey="1" @change="tabsChange">
-      <a-tab-pane tab="税盘" key="1">
+      <a-tab-pane tab="金税盘信息" key="1">
         <Tax-Customer-Author-List ref="taxCustomerAuthorList"></Tax-Customer-Author-List>
       </a-tab-pane>
       <a-tab-pane tab="授权信息" key="2" forceRender>

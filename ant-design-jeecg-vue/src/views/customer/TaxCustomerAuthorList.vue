@@ -53,7 +53,7 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
         <template slot="authorStatus"  slot-scope="textVal">
-          <span  :style="{color:(textVal=='1'?'limegreen':'red')}">{{textVal=='1'?'有效':'无效'}}</span>
+          <span  :style="{color:(textVal=='1'?'limegreen':'red')}">{{textVal=='1'?'有效':'失效'}}</span>
         </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)" v-has="'customerAuthor:edit'" >编辑</a>
