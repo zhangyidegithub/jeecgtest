@@ -101,7 +101,7 @@
             dataIndex: 'sellerTaxName'
           },
           {
-            title: '经办人',
+            title: '开票人',
             align:"center",
             dataIndex: 'invoicer'
           },

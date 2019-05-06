@@ -37,6 +37,11 @@ public class TaxCustomerAuthorInfoServiceImpl extends ServiceImpl<TaxCustomerAut
 	}
 
 	@Override
+	public TaxCustomerAuthorInfo selectEffectiveAuth(String customerId, String checkCode) {
+		return taxCustomerAuthorInfoMapper.selectEffectiveAuth(customerId,checkCode);
+	}
+
+	@Override
 	@Transactional
 	public boolean save(TaxCustomerAuthorInfo entity) {
 		boolean flag = super.save(entity);

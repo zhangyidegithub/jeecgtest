@@ -6,7 +6,6 @@ import com.aisino.customer.service.ITaxCustomerAuthorInfoService;
 import com.aisino.customer.service.ITaxCustomerAuthorService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -273,15 +272,16 @@ public class TaxCustomerAuthorController {
 			 result.error500("参数异常，未查询出有效实体");
 			 return result;
 		 }
+		 if(soutceTaxCustomerAuthor.getAuthorStatus()==0){
+			 result.error500("当前盘授权状态无效");
+			 return result;
+		 }
 		 TaxCustomerAuthor  targetTaxCustomerAuthor =  taxCustomerAuthorService.getById(targetAuthId);
 		 if(null == targetTaxCustomerAuthor){
 			 result.error500("参数异常，未查询出有效实体");
 			 return result;
 		 }
-		 TaxCustomerAuthorInfo authorInfo =  taxCustomerAuthorInfoService.getOne(new LambdaQueryWrapper<TaxCustomerAuthorInfo>()
-				 .eq(TaxCustomerAuthorInfo::getCustomerId,soutceTaxCustomerAuthor.getCustomerId())
-				 .eq(TaxCustomerAuthorInfo::getCheckCode,soutceTaxCustomerAuthor.getCheckCode())
-				 .orderByDesc(TaxCustomerAuthorInfo::getCreatedDate));
+		 TaxCustomerAuthorInfo authorInfo =  taxCustomerAuthorInfoService.selectEffectiveAuth(soutceTaxCustomerAuthor.getCustomerId(),soutceTaxCustomerAuthor.getCheckCode());
 		 if(null == authorInfo){
 			 result.error500("原盘未查询出有效授权记录");
 			 return result;
@@ -305,7 +305,12 @@ public class TaxCustomerAuthorController {
 			 result.error500("数据更新异常");
 			 return result;
 		 }
+		 //更新原盘状态
+		 soutceTaxCustomerAuthor.setAuthorStatus(0);
+		 soutceTaxCustomerAuthor.setIslockReached("1");
+		 taxCustomerAuthorService.updateById(soutceTaxCustomerAuthor);
 		 result.setResult(soutceTaxCustomerAuthor);
+
 		 result.setSuccess(true);
 		 result.success("迁移成功");
 		 return result;

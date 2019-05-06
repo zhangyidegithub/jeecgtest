@@ -21,4 +21,11 @@ public interface ITaxCustomerAuthorInfoService extends IService<TaxCustomerAutho
 	 * @return
 	 */
 	public boolean deleteByCheckCode(String customerId,String checkCode);
+	/**
+	 * 查询有效授权
+	 * @param customerId
+	 * @param checkCode
+	 * @return
+	 */
+	public TaxCustomerAuthorInfo selectEffectiveAuth(String customerId,String checkCode);
 }

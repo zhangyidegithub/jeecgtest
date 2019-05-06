@@ -34,4 +34,12 @@ public interface TaxCustomerAuthorInfoMapper extends BaseMapper<TaxCustomerAutho
 	 * @return
 	 */
 	public boolean deleteByAuthorIds(List<String> authorIds);
+
+	/**
+	 * 查询有效授权
+	 * @param customerId
+	 * @param checkCode
+	 * @return
+	 */
+	public TaxCustomerAuthorInfo selectEffectiveAuth(@Param(value = "customerId")String customerId,@Param(value = "checkCode")String checkCode);
 }

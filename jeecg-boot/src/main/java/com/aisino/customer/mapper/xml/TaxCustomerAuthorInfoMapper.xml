@@ -32,4 +32,15 @@
 			</foreach>
 		)
 	</delete>
+	<select id="selectEffectiveAuth" resultType="com.aisino.customer.entity.TaxCustomerAuthorInfo">
+		select * from (
+			select info.*,row_number() over (partition by customer_id,check_code order by created_date desc) rn from tax_customer_author_info info
+			where  to_date(to_char(sysdate,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+			between
+			to_date(to_char(author_begin_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+			and
+			to_date(to_char(author_end_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+			and customer_id=#{customerId} and check_code=#{checkCode}
+      	)b where rn = 1
+	</select>
 </mapper>
