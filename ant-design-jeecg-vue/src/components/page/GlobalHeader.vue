@@ -23,7 +23,7 @@
     <div v-else :class="['top-nav-header-index', theme]">
       <div class="header-index-wide">
         <div class="header-index-left" :style="topMenuStyle.headerIndexLeft">
-          <logo ref="Logo" class="top-nav-header" :show-title="device !== 'mobile'" :style="topMenuStyle.topNavHeader"/>
+          <logo ref="Logo" class="top-nav-header" :show-title="device !== 'mobile'" :style="topMenuStyle.topNavHeader"></logo>
           <div v-if="device !== 'mobile'" id="top-nav-scroll-view" :style="topMenuStyle.scrollView">
             <div id="top-nav-scroll-width" :style="topMenuStyle.scrollWidth">
               <s-menu
@@ -150,9 +150,9 @@
         //   console.log(this.$refs.Logo);
         // })
         // alert("bbb")
-        setTimeout(()=>{
-          this.$refs.Logo.whatfuckdat();
-        },10)
+        // setTimeout(()=>{
+        //   this.$refs.Logoo.whatFuckDay();
+        // },10)
       },
       //update-begin--author:sunjianlei---date:20190408------for: 顶部导航栏增加横向滚动条-----
       buildTopMenuStyle() {

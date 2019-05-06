@@ -32,9 +32,9 @@
       }
     },
     methods: {
-      whatfuckdat: function(){
+      whatFuckDay(){
         // alert("a");
-        // console.log("aaa")
+        console.log("aaa")
       }
     }
 
