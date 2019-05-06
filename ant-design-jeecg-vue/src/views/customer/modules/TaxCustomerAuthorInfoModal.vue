@@ -24,7 +24,7 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="盘号"
+          label="税盘号"
           hasFeedback>
 
           <a-select
@@ -33,7 +33,7 @@
             :getPopupContainer="getPopupContainer"
             :filterOption="filterOption"
             optionFilterProp="children"
-            placeholder="请选择盘号">
+            placeholder="请选择税盘">
             <a-select-option v-for="item in customerAuthors"  :key="item.checkCode">{{item.checkCode}}</a-select-option>
           </a-select>
         </a-form-item>
@@ -137,7 +137,7 @@
             dataIndex: 'custTaxCode',
           },
           {
-            title: '盘号',
+            title: '税盘号',
             align: "center",
             dataIndex: 'checkCode',
           },

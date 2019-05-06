@@ -37,9 +37,9 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="盘号"
+          label="税盘号"
           hasFeedback>
-          <a-input placeholder="请输入盘号，用于客户端授权验证使用" v-decorator="['checkCode', validatorRules.checkCode]" />
+          <a-input placeholder="请输入税盘号，用于客户端授权验证使用" v-decorator="['checkCode', validatorRules.checkCode]" />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
@@ -62,7 +62,7 @@
           hasFeedback>
           <a-input placeholder="请输入联系人手机号" v-decorator="['linkPhone', validatorRules.linkPhone]" />
         </a-form-item>
-        <a-form-item label="无票标志" :labelCol="labelCol" :wrapperCol="wrapperCol" hasFeedback>
+        <!--<a-form-item label="无票标志" :labelCol="labelCol" :wrapperCol="wrapperCol" hasFeedback>
           <a-select v-decorator="[ 'isinvEmpty', validatorRules.isinvEmpty]" placeholder="请选择无票标志">
             <a-select-option :value="1">有可用发票</a-select-option>
             <a-select-option :value="0">无可用发票</a-select-option>
@@ -73,7 +73,7 @@
             <a-select-option :value="1">已到抄税期</a-select-option>
             <a-select-option :value="0">未到抄税期</a-select-option>
           </a-select>
-        </a-form-item>
+        </a-form-item>-->
         <!--{initialValue:0}-->
         <a-form-item label="锁死标志" :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="authorhiding" hasFeedback>
           <a-select  v-decorator="[ 'islockReached', {rules: [{ required: true, message: '请选择是否到锁死期!' }],initialValue:1}]" placeholder="请选择锁死标志">

@@ -15,14 +15,14 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="当前盘"
+          label="当前税盘号"
           hasFeedback>
           <a-input v-model="sourceCusCheckCode" disabled="disabled"/>
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="授权转移-目标盘"
+          label="目标税盘号"
           hasFeedback>
           <a-select
             showSearch
@@ -30,7 +30,7 @@
             :getPopupContainer="getPopupContainer"
             :filterOption="filterOption"
             optionFilterProp="children"
-            placeholder="请选择盘号">
+            placeholder="请选择税盘">
             <a-select-option v-for="item in customerAuthors" v-if="item.checkCode==sourceCusCheckCode ? false:true"  :key="item.id" >{{item.checkCode}}</a-select-option>
           </a-select>
         </a-form-item>
@@ -130,7 +130,7 @@
           this.cusAuthorId = authorId;
           this.edit({"authorId":authorId}, '');
         } else {
-          this.$message.warning("请选择盘");
+          this.$message.warning("请选择税盘");
         }
       },
       edit(record, v) {

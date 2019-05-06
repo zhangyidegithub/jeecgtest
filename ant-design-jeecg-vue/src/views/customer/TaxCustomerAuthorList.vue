@@ -5,8 +5,8 @@
       <a-form layout="inline">
         <a-row :gutter="24">
           <a-col :span="6">
-            <a-form-item label="盘号">
-              <a-input placeholder="盘号" v-model="queryParam.checkCode"></a-input>
+            <a-form-item label="税盘号">
+              <a-input placeholder="税盘号" v-model="queryParam.checkCode"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="8" >
