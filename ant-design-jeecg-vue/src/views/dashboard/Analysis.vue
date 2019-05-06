@@ -67,7 +67,7 @@
               <!--</a-menu>-->
             <!--</a-dropdown>-->
           </div>
-          <a-tab-pane loading="true" tab="申请红字发票统计" key="1">
+          <a-tab-pane loading="true" tab="红字发票申请单量同比" key="1">
             <a-row>
               <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
                 <!--<bar title="申请红字发票统计" :dataSource="barData"/> 柱状体-->
@@ -185,15 +185,18 @@
         // console.log(today);
         this.NSRSBH=Vue.ls.get(USER_NAME);
         // this.redFpmonthly(),
+        this.redFpBrokenLine(),
         this.redMoneyday(),
           this.sumRedmoney(),
           this.countRedday(),
-          this.sumCountred(),
-        this.redFpBrokenLine()
+          this.sumCountred()
+
 
       }, 100)
       this.initLogInfo();
-
+      setTimeout(() => {
+        this.shujufuyu();
+      },5000)
 
     },
     watch: {
@@ -214,7 +217,6 @@
       'DataRes2': function () {
         this.shujufuyu();
       }
-
     },
     methods: {
       //年份切换
@@ -228,46 +230,44 @@
       //   }
       // },
       //红字发票柱状体请求
-      redFpmonthly() {
-        const that = this;
-        let NSRSBH = this.userNameAchane(that.NSRSBH);
-        let params;
-        if (NSRSBH === '') {
-          params = {
-            year: that.Year
-          }
-        } else {
-          params = {
-            count: 0,
-            month: "",
-            userName: NSRSBH,
-            year: that.Year
-          }
-        }
-        that.loading = true;
-        redFpCylindrical(token,params).then((res)=>{
-          if(res.success){
-            that.$message.success(res.message);
-            that.loading = false;
-            const totalList = []
-            let x,y
-            for (let i = 0; i < res.result.length; i++) {
-               x=res.result[i].month
-               y=res.result[i].count
-              totalList.push({
-                x: x+"月",
-                y: y
-              })
-            }
-            this.barData=totalList;
-          }else {
-            that.$message.error(res.message);
-            that.loading = false;
-          }
-        })
-      },
-
-
+      // redFpmonthly() {
+      //   const that = this;
+      //   let NSRSBH = this.userNameAchane(that.NSRSBH);
+      //   let params;
+      //   if (NSRSBH === '') {
+      //     params = {
+      //       year: that.Year
+      //     }
+      //   } else {
+      //     params = {
+      //       count: 0,
+      //       month: "",
+      //       userName: NSRSBH,
+      //       year: that.Year
+      //     }
+      //   }
+      //   that.loading = true;
+      //   redFpCylindrical(token,params).then((res)=>{
+      //     if(res.success){
+      //       that.$message.success(res.message);
+      //       that.loading = false;
+      //       const totalList = []
+      //       let x,y
+      //       for (let i = 0; i < res.result.length; i++) {
+      //          x=res.result[i].month
+      //          y=res.result[i].count
+      //         totalList.push({
+      //           x: x+"月",
+      //           y: y
+      //         })
+      //       }
+      //       this.barData=totalList;
+      //     }else {
+      //       that.$message.error(res.message);
+      //       that.loading = false;
+      //     }
+      //   })
+      // },
 
       //红字发票折线图请求
       redFpBrokenLine(){
@@ -282,7 +282,6 @@
           params2 ={
             year: that.lastYear
           }
-
         } else {
           params1 = {
             count: 0,
@@ -338,17 +337,11 @@
           }
         },
 // 数据赋予
-shujufuyu(){
-  setTimeout(() => {
-    this.barData3=this.barData2;
-  },50)
-},
-
-
-
-
-
-
+          shujufuyu(){
+            setTimeout(() => {
+              this.barData3=this.barData2;
+            },1000)
+          },
       //今日冲红金额
       redMoneyday(){
         const that=this;
