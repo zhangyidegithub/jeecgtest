@@ -10,22 +10,20 @@
         class="trigger"
         :type="collapsed ? 'menu-fold' : 'menu-unfold'"
         @click.native="toggle"></a-icon>
+      <!--控制导航栏宽度按钮-->
       <a-icon
         v-else
         class="trigger"
         :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-        @click.native="toggle"/>
-
-      <!--<span v-if="device === 'desktop'"></span>-->
-      <!--<span v-else>Jeecg-Boot</span>-->
-
+        @click.native="toggle"
+      />
       <user-menu :theme="theme"/>
     </div>
     <!-- 顶部导航栏模式 -->
     <div v-else :class="['top-nav-header-index', theme]">
       <div class="header-index-wide">
         <div class="header-index-left" :style="topMenuStyle.headerIndexLeft">
-          <logo class="top-nav-header" :show-title="device !== 'mobile'" :style="topMenuStyle.topNavHeader"/>
+          <logo ref="Logo" class="top-nav-header" :show-title="device !== 'mobile'" :style="topMenuStyle.topNavHeader"/>
           <div v-if="device !== 'mobile'" id="top-nav-scroll-view" :style="topMenuStyle.scrollView">
             <div id="top-nav-scroll-width" :style="topMenuStyle.scrollWidth">
               <s-menu
@@ -51,6 +49,7 @@
   import UserMenu from '../tools/UserMenu'
   import SMenu from '../menu/'
   import Logo from '../tools/Logo'
+  // import { test } from '../tools/Logo'
 
   import { mixin } from '@/utils/mixin.js'
   import { topNavScrollToSelectItem } from '@/utils/util'
@@ -147,6 +146,13 @@
       },
       toggle() {
         this.$emit('toggle')
+        // this.$nextTick(() => {
+        //   console.log(this.$refs.Logo);
+        // })
+        // alert("bbb")
+        setTimeout(()=>{
+          this.$refs.Logo.whatfuckdat();
+        },10)
       },
       //update-begin--author:sunjianlei---date:20190408------for: 顶部导航栏增加横向滚动条-----
       buildTopMenuStyle() {

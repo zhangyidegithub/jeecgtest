@@ -2,11 +2,15 @@
   <div class="logo">
     <router-link :to="{name:'dashboard'}">
       <img style="height: 59px;width: 200px;" src="~@/assets/logo2.jpg" alt="logo">
-      <!--<h1 v-if="showTitle">{{ title }}</h1>-->
+      <img style="padding-left: 10px" src="~@/assets/logo2.png" alt="logo">
     </router-link>
   </div>
 </template>
-
+<!--<style scoped>-->
+  <!--.actived{-->
+    <!--display: none;-->
+  <!--}-->
+<!--</style>-->
 <script>
   export default {
     name: 'Logo',
@@ -21,7 +25,19 @@
         default: true,
         required: false
       }
+    },
+    data(){
+      return{
+        show:true
+      }
+    },
+    methods: {
+      whatfuckdat: function(){
+        alert("a");
+        console.log("aaa")
+      }
     }
+
   }
 </script>
 <style lang="scss" scoped>

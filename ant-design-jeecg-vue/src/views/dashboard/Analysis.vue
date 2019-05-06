@@ -2,28 +2,28 @@
   <div class="page-header-index-wide">
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="6" >
-        <chart-card :loading="loading" title="今日冲红金额" :total="this.redMoneyDay">
-          <a-tooltip title="今日冲红金额" slot="action">
+        <chart-card :loading="loading" title="今日申请冲红金额" :total="this.redMoneyDay">
+          <a-tooltip title="今日申请冲红金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
-          <template slot="footer">累计冲红金额<span>￥ {{ this.sumRedMoney }}</span></template>
+          <template slot="footer">累计申请冲红金额<span>￥ {{ this.sumRedMoney }}</span></template>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="今日红票量" :total="this.countRedDay" >
-          <a-tooltip title="今日红票量" slot="action">
+        <chart-card :loading="loading" title="今日申请红票数量" :total="this.countRedDay" >
+          <a-tooltip title="今日申请红票数量" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
             <!--<mini-area x="月份" y="票量"/>-->
           </div>
-          <template slot="footer">累计红票量<span> {{ this.sumCountRed }}</span></template>
+          <template slot="footer">累计申请红票数量<span> {{ this.sumCountRed }}</span></template>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
 
         <!--<chart-card :loading="loading" title="日红票量" :total="8846 | NumberFormat">-->
-          <chart-card :loading="loading" :bordered="false" title="实时访问统计">
+          <chart-card :loading="loading" v-has="'ip:show'" :bordered="false" title="-">
             <div style="height: 105px">
               <a-row>
                 <a-col :span="8">
@@ -57,20 +57,21 @@
 
           <div class="extra-wrapper" slot="tabBarExtraContent">
             <!--<a-range-picker :style="{width: '256px'}" />-->
-            <a-dropdown>
-              <a class="ant-dropdown-link" href="#">{{ Year }}
-                <a-icon type="down" />
-              </a>
-              <a-menu slot="overlay" @click="onClick">
-                <a-menu-item key="1">{{ lastYear }}</a-menu-item>
-                <a-menu-item key="2">{{ thisYear }}</a-menu-item>
-              </a-menu>
-            </a-dropdown>
+            <!--<a-dropdown>-->
+              <!--<a class="ant-dropdown-link" href="#">{{ Year }}-->
+                <!--<a-icon type="down" />-->
+              <!--</a>-->
+              <!--<a-menu slot="overlay" @click="onClick">-->
+                <!--<a-menu-item key="1">{{ lastYear }}</a-menu-item>-->
+                <!--<a-menu-item key="2">{{ thisYear }}</a-menu-item>-->
+              <!--</a-menu>-->
+            <!--</a-dropdown>-->
           </div>
-          <a-tab-pane loading="true" tab="红字发票统计" key="1">
+          <a-tab-pane loading="true" tab="申请红字发票统计" key="1">
             <a-row>
               <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
-                <bar title="红字发票统计" :dataSource="barData"/>
+                <!--<bar title="申请红字发票统计" :dataSource="barData"/> 柱状体-->
+                <line-chart-multid title="" :height="420" :sourceDataConst="barData3"/>
               </a-col>
               <!--<a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">-->
                 <!--<rank-list title="门店销售排行榜" :list="rankList"/>-->
@@ -96,6 +97,7 @@
   import Trend from '@/components/Trend'
   import {getLoginfo} from '@/api/api'
   import Vue from 'vue';
+  import LineChartMultid from '@/components/chart/LineChartMultid'
   import store from '@/store'
   import { redFpCylindrical, redFpStatisticsCount, redFpStatisticsMoney } from '../../api/login'
   import { ACCESS_TOKEN, USER_NAME } from '../../store/mutation-types'
@@ -109,6 +111,7 @@
   //   })
   // }
   const barData = []
+
   let datee=new Date();
   // let date=datee.getDate();
   // let month=datee.getMonth()+1
@@ -131,14 +134,17 @@
       MiniProgress,
       RankList,
       Bar,
-      Trend
+      Trend,
+      LineChartMultid
     },
     data() {
       return {
         loading: true,
         center: null,
         rankList,
-        barData:[],
+        barData:[
+
+        ],
         loginfo:{},
         lastYear:'',
         thisYear:'',
@@ -148,7 +154,24 @@
         sumRedMoney:'',
         countRedDay:'',
         sumCountRed:'',
-        today:''
+        today:'',
+        DataRes1:[],
+        DataRes2:[],
+        barData2:[
+          { type: '01', ThisYear: 0, LastYear: 0 },
+          { type: '02', ThisYear: 0, LastYear: 0 },
+          { type: '03', ThisYear: 0, LastYear: 0 },
+          { type: '04', ThisYear: 0, LastYear: 0 },
+          { type: '05', ThisYear: 0, LastYear: 0 },
+          { type: '06', ThisYear: 0, LastYear: 0 },
+          { type: '07', ThisYear: 0, LastYear: 0 },
+          { type: '08', ThisYear: 0, LastYear: 0 },
+          { type: '09', ThisYear: 0, LastYear: 0 },
+          { type: '10', ThisYear: 0, LastYear: 0 },
+          { type: '11', ThisYear: 0, LastYear: 0 },
+          { type: '12', ThisYear: 0, LastYear: 0 }
+        ],
+        barData3:[]
       }
     },
     created() {
@@ -161,43 +184,66 @@
         this.Year=this.thisYear;
         // console.log(today);
         this.NSRSBH=Vue.ls.get(USER_NAME);
-        this.redFpmonthly(),
+        // this.redFpmonthly(),
         this.redMoneyday(),
           this.sumRedmoney(),
           this.countRedday(),
-          this.sumCountred()
-      }, 1000)
+          this.sumCountred(),
+        this.redFpBrokenLine()
+
+      }, 100)
       this.initLogInfo();
+
+
+    },
+    watch: {
+      // 'DataRes1': function () {
+      //   this.shuju(this.DataRes1);
+      //   this.shuju(this.DataRes2);
+      // },
+      // 'DataRes2': function () {
+      //   this.shuju(this.DataRes1);
+      //   this.shuju(this.DataRes2);
+      // },
+      'DataRes1': function () {
+        this.shujufuyu();
+      },
+      'DataRes2': function () {
+        this.shujufuyu();
+      },
+      'DataRes2': function () {
+        this.shujufuyu();
+      }
+
     },
     methods: {
-
       //年份切换
-      onClick({ key }){
-        if(key==='1'){
-          this.Year=this.lastYear;
-          this.redFpmonthly()
-          }else if (key==='2'){
-          this.Year=this.thisYear;
-          this.redFpmonthly()
-        }
-      },
+      // onClick({ key }){
+      //   if(key==='1'){
+      //     this.Year=this.lastYear;
+      //     this.redFpmonthly()
+      //     }else if (key==='2'){
+      //     this.Year=this.thisYear;
+      //     this.redFpmonthly()
+      //   }
+      // },
       //红字发票柱状体请求
       redFpmonthly() {
         const that = this;
         let NSRSBH = this.userNameAchane(that.NSRSBH);
         let params;
         if (NSRSBH === '') {
-           params = {
+          params = {
             year: that.Year
           }
         } else {
-           params = {
+          params = {
             count: 0,
             month: "",
             userName: NSRSBH,
             year: that.Year
           }
-      }
+        }
         that.loading = true;
         redFpCylindrical(token,params).then((res)=>{
           if(res.success){
@@ -220,6 +266,89 @@
           }
         })
       },
+
+
+
+      //红字发票折线图请求
+      redFpBrokenLine(){
+        const that = this;
+        let NSRSBH = this.userNameAchane(that.NSRSBH);
+        let params1;
+        let params2;
+        if (NSRSBH === '') {
+          params1 = {
+            year: that.thisYear
+          }
+          params2 ={
+            year: that.lastYear
+          }
+
+        } else {
+          params1 = {
+            count: 0,
+            month: "",
+            userName: NSRSBH,
+            year: that.thisYear
+          }
+          params2 = {
+            count: 0,
+            month: "",
+            userName: NSRSBH,
+            year: that.lastYear
+          }
+        }
+        // 今年数据的请求
+        redFpCylindrical(token,params1).then((res)=>{
+          if(res.success){
+            that.loading = false;
+            this.DataRes1=res.result;
+            this.shuju(this.DataRes1);
+          }else {
+            that.$message.error(res.message);
+            that.loading = false;
+          }
+        })
+        // 去年数据的请求
+          redFpCylindrical(token,params2).then((res)=>{
+            if(res.success){
+              that.loading = false;
+              this.DataRes2=res.result;
+              this.shuju(this.DataRes2);
+            }else {
+              that.$message.error(res.message);
+              that.loading = false;
+            }
+          })
+      },
+        shuju(arry){
+          // 数据处理
+          let i,j,k
+          for (i=0;i<this.barData2.length;i++){
+            // 今年
+            for (j=0;j<arry.length;j++){
+              if (this.barData2[i].type===arry[j].month){
+                // console.log(this.DataRes1[j].month)
+                if (arry===this.DataRes1) {
+                  this.barData2[i].ThisYear=arry[j].count;}else if (arry===this.DataRes2){
+                  this.barData2[i].LastYear=arry[j].count;
+                }
+                // console.log(this.barData2[i].year);
+              }
+            }
+          }
+        },
+// 数据赋予
+shujufuyu(){
+  setTimeout(() => {
+    this.barData3=this.barData2;
+  },50)
+},
+
+
+
+
+
+
       //今日冲红金额
       redMoneyday(){
         const that=this;
