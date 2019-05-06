@@ -1,6 +1,24 @@
 <template>
   <a-card :bordered="false">
+    <!-- 查询区域 -->
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline">
+        <a-row :gutter="24">
+          <a-col :span="6">
+            <a-form-item label="盘号">
+              <a-input placeholder="盘号" v-model="queryParam.checkCode"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8" >
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+            </span>
+          </a-col>
 
+        </a-row>
+      </a-form>
+    </div>
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus" v-has="'customerAuthorInfo:add'" >新增</a-button>
@@ -112,6 +130,11 @@
             dataIndex: 'authorEndDate'
           },
           {
+            title: '创建时间',
+            align:"center",
+            dataIndex: 'createdDate'
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
@@ -119,8 +142,9 @@
           }
         ],
         custTaxCode: "",
+        customerId:"",
         url: {
-          list: "/customer/taxCustomer/queryTaxCustomerAuthorInfoByMainId",
+          list: "/customer/taxCustomer/queryTaxCustomerAuthorInfoPageByMainId",
           delete: "/customer/taxCustomerAuthorInfo/delete",
           deleteBatch: "/customer/taxCustomerAuthorInfo/deleteBatch",
           exportXlsUrl: "customer/taxCustomerAuthorInfo/exportXls",
@@ -138,23 +162,37 @@
         if (arg === 1) {
           this.ipagination.current = 1;
         }
-        var params = this.getQueryParams();
-        getAction(this.url.list, {mainId: params.mainId}).then((res) => {
+        var params = this.getQueryParams();//查询条件
+        getAction(this.url.list, params).then((res) => {
           if (res.success) {
-            this.dataSource = res.result;
-          } else {
-            this.dataSource = null;
+            this.dataSource = res.result.records;
+            this.ipagination.total = res.result.total;
           }
         })
       },
       getCustomerMain(customerId,custTaxCode) {
         this.queryParam.mainId = customerId;
+        this.customerId = customerId;
         this.custTaxCode = custTaxCode;
         this.loadData(1);
       },
       handleAdd: function () {
         this.$refs.modalForm.add(this.queryParam.mainId,this.custTaxCode);
         this.$refs.modalForm.title = "授权";
+      },
+      searchQuery:function(){
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        //this.queryParam.checkCode=this.queryParam.checkCode+"*";
+        this.loadData(1);
+      },
+      searchReset() {
+        this.queryParam = {};
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        this.queryParam.mainId = this.customerId;
+        this.loadData(1);
+        this.loadData(1);
       }
     }
   }

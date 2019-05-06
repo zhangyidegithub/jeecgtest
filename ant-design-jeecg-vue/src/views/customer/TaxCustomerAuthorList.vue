@@ -1,6 +1,24 @@
 <template>
   <a-card :bordered="false">
+    <!-- 查询区域 -->
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline">
+        <a-row :gutter="24">
+          <a-col :span="6">
+            <a-form-item label="盘号">
+              <a-input placeholder="盘号" v-model="queryParam.checkCode"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8" >
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+            </span>
+          </a-col>
 
+        </a-row>
+      </a-form>
+    </div>
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus" v-has="'customerAuthor:add'" >新增</a-button>
@@ -39,7 +57,9 @@
         </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)" v-has="'customerAuthor:edit'" >编辑</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical" v-has="'customerAuthor:edit'"/>
+           <a href="javascript:;" @click="handleMigration(record)"  v-has="'customerAuthor:migration'">授权转移</a>
+           <a-divider type="vertical"  v-has="'customerAuthor:migration'"/>
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
@@ -61,6 +81,7 @@
 
     <!-- 表单区域 -->
     <tax-customer-author-modal ref="modalForm" @ok="modalFormOk"></tax-customer-author-modal>
+    <tax-customer-author-migration-modal ref="migrationModalForm" @ok="modalFormOk"></tax-customer-author-migration-modal>
   </a-card>
 </template>
 
@@ -69,11 +90,13 @@
   import TaxCustomerList from './TaxCustomerList'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import {getAction} from '@/api/manage'
+  import TaxCustomerAuthorMigrationModal from './modules/TaxCustomerAuthorMigrationModal'
 
   export default {
     name: "TaxCustomerAuthorList",
     mixins:[JeecgListMixin],
     components: {
+      TaxCustomerAuthorMigrationModal,
       TaxCustomerAuthorModal,
       TaxCustomerList
     },
@@ -122,8 +145,10 @@
           }
         ],
         custTaxCode: "",
+        customerId:"",
         url: {
-          list: "/customer/taxCustomer/queryTaxCustomerAuthorByMainId",
+          list: "/customer/taxCustomer/queryTaxCustomerAuthorPageByMainId",
+          migration: "/customer/taxCustomerAuthor/migration",
           delete: "/customer/taxCustomerAuthor/delete",
           deleteBatch: "/customer/taxCustomerAuthor/deleteBatch",
           exportXlsUrl: "customer/taxCustomerAuthor/exportXls",
@@ -138,20 +163,25 @@
     },
     methods: {
       loadData(arg) {
+        if(!this.url.list){
+          this.$message.error("请设置url.list属性!")
+          return
+        }
+        //加载数据 若传入参数1则加载第一页的内容
         if (arg === 1) {
           this.ipagination.current = 1;
         }
-        var params = this.getQueryParams();
-        getAction(this.url.list, {mainId: params.mainId}).then((res) => {
+        var params = this.getQueryParams();//查询条件
+        getAction(this.url.list, params).then((res) => {
           if (res.success) {
-            this.dataSource = res.result;
-          } else {
-            this.dataSource = null;
+            this.dataSource = res.result.records;
+            this.ipagination.total = res.result.total;
           }
         })
       },
       getCustomerMain(customerId,custTaxCode) {
         this.queryParam.mainId = customerId;
+        this.customerId = customerId;
         this.custTaxCode = custTaxCode;
         this.loadData(1);
       },
@@ -164,6 +194,25 @@
         this.$refs.modalForm.title="详情";
         this.$refs.modalForm.disableSubmit = true;
       },
+      searchQuery:function(){
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        //this.queryParam.checkCode=this.queryParam.checkCode+"*";
+        this.loadData(1);
+      },
+      searchReset() {
+        this.queryParam = {};
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        this.queryParam.mainId = this.customerId;
+        this.loadData(1);
+        this.loadData(1);
+      },
+      handleMigration:function(record){
+        this.$refs.migrationModalForm.edit(record,"e");
+        this.$refs.migrationModalForm.title="授权迁移";
+        this.$refs.migrationModalForm.disableSubmit = false;
+      }
     }
   }
 </script>

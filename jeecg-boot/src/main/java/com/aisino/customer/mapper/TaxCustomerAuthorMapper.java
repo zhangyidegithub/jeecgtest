@@ -28,8 +28,8 @@ public interface TaxCustomerAuthorMapper extends BaseMapper<TaxCustomerAuthor> {
 	 */
 	public Integer updateAuthorStatus(@Param("checkCode") String checkCode, @Param("customerId")String customerId, @Param("authorStatus")Integer authorStatus,@Param("islockReached")Integer islockReached);
 	/**
-	 * 检查授权还在有效期内的数据
-	 * @return
+	 * 检查授权过期得苏剧
+	 * @return List<TaxCustomerAuthor>
 	 */
 	public List<TaxCustomerAuthor> selectAuthorExpire();
 }

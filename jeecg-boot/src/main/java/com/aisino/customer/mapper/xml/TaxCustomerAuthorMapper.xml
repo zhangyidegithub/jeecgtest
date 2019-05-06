@@ -24,7 +24,7 @@
 		where check_code=#{checkCode} and customer_id=#{customerId}
 	</update>
 	<select id="selectAuthorExpire"  resultType="com.aisino.customer.entity.TaxCustomerAuthor">
-		select * from tax_customer_author a where not exists(
+		/*select * from tax_customer_author a where not exists(
   			select * from tax_customer_author c where c.id=a.id and c.author_status=0 and c.islock_reached=1
 		) and not exists(
 			select * from tax_customer_author_info b where a.customer_id=b.customer_id and a.cust_tax_code=b.cust_tax_code
@@ -34,8 +34,23 @@
 			to_date(to_char(author_begin_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
 			and
 			to_date(to_char(author_end_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
-		)
+		)*/
+		-- 	以最后一次授权为主查询授权过期得数据
+		select * from tax_customer_author a where not exists(
+         	-- 排除失效数据
+         	select * from tax_customer_author c where c.id=a.id and c.author_status=0 and c.islock_reached=1
+  		) and exists(
+      		-- 过滤授权失效得数据
+			select * from (
+				select info.*,row_number() over (partition by customer_id,check_code order by created_date desc) rn from tax_customer_author_info info
+				where  to_date(to_char(sysdate,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+				not between
+				to_date(to_char(author_begin_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+				and
+				to_date(to_char(author_end_date,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')
+      		)b where rn = 1 and a.customer_id=b.customer_id and a.check_code=b.check_code
+  		)
 	</select>
-	
-	
+
+
 </mapper>

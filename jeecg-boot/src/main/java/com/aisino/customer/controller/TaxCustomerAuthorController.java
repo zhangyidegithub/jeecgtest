@@ -1,16 +1,24 @@
 package com.aisino.customer.controller;
 
 import com.aisino.customer.entity.TaxCustomerAuthor;
+import com.aisino.customer.entity.TaxCustomerAuthorInfo;
+import com.aisino.customer.service.ITaxCustomerAuthorInfoService;
 import com.aisino.customer.service.ITaxCustomerAuthorService;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.system.entity.SysUser;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -27,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +52,8 @@ import java.util.Map;
 public class TaxCustomerAuthorController {
 	 @Autowired
 	 private ITaxCustomerAuthorService taxCustomerAuthorService;
+	 @Autowired
+	 private ITaxCustomerAuthorInfoService taxCustomerAuthorInfoService;
 	
 	/**
 	  * 分页列表查询
@@ -93,7 +103,7 @@ public class TaxCustomerAuthorController {
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
-	@RequiresPermissions(value={"customerAuthor:edit","customerAuthor:detail"})
+	@RequiresPermissions(value={"customerAuthor:edit","customerAuthor:detail"},logical= Logical.OR)
 	public Result<TaxCustomerAuthor> edit(@RequestBody TaxCustomerAuthor taxCustomerAuthor) {
 		Result<TaxCustomerAuthor> result = new Result<TaxCustomerAuthor>();
 		TaxCustomerAuthor taxCustomerAuthorEntity = taxCustomerAuthorService.getById(taxCustomerAuthor.getId());
@@ -125,6 +135,7 @@ public class TaxCustomerAuthorController {
 		}else {
 			boolean ok = taxCustomerAuthorService.removeById(id);
 			if(ok) {
+				taxCustomerAuthorInfoService.deleteByCheckCode(taxCustomerAuthor.getCustomerId(),taxCustomerAuthor.getCheckCode());
 				result.success("删除成功!");
 			}
 		}
@@ -144,7 +155,7 @@ public class TaxCustomerAuthorController {
 		if(ids==null || "".equals(ids.trim())) {
 			result.error500("参数不识别！");
 		}else {
-			this.taxCustomerAuthorService.removeByIds(Arrays.asList(ids.split(",")));
+			this.taxCustomerAuthorService.deleteBatchByIds(ids);
 			result.success("删除成功!");
 		}
 		return result;
@@ -236,4 +247,82 @@ public class TaxCustomerAuthorController {
       }
       return Result.ok("文件导入失败！");
   }
-}
+	 /**
+	  * 授权迁移
+	  * @param jsonObject
+	  * @return org.jeecg.common.api.vo.Result<com.aisino.customer.entity.TaxCustomerAuthor>
+	  * @Author zhangchengping
+	  * @Date 2019-05-05 16:56
+	  */
+	 @PostMapping(value = "/migration")
+	 @RequiresPermissions(value={"customerAuthor:migration"})
+	 public Result<TaxCustomerAuthor> migration(@RequestBody JSONObject jsonObject) {
+		 Result<TaxCustomerAuthor> result = new Result<TaxCustomerAuthor>();
+		 String sourceAuthId = jsonObject.getString("sourceAuthId");
+		 String targetAuthId = jsonObject.getString("targetAuthId");
+		 if(StringUtils.isBlank(sourceAuthId)){
+			 result.error500("参数异常");
+			 return result;
+		 }
+		 if(StringUtils.isBlank(targetAuthId)){
+			 result.error500("参数异常");
+			 return result;
+		 }
+		 TaxCustomerAuthor  soutceTaxCustomerAuthor = taxCustomerAuthorService.getById(sourceAuthId);
+		 if(null == soutceTaxCustomerAuthor){
+			 result.error500("参数异常，未查询出有效实体");
+			 return result;
+		 }
+		 TaxCustomerAuthor  targetTaxCustomerAuthor =  taxCustomerAuthorService.getById(targetAuthId);
+		 if(null == targetTaxCustomerAuthor){
+			 result.error500("参数异常，未查询出有效实体");
+			 return result;
+		 }
+		 TaxCustomerAuthorInfo authorInfo =  taxCustomerAuthorInfoService.getOne(new LambdaQueryWrapper<TaxCustomerAuthorInfo>()
+				 .eq(TaxCustomerAuthorInfo::getCustomerId,soutceTaxCustomerAuthor.getCustomerId())
+				 .eq(TaxCustomerAuthorInfo::getCheckCode,soutceTaxCustomerAuthor.getCheckCode())
+				 .orderByDesc(TaxCustomerAuthorInfo::getCreatedDate));
+		 if(null == authorInfo){
+			 result.error500("原盘未查询出有效授权记录");
+			 return result;
+		 }
+		 Date date = new Date();
+		 try {
+			 TaxCustomerAuthorInfo taxCustomerAuthorInfo = saveAuthorInfo(soutceTaxCustomerAuthor.getCustomerId(),
+					 soutceTaxCustomerAuthor.getCheckCode(),
+					 soutceTaxCustomerAuthor.getCustTaxCode(),
+					 authorInfo.getAuthorBeginDate(),date);
+		 } catch (Exception e) {
+			 result.error500("数据更新异常");
+			 return result;
+		 }
+		 try {
+			 TaxCustomerAuthorInfo taxCustomerAuthorInfoTarget = saveAuthorInfo(targetTaxCustomerAuthor.getCustomerId(),
+					 targetTaxCustomerAuthor.getCheckCode(),
+					 targetTaxCustomerAuthor.getCustTaxCode(),
+					 date,authorInfo.getAuthorEndDate());
+		 } catch (Exception e) {
+			 result.error500("数据更新异常");
+			 return result;
+		 }
+		 result.setResult(soutceTaxCustomerAuthor);
+		 result.setSuccess(true);
+		 result.success("迁移成功");
+		 return result;
+	 }
+
+	 private TaxCustomerAuthorInfo saveAuthorInfo(String customerId,String checkCode,String custTaxCode,Date beginDate,Date endDate) throws Exception {
+		 TaxCustomerAuthorInfo taxCustomerAuthorInfo = new TaxCustomerAuthorInfo();
+		 SysUser sysUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+		 taxCustomerAuthorInfo.setCreatedDate(new Date());
+		 taxCustomerAuthorInfo.setCreatedUserBy(sysUser.getUsername());
+		 taxCustomerAuthorInfo.setCustomerId(customerId);
+		 taxCustomerAuthorInfo.setCheckCode(checkCode);
+		 taxCustomerAuthorInfo.setCustTaxCode(custTaxCode);
+		 taxCustomerAuthorInfo.setAuthorBeginDate(beginDate);
+		 taxCustomerAuthorInfo.setAuthorEndDate(endDate);
+		 boolean flag =  taxCustomerAuthorInfoService.save(taxCustomerAuthorInfo);
+		 if(!flag)throw new Exception("数据插入异常");
+		 return taxCustomerAuthorInfo;
+	 }
+ }

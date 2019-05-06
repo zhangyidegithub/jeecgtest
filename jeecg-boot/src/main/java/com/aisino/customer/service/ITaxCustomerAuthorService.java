@@ -15,8 +15,14 @@ public interface ITaxCustomerAuthorService extends IService<TaxCustomerAuthor> {
 
 	public List<TaxCustomerAuthor> selectByMainId(String mainId);
 	/**
-	 * 检查授权还在有效期内的数据
+	 * 检查授权过期得数据
 	 * @return
 	 */
 	public List<TaxCustomerAuthor> selectAuthorExpire();
+
+	/**
+	 * 批量删除
+	 * @return
+	 */
+	public void deleteBatchByIds(String ids);
 }

@@ -33,7 +33,7 @@
             :getPopupContainer="getPopupContainer"
             :filterOption="filterOption"
             optionFilterProp="children"
-            placeholder="请选择锁盘号">
+            placeholder="请选择盘号">
             <a-select-option v-for="item in customerAuthors"  :key="item.checkCode">{{item.checkCode}}</a-select-option>
           </a-select>
         </a-form-item>

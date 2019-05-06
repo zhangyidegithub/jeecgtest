@@ -78,9 +78,15 @@ public class TaxCustomerController {
 													@RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 													HttpServletRequest req) {
 		Result<IPage<TaxCustomer>> result = new Result<IPage<TaxCustomer>>();
-		QueryWrapper<TaxCustomer> queryWrapper = QueryGenerator.initQueryWrapper(taxCustomer, req.getParameterMap());
-		//SysUser sysUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
-		//queryWrapper.eq("cust_tax_code",sysUser.getUsername());
+		TaxCustomer taxCustomerQuery = new TaxCustomer();
+		BeanUtils.copyProperties(taxCustomer,taxCustomerQuery);
+		if(StringUtils.isNotBlank(taxCustomerQuery.getCustTaxCode())){
+			taxCustomerQuery.setCustTaxCode(taxCustomerQuery.getCustTaxCode()+"*");
+		}
+		if(StringUtils.isNotBlank(taxCustomerQuery.getCustTaxName())){
+			taxCustomerQuery.setCustTaxName(taxCustomerQuery.getCustTaxName()+"*");
+		}
+		QueryWrapper<TaxCustomer> queryWrapper = QueryGenerator.initQueryWrapper(taxCustomerQuery, req.getParameterMap());
 		Page<TaxCustomer> page = new Page<TaxCustomer>(pageNo, pageSize);
 		IPage<TaxCustomer> pageList = taxCustomerService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -165,7 +171,7 @@ public class TaxCustomerController {
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
-	@RequiresPermissions(value={"customer:add","customer:detail"},logical= Logical.OR)
+	@RequiresPermissions(value={"customer:edit","customer:detail"},logical= Logical.OR)
 	public Result<TaxCustomer> edit(@RequestBody JSONObject jsonObject) {
 		Result<TaxCustomer> result = new Result<TaxCustomer>();
 		TaxCustomerPage taxCustomerPage = jsonObject.toJavaObject(TaxCustomerPage.class);
@@ -268,37 +274,93 @@ public class TaxCustomerController {
 		}
 		return result;
 	}
+	 /**
+	  * 通过id查询
+	  * @param mainId
+	  * @return
+	  */
+	 @GetMapping(value = "/queryTaxCustomerAuthorByMainId")
+	 public Result<List<TaxCustomerAuthor>> queryTaxCustomerAuthorListByMainId(@RequestParam(name = "mainId", required = false) String mainId) {
+		 Result<List<TaxCustomerAuthor>> result = new Result<List<TaxCustomerAuthor>>();
+		 List<TaxCustomerAuthor> taxCustomerAuthorList = new ArrayList<>();
+		 if(StringUtils.isNotBlank(mainId)){
+			 taxCustomerAuthorList = taxCustomerAuthorService.selectByMainId(mainId);
+		 }
+		 result.setResult(taxCustomerAuthorList);
+		 result.setSuccess(true);
+		 return result;
+	 }
+	 /**
+	  * 通过id查询
+	  * @param mainId
+	  * @return
+	  */
+	 @GetMapping(value = "/queryTaxCustomerAuthorInfoByMainId")
+	 public Result<List<TaxCustomerAuthorInfo>> queryTaxCustomerAuthorInfoListByMainId(@RequestParam(name = "mainId", required = false) String mainId) {
+		 Result<List<TaxCustomerAuthorInfo>> result = new Result<List<TaxCustomerAuthorInfo>>();
+		 List<TaxCustomerAuthorInfo> taxCustomerAuthorInfoList = new ArrayList<>();
+		 if(StringUtils.isNotBlank(mainId)){
+			 taxCustomerAuthorInfoList =  taxCustomerAuthorInfoService.selectByMainId(mainId);
+		 }
+		 result.setResult(taxCustomerAuthorInfoList);
+		 result.setSuccess(true);
+		 return result;
+	 }
 	
 	/**
 	  * 通过id查询
 	 * @param mainId
 	 * @return
 	 */
-	@GetMapping(value = "/queryTaxCustomerAuthorByMainId")
-	public Result<List<TaxCustomerAuthor>> queryTaxCustomerAuthorListByMainId(@RequestParam(name = "mainId", required = false) String mainId) {
-		Result<List<TaxCustomerAuthor>> result = new Result<List<TaxCustomerAuthor>>();
-		List<TaxCustomerAuthor> taxCustomerAuthorList = new ArrayList<>();
-		if(StringUtils.isNotBlank(mainId)){
-			taxCustomerAuthorList = taxCustomerAuthorService.selectByMainId(mainId);
+	@GetMapping(value = "/queryTaxCustomerAuthorPageByMainId")
+	public Result<IPage<TaxCustomerAuthor>> queryTaxCustomerAuthorPageListByMainId(TaxCustomerAuthor taxCustomerAuthor,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+																			  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+																			  HttpServletRequest req,
+																			  @RequestParam(name = "mainId", required = false) String mainId) {
+		Result<IPage<TaxCustomerAuthor>> result = new Result<IPage<TaxCustomerAuthor>>();
+		TaxCustomerAuthor queryTaxCustomerAuthor = new TaxCustomerAuthor();
+		BeanUtils.copyProperties(taxCustomerAuthor,queryTaxCustomerAuthor);
+		if(StringUtils.isNotBlank(queryTaxCustomerAuthor.getCheckCode())){
+			queryTaxCustomerAuthor.setCheckCode(queryTaxCustomerAuthor.getCheckCode()+"*");
 		}
-		result.setResult(taxCustomerAuthorList);
+		QueryWrapper<TaxCustomerAuthor> queryWrapper = QueryGenerator.initQueryWrapper(queryTaxCustomerAuthor, req.getParameterMap());
+		IPage<TaxCustomerAuthor> pageList = null;
+		if(StringUtils.isNotBlank(mainId)){
+			Page<TaxCustomerAuthor> page = new Page<TaxCustomerAuthor>(pageNo, pageSize);
+			queryWrapper.eq("customer_id",mainId);
+			pageList = taxCustomerAuthorService.page(page, queryWrapper);
+		}
 		result.setSuccess(true);
+		result.setResult(pageList);
 		return result;
 	}
+
 	/**
 	  * 通过id查询
 	 * @param mainId
 	 * @return
 	 */
-	@GetMapping(value = "/queryTaxCustomerAuthorInfoByMainId")
-	public Result<List<TaxCustomerAuthorInfo>> queryTaxCustomerAuthorInfoListByMainId(@RequestParam(name = "mainId", required = false) String mainId) {
-		Result<List<TaxCustomerAuthorInfo>> result = new Result<List<TaxCustomerAuthorInfo>>();
-		List<TaxCustomerAuthorInfo> taxCustomerAuthorInfoList = new ArrayList<>();
-		if(StringUtils.isNotBlank(mainId)){
-			taxCustomerAuthorInfoList =  taxCustomerAuthorInfoService.selectByMainId(mainId);
+	@GetMapping(value = "/queryTaxCustomerAuthorInfoPageByMainId")
+	public Result<IPage<TaxCustomerAuthorInfo>> queryTaxCustomerAuthorInfoPageListByMainId(TaxCustomerAuthorInfo taxCustomerAuthorInfo,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+																					  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+																					  HttpServletRequest req,
+																					  @RequestParam(name = "mainId", required = false) String mainId) {
+		Result<IPage<TaxCustomerAuthorInfo>> result = new Result<IPage<TaxCustomerAuthorInfo>>();
+		TaxCustomerAuthorInfo queryTaxCustomerAuthorInfo = new TaxCustomerAuthorInfo();
+		BeanUtils.copyProperties(taxCustomerAuthorInfo,queryTaxCustomerAuthorInfo);
+		if(StringUtils.isNotBlank(queryTaxCustomerAuthorInfo.getCheckCode())){
+			queryTaxCustomerAuthorInfo.setCheckCode(queryTaxCustomerAuthorInfo.getCheckCode()+"*");
 		}
-		result.setResult(taxCustomerAuthorInfoList);
+		QueryWrapper<TaxCustomerAuthorInfo> queryWrapper = QueryGenerator.initQueryWrapper(queryTaxCustomerAuthorInfo, req.getParameterMap());
+		IPage<TaxCustomerAuthorInfo> pageList = null;
+		if(StringUtils.isNotBlank(mainId)){
+			Page<TaxCustomerAuthorInfo> page = new Page<TaxCustomerAuthorInfo>(pageNo, pageSize);
+			queryWrapper.eq("customer_id",mainId);
+			queryWrapper.orderByDesc("created_date");
+			pageList = taxCustomerAuthorInfoService.page(page, queryWrapper);
+		}
 		result.setSuccess(true);
+		result.setResult(pageList);
 		return result;
 	}
 

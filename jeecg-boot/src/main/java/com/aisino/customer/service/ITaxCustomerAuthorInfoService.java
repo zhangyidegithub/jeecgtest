@@ -2,6 +2,7 @@ package com.aisino.customer.service;
 
 import com.aisino.customer.entity.TaxCustomerAuthorInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+
 import java.util.List;
 
 /**
@@ -13,4 +14,11 @@ import java.util.List;
 public interface ITaxCustomerAuthorInfoService extends IService<TaxCustomerAuthorInfo> {
 
 	public List<TaxCustomerAuthorInfo> selectByMainId(String mainId);
+	/**
+	 * 根据盘号删除授权信息
+	 * @param customerId
+	 * @param checkCode
+	 * @return
+	 */
+	public boolean deleteByCheckCode(String customerId,String checkCode);
 }

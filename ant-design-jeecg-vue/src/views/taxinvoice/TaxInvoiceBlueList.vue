@@ -106,11 +106,6 @@
             dataIndex: 'invoicer'
           },
           {
-            title: '价税合计金额',
-            align:"center",
-            dataIndex: 'amount'
-          },
-          {
             title: '操作',
             dataIndex: 'action',
             align:"center",

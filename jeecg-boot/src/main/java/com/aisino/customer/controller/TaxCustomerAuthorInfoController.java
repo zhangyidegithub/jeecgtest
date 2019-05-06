@@ -2,13 +2,14 @@ package com.aisino.customer.controller;
 
 import com.aisino.customer.entity.TaxCustomerAuthorInfo;
 import com.aisino.customer.service.ITaxCustomerAuthorInfoService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
@@ -99,7 +100,7 @@ public class TaxCustomerAuthorInfoController {
     * @return
     */
    @PutMapping(value = "/edit")
-   @RequiresPermissions(value={"customerAuthorInfo:edit","customerAuthorInfo:detail"})
+   @RequiresPermissions(value={"customerAuthorInfo:edit","customerAuthorInfo:detail"},logical= Logical.OR)
    public Result<TaxCustomerAuthorInfo> edit(@RequestBody TaxCustomerAuthorInfo taxCustomerAuthorInfo) {
        Result<TaxCustomerAuthorInfo> result = new Result<TaxCustomerAuthorInfo>();
        TaxCustomerAuthorInfo taxCustomerAuthorInfoEntity = taxCustomerAuthorInfoService.getById(taxCustomerAuthorInfo.getId());

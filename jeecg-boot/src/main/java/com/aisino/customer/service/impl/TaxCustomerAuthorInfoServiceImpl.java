@@ -32,6 +32,12 @@ public class TaxCustomerAuthorInfoServiceImpl extends ServiceImpl<TaxCustomerAut
 
 	@Override
 	@Transactional
+	public boolean deleteByCheckCode(String customerId, String checkCode) {
+		return taxCustomerAuthorInfoMapper.deleteByCheckCode(customerId,checkCode);
+	}
+
+	@Override
+	@Transactional
 	public boolean save(TaxCustomerAuthorInfo entity) {
 		boolean flag = super.save(entity);
 		if(flag){

@@ -76,13 +76,13 @@
         </a-form-item>
         <!--{initialValue:0}-->
         <a-form-item label="锁死标志" :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="authorhiding" hasFeedback>
-          <a-select  v-decorator="[ 'islockReached', {rules: [{ required: true, message: '请选择是否到锁死期!' }],initialValue:0}]" placeholder="请选择锁死标志">
+          <a-select  v-decorator="[ 'islockReached', {rules: [{ required: true, message: '请选择是否到锁死期!' }],initialValue:1}]" placeholder="请选择锁死标志">
             <a-select-option :value="1">已到锁死期</a-select-option>
             <a-select-option :value="0">未到锁死期</a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item label="授权状态" :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="authorhiding" hasFeedback>
-          <a-select v-decorator="[ 'authorStatus', {rules: [{ required: true, message: '请选择授权状态!' }],initialValue:1}]" placeholder="请选择授权状态">
+          <a-select v-decorator="[ 'authorStatus', {rules: [{ required: true, message: '请选择授权状态!' }],initialValue:0}]" placeholder="请选择授权状态">
             <a-select-option :value="1">有效</a-select-option>
             <a-select-option :value="0">无效</a-select-option>
           </a-select>

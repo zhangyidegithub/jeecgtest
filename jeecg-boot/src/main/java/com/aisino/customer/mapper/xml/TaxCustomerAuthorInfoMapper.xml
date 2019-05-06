@@ -15,4 +15,21 @@
 		WHERE
 			 CUSTOMER_ID = #{id} ORDER BY created_date desc
 	</select>
+
+	<delete id="deleteByCheckCode">
+		DELETE
+		FROM  TAX_CUSTOMER_AUTHOR_INFO
+		WHERE
+			 CUSTOMER_ID = #{customerId} and CHECK_CODE=#{checkCode}
+	</delete>
+
+	<delete id="deleteByAuthorIds"  parameterType = "java.util.List">
+		DELETE  FROM TAX_CUSTOMER_AUTHOR_INFO i WHERE EXISTS(
+			SELECT * FROM TAX_CUSTOMER_AUTHOR a WHERE i.CUSTOMER_ID=a.CUSTOMER_ID and i.CHECK_CODE=a.CHECK_CODE
+			AND a.id IN
+			<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		)
+	</delete>
 </mapper>
