@@ -175,7 +175,7 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          checkCode:{rules: [{ required: true, message: '请选择盘号!' }]},
+          checkCode:{rules: [{ required: true, message: '请选择税盘号!' }]},
           authorDateRange:{rules: [{ required: true, message: '请选择授权日期!' }]},
         },
         url: {

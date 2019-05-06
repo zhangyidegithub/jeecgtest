@@ -82,7 +82,7 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          targetAuthorId:{rules: [{ required: true, message: '请选择盘号!' }]},
+          targetAuthorId:{rules: [{ required: true, message: '请选择税盘号!' }]},
         },
         url: {
           add: "/customer/taxCustomerAuthor/migration",

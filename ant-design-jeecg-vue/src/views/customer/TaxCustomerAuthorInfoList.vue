@@ -114,7 +114,7 @@
             dataIndex: 'custTaxCode'
           },*/
           {
-            title: '盘号',
+            title: '税盘号',
             align:"center",
             dataIndex: 'checkCode'
           },

@@ -121,7 +121,7 @@
             dataIndex: 'custTaxCode'
           },*/
           {
-            title: '盘号',
+            title: '税盘号',
             align:"center",
             dataIndex: 'checkCode'
           },
@@ -187,7 +187,7 @@
       },
       handleAdd: function () {
         this.$refs.modalForm.add(this.queryParam.mainId,this.custTaxCode);
-        this.$refs.modalForm.title = "添加盘号信息";
+        this.$refs.modalForm.title = "添加税盘信息";
       },
       handleDetail:function(record){
         this.$refs.modalForm.detail(record);
