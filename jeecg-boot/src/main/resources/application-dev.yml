@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /jeecg-boot
+    context-path: /aisino
     compression:
       enabled: true
       mime-types: application/javascript,application/json,application/xml,text/html,text/xml,text/plain,text/css,image/*
@@ -95,6 +95,7 @@ spring:
           #password: root
           #driver-class-name: com.mysql.jdbc.Driver
           url: jdbc:oracle:thin:@192.168.3.200:1521:EDWDB
+          #url: jdbc:oracle:thin:@localhost:1521:ORA11G
           username: INVOICE_TAX
           password: INVOICE_TAX
           driver-class-name: oracle.jdbc.driver.OracleDriver
@@ -105,7 +106,7 @@ spring:
   #redis 配置
   redis:
     database: 0
-#    host: 118.24.177.54
+    #host: 118.24.177.54
     host: 127.0.0.1
     lettuce:
       pool:
@@ -114,8 +115,8 @@ spring:
         max-wait: -1ms  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
         min-idle: 0     #最小等待连接中的数量,设 0 为没有限制
       shutdown-timeout: 100ms
-#    password: hh1125
     password: aisino888
+    #password: 123456
     port: 6379
 #mybatis plus 设置
 mybatis-plus:

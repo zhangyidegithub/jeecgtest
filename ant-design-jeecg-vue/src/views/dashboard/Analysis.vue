@@ -56,26 +56,13 @@
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">
 
           <div class="extra-wrapper" slot="tabBarExtraContent">
-            <!--<a-range-picker :style="{width: '256px'}" />-->
-            <!--<a-dropdown>-->
-              <!--<a class="ant-dropdown-link" href="#">{{ Year }}-->
-                <!--<a-icon type="down" />-->
-              <!--</a>-->
-              <!--<a-menu slot="overlay" @click="onClick">-->
-                <!--<a-menu-item key="1">{{ lastYear }}</a-menu-item>-->
-                <!--<a-menu-item key="2">{{ thisYear }}</a-menu-item>-->
-              <!--</a-menu>-->
-            <!--</a-dropdown>-->
           </div>
           <a-tab-pane loading="true" tab="红字发票申请单量同比" key="1">
             <a-row>
               <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
                 <!--<bar title="申请红字发票统计" :dataSource="barData"/> 柱状体-->
-                <line-chart-multid title="" :height="420" :sourceDataConst="barData3"/>
+                <line-chart-multid :height="420" :sourceDataConst="barData3"/>
               </a-col>
-              <!--<a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">-->
-                <!--<rank-list title="门店销售排行榜" :list="rankList"/>-->
-              <!--</a-col>-->
             </a-row>
           </a-tab-pane>
         </a-tabs>
@@ -320,6 +307,9 @@
           })
       },
         shuju(arry){
+        if (arry === null){
+          return arry;
+        }
           // 数据处理
           let i,j,k
           for (i=0;i<this.barData2.length;i++){
