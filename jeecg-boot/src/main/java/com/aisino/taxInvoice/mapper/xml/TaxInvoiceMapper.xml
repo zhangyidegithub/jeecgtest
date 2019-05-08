@@ -9,7 +9,7 @@
             FROM TAX_INVOICE
             WHERE 1 = 1
             <if test="userName != null and userName != ''">
-                CLIENT_TAX_CODE = #{userName}
+                AND CLIENT_TAX_CODE = #{userName}
             </if>
             <if test="year != null">
                 AND TO_CHAR(created_date,'yyyy') = #{year}
