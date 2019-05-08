@@ -81,7 +81,7 @@
   import SideMenu from '@/components/menu/SideMenu'
   import GlobalHeader from '@/components/page/GlobalHeader'
   import GlobalFooter from '@/components/page/GlobalFooter'
-  import SettingDrawer from '@/components/setting/SettingDrawer'
+  // import SettingDrawer from '@/components/setting/SettingDrawer'
   import { triggerWindowResizeEvent } from '@/utils/util'
   import { mapState, mapActions } from 'vuex'
   import { mixin, mixinDevice } from '@/utils/mixin.js'
@@ -92,7 +92,7 @@
       SideMenu,
       GlobalHeader,
       GlobalFooter,
-      SettingDrawer
+      // SettingDrawer
     },
     mixins: [mixin, mixinDevice],
     data() {
