@@ -5,8 +5,8 @@
       <a-form layout="inline">
         <a-row :gutter="24">
           <a-col :span="6">
-            <a-form-item label="税盘号">
-              <a-input placeholder="税盘号" v-model="queryParam.checkCode"></a-input>
+            <a-form-item label="金税盘号">
+              <a-input placeholder="金税盘号" v-model="queryParam.checkCode"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="8" >
@@ -58,8 +58,10 @@
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)" v-has="'customerAuthor:edit'" >编辑</a>
           <a-divider type="vertical" v-has="'customerAuthor:edit'"/>
-           <a href="javascript:;" @click="handleMigration(record)"  v-has="'customerAuthor:migration'">授权转移</a>
-           <a-divider type="vertical"  v-has="'customerAuthor:migration'"/>
+          <template v-if="migrationShow(record)" v-has="'customerAuthor:migration'">
+           <a href="javascript:;" @click="handleMigration(record)">授权转移</a>
+           <a-divider type="vertical"   />
+          </template>
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
@@ -121,7 +123,7 @@
             dataIndex: 'custTaxCode'
           },*/
           {
-            title: '税盘号',
+            title: '金税盘号',
             align:"center",
             dataIndex: 'checkCode'
           },
@@ -187,7 +189,7 @@
       },
       handleAdd: function () {
         this.$refs.modalForm.add(this.queryParam.mainId,this.custTaxCode);
-        this.$refs.modalForm.title = "添加税盘信息";
+        this.$refs.modalForm.title = "添加金税盘信息";
       },
       handleDetail:function(record){
         this.$refs.modalForm.detail(record);
@@ -212,6 +214,12 @@
         this.$refs.migrationModalForm.edit(record,"e");
         this.$refs.migrationModalForm.title="授权迁移";
         this.$refs.migrationModalForm.disableSubmit = false;
+      },
+      migrationShow:function(record){
+       if(record.authorStatus==1){
+         return true;
+       }
+       return false;
       }
     }
   }

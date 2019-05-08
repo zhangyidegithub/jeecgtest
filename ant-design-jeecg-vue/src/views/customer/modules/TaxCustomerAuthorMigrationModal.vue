@@ -15,14 +15,14 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="当前税盘号"
+          label="当前金税盘号"
           hasFeedback>
           <a-input v-model="sourceCusCheckCode" disabled="disabled"/>
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="目标税盘号"
+          label="目标金税盘号"
           hasFeedback>
           <a-select
             showSearch
@@ -30,7 +30,7 @@
             :getPopupContainer="getPopupContainer"
             :filterOption="filterOption"
             optionFilterProp="children"
-            placeholder="请选择税盘">
+            placeholder="请选择金税盘">
             <a-select-option v-for="item in customerAuthors" v-if="item.checkCode==sourceCusCheckCode ? false:true"  :key="item.id" >{{item.checkCode}}</a-select-option>
           </a-select>
         </a-form-item>
@@ -82,7 +82,7 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          targetAuthorId:{rules: [{ required: true, message: '请选择税盘号!' }]},
+          targetAuthorId:{rules: [{ required: true, message: '请选择金税盘号!' }]},
         },
         url: {
           add: "/customer/taxCustomerAuthor/migration",
@@ -130,7 +130,7 @@
           this.cusAuthorId = authorId;
           this.edit({"authorId":authorId}, '');
         } else {
-          this.$message.warning("请选择税盘");
+          this.$message.warning("请选择金税盘");
         }
       },
       edit(record, v) {

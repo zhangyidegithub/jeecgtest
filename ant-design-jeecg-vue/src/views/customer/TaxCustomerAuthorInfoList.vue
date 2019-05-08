@@ -5,8 +5,8 @@
       <a-form layout="inline">
         <a-row :gutter="24">
           <a-col :span="6">
-            <a-form-item label="税盘号">
-              <a-input placeholder="税盘号" v-model="queryParam.checkCode"></a-input>
+            <a-form-item label="金税盘号">
+              <a-input placeholder="金税盘号" v-model="queryParam.checkCode"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="8" >
@@ -114,7 +114,7 @@
             dataIndex: 'custTaxCode'
           },*/
           {
-            title: '税盘号',
+            title: '金税盘号',
             align:"center",
             dataIndex: 'checkCode'
           },

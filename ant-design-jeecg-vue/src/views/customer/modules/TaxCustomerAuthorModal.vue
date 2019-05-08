@@ -37,9 +37,9 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label="税盘号"
+          label="金税盘号"
           hasFeedback>
-          <a-input placeholder="请输入税盘号，用于客户端授权验证使用" v-decorator="['checkCode', validatorRules.checkCode]" />
+          <a-input placeholder="请输入金税盘号，用于客户端授权验证使用" v-decorator="['checkCode', validatorRules.checkCode]" />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
@@ -162,7 +162,7 @@
             dataIndex: 'linkPhone',
           },
           {
-            title: '税盘号',
+            title: '金税盘号',
             dataIndex: 'checkCode',
             align: "checkCode",
           },
@@ -215,7 +215,7 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          checkCode:{rules: [{ required: true, message: '请输入税盘号!' }]},
+          checkCode:{rules: [{ required: true, message: '请输入金税盘号!' }]},
           machineNo:{rules: [{ required: true, message: '请输入本开票机号码，主开票机为0' }]},
           linkMan:{rules: [{ required: true, message: '请输入联系人!' }]},
           linkPhone:{rules: [{required: true, message: '请输入联系人手机号码!' },{validator: this.validatePhone}]},

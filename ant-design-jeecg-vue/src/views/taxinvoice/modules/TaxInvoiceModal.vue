@@ -4,7 +4,7 @@
     :width="950"
     placement="right"
     :visible="visible"
-    :maskClosable="false"
+    :maskClosable="true"
     :closable="true"
     @ok="handleCancel"
     @close="handleCancel">
@@ -303,7 +303,7 @@
       }
     },
     methods: {
- 
+
       /** 调用完edit()方法之后会自动调用此方法 */
       editAfter() {
         this.$nextTick(() => {
@@ -321,7 +321,7 @@
           this.requestSubTableData(this.url.taxInvoiceGoods.list, params, this.taxInvoiceGoodsTable)
         }
       },
- 
+
       /** 整理成formData */
       classifyIntoFormData(allValues) {
         let main = Object.assign(this.model, allValues.formValue)
