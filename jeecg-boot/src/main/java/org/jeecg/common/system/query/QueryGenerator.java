@@ -247,9 +247,10 @@ public class QueryGenerator {
 		if(rule == null && val.startsWith(NOT_EQUAL)){
 			rule = QueryRuleEnum.NE;
 		}
-		return rule != null ? rule : QueryRuleEnum.EQ;
+		return rule != null ? rule : QueryRuleEnum.LIKE;//设置默认模糊查询
+//		return rule != null ? rule : QueryRuleEnum.EQ;
 	}
-	
+
 	/**
 	 * 替换掉关键字字符
 	 * 
