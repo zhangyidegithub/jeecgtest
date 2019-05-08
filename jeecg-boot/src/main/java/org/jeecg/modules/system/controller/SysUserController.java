@@ -67,7 +67,6 @@ public class SysUserController {
 
 	@Autowired
 	private ISysUserDepartService sysUserDepartService;
-
 	@Autowired
 	private ISysUserRoleService userRoleService;
     @Autowired

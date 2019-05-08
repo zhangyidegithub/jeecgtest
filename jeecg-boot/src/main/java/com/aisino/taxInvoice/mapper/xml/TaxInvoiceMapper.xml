@@ -9,7 +9,7 @@
             FROM TAX_INVOICE
             WHERE 1 = 1
             <if test="userName != null and userName != ''">
-                AND CLIENT_TAX_CODE = #{userName}
+                AND SELLER_TAX_NAME = #{userName}
             </if>
             <if test="year != null">
                 AND TO_CHAR(created_date,'yyyy') = #{year}
@@ -27,14 +27,14 @@
             AND  TO_CHAR(CREATED_DATE,'YYYY-MM-DD')=#{date}
         </if>
         <if test="userName!= null">
-            AND CLIENT_TAX_CODE = #{userName}
+            AND SELLER_TAX_NAME = #{userName}
         </if>
 	</select>
     <select id="findByAmount" parameterType="com.aisino.taxInvoice.entity.Report" resultType="com.aisino.taxInvoice.entity.Report">
         SELECT SUM(amount) AS amount FROM TAX_INVOICE
         WHERE 1 = 1
         <if test="userName != null">
-            AND CLIENT_TAX_CODE = #{userName}
+            AND SELLER_TAX_NAME = #{userName}
         </if>
         <if test="date != null">
             AND TO_CHAR(CREATED_DATE,'YYYY-MM-DD') = #{date}
