@@ -101,7 +101,7 @@
   import {getLoginfo} from '@/api/api'
   import Vue from 'vue';
   import LineChartMultid from '@/components/chart/LineChartMultid'
-  import EcHistogram from '@/components/chart/echarts/EcHistogram'
+  // import EcHistogram from '@/components/chart/echarts/EcHistogram'
   import store from '@/store'
   import { redFpCylindrical, redFpStatisticsCount, redFpStatisticsMoney } from '../../api/login'
   import { ACCESS_TOKEN, USER_NAME } from '../../store/mutation-types'
@@ -140,7 +140,7 @@
       Bar,
       Trend,
       LineChartMultid,
-      EcHistogram
+      // EcHistogram
     },
     data() {
       return {
