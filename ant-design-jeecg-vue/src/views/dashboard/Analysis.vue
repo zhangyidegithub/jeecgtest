@@ -51,40 +51,40 @@
       </a-col>
     </a-row>
 
-    <a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">
-      <div class="salesCard">
-        <a-tabs default-active-key="1" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">
-
-          <div class="extra-wrapper" slot="tabBarExtraContent">
-          </div>
-          <a-tab-pane loading="true" tab="红字发票申请单量同比" key="1">
-            <a-row>
-              <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
-                <!--<bar title="申请红字发票统计" :dataSource="barData"/> 柱状体-->
-                <line-chart-multid :height="420" :sourceDataConst="barData3"/>
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-    </a-card>
     <!--<a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">-->
       <!--<div class="salesCard">-->
         <!--<a-tabs default-active-key="1" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">-->
+
           <!--<div class="extra-wrapper" slot="tabBarExtraContent">-->
           <!--</div>-->
-          <!--<a-tab-pane loading="true" tab="红字发票申请单量同比test" key="1">-->
+          <!--<a-tab-pane loading="true" tab="红字发票申请单量同比" key="1">-->
             <!--<a-row>-->
               <!--<a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">-->
                 <!--&lt;!&ndash;<bar title="申请红字发票统计" :dataSource="barData"/> 柱状体&ndash;&gt;-->
-                <!--&lt;!&ndash;<line-chart-multid :height="420" :sourceDataConst="barData3"/>&ndash;&gt;-->
-                <!--&lt;!&ndash;<EcHistogram></EcHistogram>&ndash;&gt;-->
+                <!--<line-chart-multid :height="420" :sourceDataConst="barData3"/>-->
               <!--</a-col>-->
             <!--</a-row>-->
           <!--</a-tab-pane>-->
         <!--</a-tabs>-->
       <!--</div>-->
     <!--</a-card>-->
+    <a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">
+      <div class="salesCard">
+        <a-tabs default-active-key="1" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">
+          <div class="extra-wrapper" slot="tabBarExtraContent">
+          </div>
+          <a-tab-pane loading="true" tab="红字发票申请单量同比" key="1">
+            <a-row>
+              <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
+                <!--<bar title="申请红字发票统计" :dataSource="barData"/> 柱状体-->
+                <!--<line-chart-multid :height="420" :sourceDataConst="barData3"/>-->
+                <EcHistogram ref="ech" :dataSource="barData5" ></EcHistogram>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+    </a-card>
   </div>
 </template>
 
@@ -101,32 +101,15 @@
   import {getLoginfo} from '@/api/api'
   import Vue from 'vue';
   import LineChartMultid from '@/components/chart/LineChartMultid'
-  // import EcHistogram from '@/components/chart/echarts/EcHistogram'
+  import EcHistogram from '@/components/chart/echarts/EcHistogram'
   import store from '@/store'
   import { redFpCylindrical, redFpStatisticsCount, redFpStatisticsMoney } from '../../api/login'
   import { ACCESS_TOKEN, USER_NAME } from '../../store/mutation-types'
   import { formatDate, formatDate2 } from '../../utils/util'
-
   const rankList = []
-  // for (let i = 0; i < 7; i++) {
-  //   rankList.push({
-  //     name: '白鹭岛 ' + (i+1) + ' 号店',
-  //     total: 1234.56 - i * 100
-  //   })
-  // }
   const barData = []
-
   let datee=new Date();
-  // let date=datee.getDate();
-  // let month=datee.getMonth()+1
-   // let today=""+datee.getFullYear()+"-"+month+"-"+date;
   const token=Vue.ls.get(ACCESS_TOKEN);
-  // for (let i = 0; i < 12; i += 1) {
-  //   barData.push({
-  //     x: `${i + 1}月`,
-  //     y: Math.floor(Math.random() * 1000) + 200
-  //   })
-  // }
   export default {
     name: "Analysis",
     components: {
@@ -140,7 +123,7 @@
       Bar,
       Trend,
       LineChartMultid,
-      // EcHistogram
+      EcHistogram
     },
     data() {
       return {
@@ -148,7 +131,6 @@
         center: null,
         rankList,
         barData:[
-
         ],
         loginfo:{},
         lastYear:'',
@@ -160,23 +142,9 @@
         countRedDay:'',
         sumCountRed:'',
         today:'',
-        DataRes1:[],
-        DataRes2:[],
-        barData2:[
-          { type: '01', ThisYear: 0, LastYear: 0 },
-          { type: '02', ThisYear: 0, LastYear: 0 },
-          { type: '03', ThisYear: 0, LastYear: 0 },
-          { type: '04', ThisYear: 0, LastYear: 0 },
-          { type: '05', ThisYear: 0, LastYear: 0 },
-          { type: '06', ThisYear: 0, LastYear: 0 },
-          { type: '07', ThisYear: 0, LastYear: 0 },
-          { type: '08', ThisYear: 0, LastYear: 0 },
-          { type: '09', ThisYear: 0, LastYear: 0 },
-          { type: '10', ThisYear: 0, LastYear: 0 },
-          { type: '11', ThisYear: 0, LastYear: 0 },
-          { type: '12', ThisYear: 0, LastYear: 0 }
-        ],
-        barData3:[]
+        barData4:[ [0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0]],
+        barData5:[]
       }
     },
     created() {
@@ -190,17 +158,18 @@
         // console.log(today);
         this.NSRSBH=Vue.ls.get(USER_NAME);
         // this.redFpmonthly(),
-        this.redFpBrokenLine(),
+        // this.redFpBrokenLine(),
         this.redMoneyday(),
           this.sumRedmoney(),
           this.countRedday(),
-          this.sumCountred()
-
+          this.sumCountred(),
+        this.EredFpBrokenLine()
 
       }, 100)
       this.initLogInfo();
-      setTimeout(() => {
-        this.shujufuyu();
+      const a=setInterval(this.Eshujufuyu, 1000);
+      setInterval(() => {
+        clearInterval(a);
       },5000)
 
     },
@@ -213,15 +182,23 @@
       //   this.shuju(this.DataRes1);
       //   this.shuju(this.DataRes2);
       // },
-      'DataRes1': function () {
-        this.shujufuyu();
+      // 'DataRes1': function () {
+      //   this.shujufuyu();
+      // },
+      // 'DataRes2': function () {
+      //   this.shujufuyu();
+      // },
+      // 'DataRes2': function () {
+      //   this.shujufuyu();
+      // },
+      'barData4': function () {
+        this.Eshujufuyu();
+        this.$refs.ech.drawLine();
       },
-      'DataRes2': function () {
-        this.shujufuyu();
-      },
-      'DataRes2': function () {
-        this.shujufuyu();
-      }
+      // 'barData5': function () {
+      //   this.$refs.ech.drawLine();
+      // }
+
     },
     methods: {
       //年份切换
@@ -273,9 +250,7 @@
       //     }
       //   })
       // },
-
-      //红字发票折线图请求
-      redFpBrokenLine(){
+      EredFpBrokenLine(){
         const that = this;
         let NSRSBH = this.userNameAchane(that.NSRSBH);
         let params1;
@@ -301,55 +276,129 @@
             year: that.lastYear
           }
         }
-        // 今年数据的请求
+        //今年数据
         redFpCylindrical(token,params1).then((res)=>{
           if(res.success){
             that.loading = false;
-            this.DataRes1=res.result;
-            this.shuju(this.DataRes1);
+            if (res.result!==null){
+              let i
+              for (i=0;i<res.result.length;i++){
+                res.result[i].month=res.result[i].month.replace(/^0/, '');
+                this.barData4[0][parseInt(res.result[i].month)]=res.result[i].count;
+              }
+            } else {
+              that.$message.success("今年数据为空");
+            }
           }else {
             that.$message.error(res.message);
             that.loading = false;
           }
         })
-        // 去年数据的请求
-          redFpCylindrical(token,params2).then((res)=>{
-            if(res.success){
-              that.loading = false;
-              this.DataRes2=res.result;
-              this.shuju(this.DataRes2);
-            }else {
-              that.$message.error(res.message);
-              that.loading = false;
-            }
-          })
-      },
-        shuju(arry){
-        if (arry === null){
-          return arry;
-        }
-          // 数据处理
-          let i,j,k
-          for (i=0;i<this.barData2.length;i++){
-            // 今年
-            for (j=0;j<arry.length;j++){
-              if (this.barData2[i].type===arry[j].month){
-                // console.log(this.DataRes1[j].month)
-                if (arry===this.DataRes1) {
-                  this.barData2[i].ThisYear=arry[j].count;}else if (arry===this.DataRes2){
-                  this.barData2[i].LastYear=arry[j].count;
-                }
-                // console.log(this.barData2[i].year);
+        //去年数据
+        redFpCylindrical(token,params2).then((res)=>{
+          if(res.success){
+            that.loading = false;
+            if (res.result!==null){
+              let i
+              for (i=0;i<res.result.length;i++){
+                res.result[i].month=res.result[i].month.replace(/^0/, '');
+                this.barData4[1][parseInt(res.result[i].month)]=res.result[i].count;
               }
+            } else {
+              that.$message.success("去年数据为空");
             }
+          }else {
+            that.$message.error(res.message);
+            that.loading = false;
           }
-        },
-// 数据赋予
-          shujufuyu(){
-            setTimeout(() => {
-              this.barData3=this.barData2;
-            },1000)
-          },
+        })
+      },
+      Eshujufuyu(){
+        this.barData5=this.barData4;
+      },
+      //红字发票折线图请求
+//       redFpBrokenLine(){
+//         const that = this;
+//         let NSRSBH = this.userNameAchane(that.NSRSBH);
+//         let params1;
+//         let params2;
+//         if (NSRSBH === '') {
+//           params1 = {
+//             year: that.thisYear
+//           }
+//           params2 ={
+//             year: that.lastYear
+//           }
+//         } else {
+//           params1 = {
+//             count: 0,
+//             month: "",
+//             userName: NSRSBH,
+//             year: that.thisYear
+//           }
+//           params2 = {
+//             count: 0,
+//             month: "",
+//             userName: NSRSBH,
+//             year: that.lastYear
+//           }
+//         }
+//         // 今年数据的请求
+//         redFpCylindrical(token,params1).then((res)=>{
+//           if(res.success){
+//             that.loading = false;
+//             this.DataRes1=res.result;
+//             this.shuju(this.DataRes1);
+//           }else {
+//             that.$message.error(res.message);
+//             that.loading = false;
+//           }
+//         })
+//         // 去年数据的请求
+//           redFpCylindrical(token,params2).then((res)=>{
+//             if(res.success){
+//               that.loading = false;
+//               this.DataRes2=res.result;
+//               this.shuju(this.DataRes2);
+//             }else {
+//               that.$message.error(res.message);
+//               that.loading = false;
+//             }
+//           })
+//       },
+//         shuju(arry){
+//         if (arry === null){
+//           return arry;
+//         }
+//           // 数据处理
+//           let i,j,k
+//           for (i=0;i<this.barData2.length;i++){
+//             // 今年
+//             for (j=0;j<arry.length;j++){
+//               if (this.barData2[i].type===arry[j].month){
+//                 // console.log(this.DataRes1[j].month)
+//                 if (arry===this.DataRes1) {
+//                   this.barData2[i].ThisYear=arry[j].count;}else if (arry===this.DataRes2){
+//                   this.barData2[i].LastYear=arry[j].count;
+//                 }
+//                 // console.log(this.barData2[i].year);
+//               }
+//             }
+//           }
+//         },
+// // 数据赋予
+//           shujufuyu(){
+//             setTimeout(() => {
+//               this.barData3=this.barData2;
+//             },1000)
+//           },
+
+
+
+
+
+
+
       //今日冲红金额
       redMoneyday(){
         const that=this;

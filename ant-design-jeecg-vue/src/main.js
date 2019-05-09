@@ -3,7 +3,7 @@ import App from './App.vue'
 import Storage from 'vue-ls'
 import router from './router'
 import store from './store/'
-// import echarts from 'echarts'
+import echarts from 'echarts'
 import { VueAxios } from "@/utils/request"
 
 import Antd from 'ant-design-vue'
@@ -32,7 +32,7 @@ import config from '@/defaultSettings'
 
 import JDictSelectTag from './components/dict/index.js'
 import hasPermission from '@/utils/hasPermission'
-// Vue.prototype.$echarts = echarts
+Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
 Vue.use(Storage, config.storageOptions)
 Vue.use(Antd)
