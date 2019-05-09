@@ -1,4 +1,5 @@
 <template>
+  <div>
   <a-card
     title="重新设定密码"
     :width="800"
@@ -12,6 +13,7 @@
     <!--<a-button @click="username1()">1111</a-button>-->
     <password-modal ref="passwordmodal" @ok="passwordModalOk"></password-modal>
   </a-card>
+  </div>
 </template>
 
 <script>

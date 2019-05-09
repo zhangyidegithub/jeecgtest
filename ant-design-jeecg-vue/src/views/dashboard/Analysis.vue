@@ -68,7 +68,23 @@
         </a-tabs>
       </div>
     </a-card>
-    </a-row>
+    <!--<a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">-->
+      <!--<div class="salesCard">-->
+        <!--<a-tabs default-active-key="1" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">-->
+          <!--<div class="extra-wrapper" slot="tabBarExtraContent">-->
+          <!--</div>-->
+          <!--<a-tab-pane loading="true" tab="红字发票申请单量同比test" key="1">-->
+            <!--<a-row>-->
+              <!--<a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">-->
+                <!--&lt;!&ndash;<bar title="申请红字发票统计" :dataSource="barData"/> 柱状体&ndash;&gt;-->
+                <!--&lt;!&ndash;<line-chart-multid :height="420" :sourceDataConst="barData3"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;<EcHistogram></EcHistogram>&ndash;&gt;-->
+              <!--</a-col>-->
+            <!--</a-row>-->
+          <!--</a-tab-pane>-->
+        <!--</a-tabs>-->
+      <!--</div>-->
+    <!--</a-card>-->
   </div>
 </template>
 
@@ -85,6 +101,7 @@
   import {getLoginfo} from '@/api/api'
   import Vue from 'vue';
   import LineChartMultid from '@/components/chart/LineChartMultid'
+  import EcHistogram from '@/components/chart/echarts/EcHistogram'
   import store from '@/store'
   import { redFpCylindrical, redFpStatisticsCount, redFpStatisticsMoney } from '../../api/login'
   import { ACCESS_TOKEN, USER_NAME } from '../../store/mutation-types'
@@ -122,7 +139,8 @@
       RankList,
       Bar,
       Trend,
-      LineChartMultid
+      LineChartMultid,
+      EcHistogram
     },
     data() {
       return {
