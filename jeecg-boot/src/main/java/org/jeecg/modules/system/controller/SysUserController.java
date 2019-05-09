@@ -67,12 +67,14 @@ public class SysUserController {
 
 	@Autowired
 	private ISysUserDepartService sysUserDepartService;
+
 	@Autowired
 	private ISysUserRoleService userRoleService;
     @Autowired
     private ITaxCustomerService taxCustomerService;
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
+    @PermissionData(pageComponent="system/UserList")
 	public Result<IPage<SysUser>> queryPageList(SysUser user,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
 		Result<IPage<SysUser>> result = new Result<IPage<SysUser>>();

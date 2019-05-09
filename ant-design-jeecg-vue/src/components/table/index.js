@@ -83,7 +83,6 @@ export default {
       this.loadData();
     },
     loadData(pagination, filters, sorter) {
-
       this.localLoading = true
       var result = this.data(
         Object.assign({
