@@ -3,8 +3,8 @@
 </template>
 <script>
   let datee=new Date();
-  let thisYear=datee.getFullYear();
-  let lastYear=datee.getFullYear()-1;
+  let thisYear=datee.getFullYear()+'';
+  let lastYear=(datee.getFullYear()-1)+'';
   export default {
     name:'EcHistogram',
     props:{
@@ -14,7 +14,7 @@
       }
     },
     mounted(){
-      this.drawLine();
+      // this.drawLine();
     },
     watch: {
       'dataSource': function () {
@@ -25,12 +25,26 @@
       drawLine(){
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('myChart'))
-        // 获取数据
+        // 处理数据
+        // if (this.dataSource!==undefined){
+        // let i,j
+        // let par1=0;
+        // for (i=0;i<dataSource[0].length;i++){
+        //   par1=par1+dataSource[0][i];
+        // }
+        // console.log(par1);
+        // }
         // 绘制图表
         myChart.setOption({
           // title: { text: '在Vue中使用echarts' },
           tooltip: {
             trigger: 'axis'
+          },
+          // title: {
+          //   text: '折线图堆叠'
+          // },
+          legend: {
+            data:[thisYear,lastYear]
           },
           color:["#1890FF","#34C45F"],
           xAxis: {
@@ -60,7 +74,7 @@
             lineStyle:{
               normal:{
                 color:'#1890FF',
-                width:3
+                width:1
               }
             }
           },
@@ -72,7 +86,7 @@
               lineStyle:{
                 normal:{
                   color:'#34C45F',
-                  width:3
+                  width:1
                 }
               }
             },
