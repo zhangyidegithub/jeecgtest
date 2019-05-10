@@ -41,7 +41,7 @@
             trigger: 'axis'
           },
           // title: {
-          //   text: '折线图堆叠'
+          //   text: '红字发票申请单量同比表'
           // },
           legend: {
             data:[thisYear,lastYear]
@@ -74,7 +74,7 @@
             lineStyle:{
               normal:{
                 color:'#1890FF',
-                width:1
+                width:2
               }
             }
           },
@@ -86,7 +86,7 @@
               lineStyle:{
                 normal:{
                   color:'#34C45F',
-                  width:1
+                  width:2
                 }
               }
             },
